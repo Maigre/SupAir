@@ -1,0 +1,28 @@
+
+.tableau_membre {
+	font-size:11px;
+	width: 100%;
+}
+
+.pad5 {
+	padding: 5px;
+}
+
+.marg5 {
+	margin: 5px;
+}
+
+.right {
+	margin-left: auto;
+}
+
+hr {
+	line-height:2px;
+	border:0;
+	border-bottom: 1px solid #CCC;
+}
+
+
+.x-panel-header-text {
+	line-height:16px !important;
+}
