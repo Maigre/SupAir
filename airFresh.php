@@ -1,10 +1,5 @@
 <?php 
-
-
-//TODO : Before MySQL DUMP : count -1 histo and number of tickets to know if a dump is necessary / force if Files Freshed FTP
-
-//TODO : ProgressBar for histo transmission ?
-
+// AIRFRESH VERSION 1 - 05 octobre 2011
 
 //Integrity test
 //KEEP THIS PART WHATEVER UPGRADES ARE PERFORMED HERE
@@ -31,7 +26,7 @@ define('VERSION_SERVER_FILE','server.alv');
 function AirFresh($config)
 {
 	//push local sql historique to server 
-	PushMySQL($config);
+	if (!defined('SKIP_HISTO') or (!SKIP_HISTO)) PushMySQL($config);
 	
 	if (!$config['mysql_only'])
 	{
@@ -39,10 +34,10 @@ function AirFresh($config)
 		$config['ftp']['host'] = FTP_HOST;
 		$config['ftp']['user'] = FTP_USER;
 		$config['ftp']['pass'] = FTP_PASS;
-	
+
 		$ftp = new FTPclass($config['ftp']);
 		if (!$ftp->connect()) sorry(NO_CONNECTION);
-		
+	
 		//DELETE local version file
 		@unlink($config['local_version_file']);
 
@@ -54,7 +49,7 @@ function AirFresh($config)
 	
 	//GET NEW VERSION
 	echo '<br />version validation..';
-	
+flush();	
 		$new_version = trim(@file_get_contents($config['ftp']['local_path'].VERSION_SERVER_FILE));
 		if ($new_version == '') sorry('warning: new version not installed properly, upgrade failed..');
 		
@@ -70,7 +65,7 @@ function AirFresh($config)
 function FreshFiles($ftp,$config)
 {
 	echo '<br />software update.....';
-	//CHECK FTP CONNECTION 	
+flush();	//CHECK FTP CONNECTION 	
 	if (!$ftp->connected()) sorry(NO_CONNECTION);
 	else
 	{
@@ -82,9 +77,23 @@ function FreshFiles($ftp,$config)
 
 function FreshMySQL($config)
 {
-	echo '<br />download dump.......';
-		
-		$dumpfile_gz = $config['ftp']['local_path'].'dump.sql.gz';
+	echo '<br />check database......';
+flush();		
+		$my = new myDriver();
+			$state1 = $my->Query1("SELECT COUNT(*) AS nb FROM `historique` WHERE ticket = -1",'nb');
+			$maxtik = $my->Query1("SELECT MAX(id) AS max FROM `historique_tickets`",'max');
+		$my->close();	
+
+			$ask = http_post($config['airTraffic_url'],array('action'=>'dbstate','airlab_key'=>AIRLAB_KEY));
+			if ($ask['content'] == '') sorry('http: impossible to get DB state..');
+
+	echo ' [ok]'; 
+flush();				
+			if ($ask['content'] == ($state1.'/'.$maxtik)) return true;	
+	
+	echo '<br />download database...';
+flush();		
+		$dumpfile_gz = $config['ftp']['local_path'].'dump.sql.bz2';
 				
 		$ask = http_post($config['airTraffic_url'],array('action'=>'dump','airlab_key'=>AIRLAB_KEY));
 
@@ -93,18 +102,48 @@ function FreshMySQL($config)
 	
 	echo ' [ok]';
 	
-	echo '<br />database import.....';
-		
-		$dumpfile = str_replace('.sql.gz','.sql',$dumpfile_gz);
+	echo '<br />database unzip......';
+flush();		
+		$dumpfile = str_replace('.sql.bz2','.sql',$dumpfile_gz);
 		@unlink($dumpfile);
 		
-		system('gunzip '.$dumpfile);
+		$f = file_get_contents($dumpfile_gz);
+		if(!$f) sorry('fail to open compressed dump file !');
+		
+		$f = bzdecompress($f);
+		if(is_numeric($f)) sorry('bunzip error '.$f);
+		
+///		$f = file_put_contents($dumpfile,$f);
+//		if(!$f) sorry('fail to write uncompressed sql file !');
+
+echo ' [ok]';
+	
+	echo '<br />database import.....';
+flush();
+		
+//		system('bunzip2 '.$dumpfile_gz,$err); //linux system
+//		if (!$f) sorry('bzip2: decompression failed !');
 		
 		//DELETE VERSION FILE
 		@unlink($config['local_version_file']);
 		
-		system('mysql -h '.MYSQL_HOST.' -u '.MYSQL_USER.' -p'.MYSQL_PASS.' '.MYSQL_BASE.' < '.$dumpfile,$err);	
-		if ($err) sorry('mysql: import failed !');
+//		system('mysql -h '.MYSQL_HOST.' -u '.MYSQL_USER.' -p'.MYSQL_PASS.' '.MYSQL_BASE.' < '.$dumpfile,$err);	//linux system
+		
+		$my = new myDriver();
+		$q = explode(";\n",$f);
+		
+		FTPclass::Init_ProgressBar(count($q)-1);
+		
+		for($i=0;$i<count($q);$i++)
+		{
+			FTPclass::ProgressBar(1);
+			if (trim($q[$i] != ''))
+			{
+				$my->Query($q[$i]);
+				if (($my->error())&&($my->errno() != 1065)) sorry('mysql: import failed ! Qn : '.$i.'<br />Erreur '.$my->errno().' : '.$my->error().'<br />Query : '.$q[$i].'<br />Query+1 : '.$q[$i+1]);
+			}
+		}
+		$my->close();
 		
 	echo ' [ok]';
 
@@ -114,7 +153,7 @@ function PushMySQL($config)
 {
 
 	echo '<br />sync histo state....';
-		
+flush();		
 	$my = new myDriver();
 	if (!$my) sorry('local: impossible to connect local database !');
 	
@@ -123,7 +162,7 @@ function PushMySQL($config)
 		syncTicketState($my,$config);
 		
 	echo ' [ok]';	
-	
+
 	
 	//CHECKING STATE 0 histo
 	//STATE 0 : queries unknow on the server, need to open a new ticket
@@ -131,7 +170,7 @@ function PushMySQL($config)
 		if (is_array($c[0]))
 		{
 			echo '<br />opening new ticket..';	
-			//ASK SERVER FOR A NEW TICKET
+flush();			//ASK SERVER FOR A NEW TICKET
 				$ask = http_post($config['airTraffic_url'],array('action'=>'new_ticket','airlab_key'=>AIRLAB_KEY));
 				if (!($ask['content'] != '')) sorry('server: impossible to get a new ticket'); 
 				else 
@@ -160,17 +199,19 @@ function PushMySQL($config)
 			foreach($c as $tik)
 			{				
 				echo '<br />push ticket '.$tik['id'].'......';
-			
+flush();			
 					//GET ALL HISTO FOR THIS TICKET
 					$histos = $my->QueryM("SELECT * FROM `historique` WHERE `ticket` = '".$tik['id']."' ORDER BY `id`");
 					
 					if (is_array($histos[0]))
 					{
+					
+					
 						//POST ALL HISTO ENTRIES CONCERNED BY 
-						$post = json_encode($histos);
+						$post = serialize($histos);
 						$hash = md5($post);
 						$post = gzcompress($post,9);
-						
+					
 						$ask = http_post($config['airTraffic_url'],array('action'=>'push_histo','ticket'=>$tik['id'],'histos'=>$post,'hash'=> $hash,'airlab_key'=>AIRLAB_KEY));
 						
 						//SERVER WILL SET THE TICKET ON STATE 2 IF RECIEVED, AND REPLY SOMETHING LIKE 'ok'
@@ -178,6 +219,7 @@ function PushMySQL($config)
 						else if ($ask['content'] == 'bad_ticket') sorry('ticket '.$tik['id'].' bad number.. please re-start sync ');
 						else if ($ask['content'] == 'wrong_hash') sorry('ticket '.$tik['id'].' bad hash.. please re-start sync ');
 						else if ($ask['content'] == 'no_ticket') sorry('ticket '.$tik['id'].' lost.. please re-start sync ');
+						else if ($ask['content'] != 'ok') sorry('ticket '.$tik['id'].' transfer error.. '.$ask['content']);
 					}
 					//if no histo : delete ticket
 					else $my->Query("DELETE FROM `historique_tickets` WHERE `id` = '".$tik['id']."'");
@@ -193,11 +235,13 @@ function PushMySQL($config)
 		$c = $my->QueryM("SELECT * FROM `historique_tickets` WHERE `statut` = 2");
 		if (is_array($c[0]))
 		{
-			echo '<br />server runs queries..';
-				
+			echo '<br />server runs queries. ';
+flush();				
 				//COMMAND SERVER TO EXECUTE PENDING HISTO
 				$ask = http_post($config['airTraffic_url'],array('action'=>'run_histo','airlab_key'=>AIRLAB_KEY));			
 
+				if ($ask['content'] != 'ok') sorry('ticket '.$tik['id'].' executing error.. '.$ask['content']);
+				
 				syncTicketState($my,$config);
 			
 			echo '[ok]';
@@ -245,8 +289,8 @@ function syncTicketState($my,$config)
 			
 			if ($res[$id] == 'unknown') 
 			{
+				$my->Query("UPDATE `historique` SET `ticket` = '0' WHERE `ticket` = '".$id."'");
 				$my->Query("DELETE FROM `historique_tickets` WHERE `id` = '".$id."'");
-				$my->Query("UPDATE `historique` SET `ticket` = '0' WHERE `ticket` = '".$id."')");
 			}
 		}
 	}
@@ -281,12 +325,26 @@ class myDriver
 	
 	function QueryM($query)
 	{
+		$data = null;
 		$q = $this->Query($query);
 		
-		while ($row = mysql_fetch_assoc($q)) $data[] = $row;
-		mysql_free_result($q);
-		
+		if ($q)
+		{
+			while ($row = mysql_fetch_assoc($q)) $data[] = $row;
+			mysql_free_result($q);
+		}
+			
 		return $data;
+	}
+	
+	function error()
+	{
+		return mysql_error();
+	}
+	
+	function errno()
+	{
+		return mysql_errno();
 	}
 	
 	function close()
@@ -329,12 +387,12 @@ class myDriver
 			var $user	= '';
 			var $pass	= '';
 			var $port		= 21;
-			var $ssl		= TRUE;
+			var $ssl		= FALSE;
 			var $passive	= TRUE;
 			var $debug		= FALSE;
 			var $conn_id	= FALSE;
 			var $overwrite_only_different = TRUE; //TRUE overwrite file only if different, if identical skip //FALSE force overwrite everytime
-
+			var $progress = 0;
 
 			/**
 			 * Constructor - Sets Preferences
@@ -390,7 +448,7 @@ class myDriver
 					$this->initialize($config);
 				}
 
-				if ($this->ssl) $this->conn_id = @ftp_ssl_connect($this->host, $this->port);
+				if ($this->ssl) $this->conn_id = ftp_ssl_connect($this->host, $this->port);
 				else $this->conn_id = @ftp_connect($this->host, $this->port);
 
 				if (FALSE === $this->conn_id)
@@ -504,7 +562,7 @@ class myDriver
 			 * @param	string
 			 * @return	bool
 			 */
-			function download($rempath, $locpath, $remote_file = NULL, $mode = 'auto')
+			function download($rempath, $locpath, $remote_file = NULL, $mode = 'binary')
 			{
 				if ($this->debug) $start = microtime(true);
 				if ( ! $this->connected())
@@ -567,20 +625,18 @@ class myDriver
 				$size_local = @filesize($locpath);
 				$date_local = @filemtime($locpath);
 
-				//if (($size_remote == $size_local) and ($date_local == $date_remote)) echo '<BR />same';
-				//else echo '<BR />different: '.$date_remote.' '.$date_local;
 
 				$ok = true;
 
 				if ($remote_file['size'] != $size_local) 
 				{
-					//echo '<br />size doesn\'t macth :';
+					if ($this->debug) echo '<br />size doesn\'t match : '.$remote_file['size'].'/'.$size_local;
 					$ok = false;
 				}
 		
-				if ($date_local != $remote_file['date'])
+				if (abs($date_local - $remote_file['date']) > 300)
 				{
-					//echo '<br />date doesn\'t macth';
+					if ($this->debug) echo '<br />date doesn\'t match : '.$remote_file['date'].'/'.$date_local;
 					$ok = false;
 				}
 		
@@ -692,61 +748,69 @@ class myDriver
 			}
 
 
-			function Init_ProgressBar($max_value,$gauche= 0,$haut= 4,$largeur = 100,$hauteur=12,$bord_col='black',$txt_col='black',$bg_col='#CCC',$prog_col='white')
+			public static function Init_ProgressBar($max_value,$gauche= 0,$haut= 4,$largeur = 100,$hauteur=12,$bord_col='black',$txt_col='black',$bg_col='#CCC',$prog_col='white')
 			{
 				
 				global $bar;
+				global $progress;
 				
-				if ($bar > 0)
-				{
-					if ($max_value > 0) 
-					{
-						echo "\n<script>max_value = max_value+".$max_value."</script>";
-						$this->ProgressBar(0);
-					}
-				}
-				else
-				{
-					$bar = 1;
-					//texte
-					$tailletxt=$hauteur-10;
-					echo '<div id="pourcentage" style="position:relative;top:'.($haut);
-					echo ';left:'.$gauche;
-					echo ';width:'.$largeur.'px';
-					echo ';height:'.$hauteur.'px;border:1px solid '.$bord_col.';font-weight:bold';
-					echo ';color:'.$txt_col.';z-index:1;text-align:center;">0%</div>';
-					//fond noir
-					echo '<div id="backside" style="position:relative;top:'.($haut-13); //+1
-					echo ';left:'.($gauche+1); //+1
-					echo ';width:100px';
-					echo ';height:'.$hauteur.'px';
-					echo ';background-color:'.$prog_col.';z-index:0;"></div>';
-					//progress bar
-					echo '<div id="progrbar" style="position:relative;top:'.($haut-25); //+1
-					echo ';left:'.($gauche+1); //+1
-					echo ';width:0px';
-					echo ';height:'.$hauteur.'px';
-					echo ';background-color:'.$bg_col.';z-index:0;"></div>';
-		
-					echo "\n<script>var max_value = ".$max_value."; var current_value=0;</script>";
-				}
+				$progress = 0;
+				$bar++;
+				//texte
+				$tailletxt=$hauteur-10;
+				echo '<div id="pourcentage_'.$bar.'" style="position:relative;top:'.($haut);
+				echo ';left:'.$gauche;
+				echo ';width:'.$largeur.'px';
+				echo ';height:'.$hauteur.'px;border:1px solid '.$bord_col.';font-weight:bold';
+				echo ';color:'.$txt_col.';z-index:1;text-align:center;">0%</div>';
+				//fond noir
+				echo '<div id="backside_'.$bar.'" style="position:relative;top:'.($haut-13); //+1
+				echo ';left:'.($gauche+1); //+1
+				echo ';width:100px';
+				echo ';height:'.$hauteur.'px';
+				echo ';background-color:'.$prog_col.';z-index:0;"></div>';
+				//progress bar
+				echo '<div id="progrbar_'.$bar.'" style="position:relative;top:'.($haut-25); //+1
+				echo ';left:'.($gauche+1); //+1
+				echo ';width:0px';
+				echo ';height:'.$hauteur.'px';
+				echo ';background-color:'.$bg_col.';z-index:0;"></div>';
+	
+				echo "\n<script>\n
+							var max_value_".$bar." = ".$max_value."; \n
+							var current_value_".$bar." =0;\n
+							
+							function P_add_".$bar."(value)
+							\n{";
+							
+							echo "\ncurrent_value_".$bar." = current_value_".$bar."+value;";
+							echo "\nif (current_value_".$bar." >= max_value_".$bar.") {";
+							echo "\ndocument.getElementById(\"pourcentage_".$bar."\").style.display = 'none';";
+							echo "\ndocument.getElementById(\"progrbar_".$bar."\").style.display = 'none';";
+							echo "\ndocument.getElementById(\"backside_".$bar."\").style.display = 'none';";
+							echo "\n} else {";
+							echo "\ndocument.getElementById(\"pourcentage_".$bar."\").innerHTML= Math.floor(current_value_".$bar."*100*10/max_value_".$bar.")/10 + '%';";
+							echo "\ndocument.getElementById('progrbar_".$bar."').style.width= (current_value_".$bar."*100/max_value_".$bar.");\n";
+							echo "\n}
+							}
+									
+						</script>\n";
+
 			}
 	
-			function ProgressBar($value)
+			public static function ProgressBar($value)
 			{
-				echo "\n<script>";
-				echo "\ncurrent_value = current_value+".$value.";";
-				echo "\nif (current_value >= max_value) {";
-				echo "\ndocument.getElementById(\"pourcentage\").style.display = 'none';";
-				echo "\ndocument.getElementById(\"progrbar\").style.display = 'none';";
-				echo "\ndocument.getElementById(\"backside\").style.display = 'none';";
-				echo "\n} else {";
-				echo "\ndocument.getElementById(\"pourcentage\").innerHTML= Math.floor(current_value*100*100/max_value)/100 + '%';";
-				echo "\ndocument.getElementById('progrbar').style.width= (current_value*100/max_value);\n";
-				echo "\n}";
-				echo "\n</script>";
-				ob_flush();
-				flush(); // explication : http://www.manuelphp.com/php/function.flush.php
+				global $progress;
+				global $bar;
+				
+				//if (($value - $progress) >= 0.01)
+				if (true)
+				{
+					echo "\n<script>P_add_".$bar."(".$value.");</script>";
+					ob_flush();
+					flush(); // explication : http://www.manuelphp.com/php/function.flush.php
+					$progress = $value;
+				}
 			}
 
 			// --------------------------------------------------------------------

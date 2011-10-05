@@ -37,7 +37,7 @@
 |
 */
 
-$autoload['packages'] = array(APPPATH.'third_party');
+$autoload['packages'] = array();
 
 
 /*
@@ -64,7 +64,7 @@ $autoload['libraries'] = array('session','database'); //auth37
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('form', 'url' 'date', 'sqlparser_helper');
+$autoload['helper'] = array('form', 'url', 'date', 'sqlparser_helper');
 
 
 /*

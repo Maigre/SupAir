@@ -25,10 +25,10 @@
      	Ext.onReady(function(){
 			
 			//load viewport
-			MainApp.ViewPort.init();
+			//MainApp.ViewPort.init();
 			
 			//check if already logged in and display welcome message or login window
-			MainApp.Login.ask();
+			//MainApp.Login.ask();
 					  
 				
 		});
@@ -36,6 +36,7 @@
 
     </head>
     <body>
+    	ok !
     	<div id="working-area"></div>
     </body>
 </html>

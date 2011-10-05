@@ -301,50 +301,10 @@ class CI_DB_driver {
 
 		// Start the Query Timer
 		$time_start = list($sm, $ss) = explode(' ', microtime());
-		
-		/**************MODIFICATION SUIVI HISTORIQUE*****************/
-		
-		
-		//On écrit la requête dans la table historique des requêtes.
-		//on vérifie que la requête correspond bien à une modification de la database (i.e la requête commence par INSERT, UPDATE ou DELETE)
-		
-		//parse the request to get details
-		$sql = str_replace("\n"," ",$sql);
-		$parse = histo_parse($sql);
-		//print_r($parse); die;
-		$query_done = '';
-		if ($parse)
-		{
-			if (($parse['type'] == 'INSERT') or ($parse['type'] == 'UPDATE') or ($parse['type'] == 'DELETE'))
-			{
-				if ($parse['table'] != 'system_sessions')
-				{
-					if (APP_TYPE == 'server') $ticket = -1;
-					else $ticket = 0;
-					
-					$requete= "INSERT INTO `historique` VALUES (null,\"".$sql."\",'".now()."','".$parse['type']."',\"".$parse['table']."\",null,\"".$ticket."\",0,null)";
-					$this->simple_query($requete);
-					
-					if ($parse['type'] == 'INSERT') $parse['historique_id'] = $this->insert_id();
-				}
-			}
-		}
-		else
-		{
-			$requete= "INSERT INTO `historique` VALUES (null,\"".$sql."\",\"".now()."\",null,null,null,1,null)";
-			$this->simple_query($requete);
-		}		
-		
-		/*LOG IN FILE !
-		if (substr($sql,0,6) != 'SELECT') 
-		{
-			if ($parse) $valid = 1; else $valid = 0;
-			file_put_contents('track.txt',"--- valid: ".$valid."---- type ".$parse['type']." --- query histo : ".$query_done."\n",FILE_APPEND);
-			file_put_contents('track.txt',$sql."\n",FILE_APPEND);
-		}
-		*/
-	
-		/**************FIN MODIFICATION*****************/
+
+/**************MODIFICATION SUIVI HISTORIQUE*****************/
+$histo_id = record_query($this,$sql);
+/**************FIN MODIFICATION*****************/
 		
 		// Run the Query
 		if (FALSE === ($this->result_id = $this->simple_query($sql)))
@@ -385,15 +345,9 @@ class CI_DB_driver {
 		}
 		
 		
-		/****************MODIFICATION************///
-				
-		if (($parse['type'] == 'INSERT') and ($parse['table'] != 'system_sessions'))
-		{		
-			$requete = "UPDATE `historique` SET `insert_id` = ".$this->insert_id()." WHERE `id` = ".$parse['historique_id'];
-			$this->simple_query($requete);
-		}
-		
-		/*******FIN MODIF ******/
+/****************MODIFICATION************///
+record_query_id($this,$histo_id,$this->insert_id());
+/*******FIN MODIF ******/
 
 		// Stop and aggregate the query time results
 		$time_end = list($em, $es) = explode(' ', microtime());

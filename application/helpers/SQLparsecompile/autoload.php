@@ -57,6 +57,9 @@ function __autoload($className){
 		include_once($absolutePathToClassFile);
 		return false;
 	}
+
+if (isset($domains[1]))
+{
 	// subpackage domain
 	$subdomains = explode("_", toUnderscore($domains[1]));
 
@@ -104,6 +107,7 @@ function __autoload($className){
 		include_once($absolutePathToClassFile);
 		return false;
 	}
-	
+}
+return false;	
 }
 
