@@ -65,7 +65,6 @@ class Entity_m extends CI_Model {
 				else if (isset($data[$n])) $this->bean->{$n} = $data[$n];
 			}
 		}
-		return $this;
 	}
 	
 	function format()

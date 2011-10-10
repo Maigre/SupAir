@@ -8,7 +8,7 @@ Ext.define('MainApp.view.FamilleForm', {
 	//width 		 : 240,
 	x     		 : 0,
 	y     		 : 0,
-	url   		 : BASE_URL+'famille/save',
+	url   		 : BASE_URL+'user/famille/save',
 	frame 		 : true,
 	title 		 : 'Nouvelle Famille',
 	iconCls 	 : 'group',
@@ -41,7 +41,7 @@ Ext.define('MainApp.view.FamilleForm', {
 		},{
 		fieldLabel: '',
 		hideLabel : true,		
-		name      : 'ville',
+		name      : 'userVille',
 		value	  : 'Lyon'
 		//cls       : 'red'
 		},{
@@ -91,7 +91,7 @@ Ext.define('MainApp.view.FamilleForm', {
 				xtype: 'textfield',
 				fieldLabel: 'Q.F',
 				//hideLabel : true,		
-				name      : 'Q.F',
+				name      : 'qf',
 				value	  : '150',
 				anchor	  : '96%',
 				labelWidth: 40
@@ -110,7 +110,7 @@ Ext.define('MainApp.view.FamilleForm', {
         disabled: true,
         handler: function() {
             var form = this.up('form').getForm();
-            form.initialConfig.url = BASE_URL+'famille/save';
+            form.url = BASE_URL+'user/famille/save';
             console.info(form);
             if (form.isValid()) {
                 form.submit({

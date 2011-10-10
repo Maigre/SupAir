@@ -138,7 +138,7 @@ Ext.define('MainApp.view.AdherentDisplay', {
 			proxy: {
 				type: 'ajax',
 				api: {
-					read: BASE_URL+'adherent/show/1'    		
+					read: BASE_URL+'user/adherent/show/1'    		
 				},
 				actionMethods : {read: 'POST'},   	
 				reader: {

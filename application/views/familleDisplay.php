@@ -120,7 +120,7 @@ Ext.define('MainApp.view.FamilleDisplay', {
 			proxy: {
 				type: 'ajax',
 				api: {
-					read: BASE_URL+'famille/show/1'    		
+					read: BASE_URL+'user/famille/show/1'    		
 				},
 				actionMethods : {read: 'POST'},   	
 				reader: {

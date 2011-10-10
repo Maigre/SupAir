@@ -132,7 +132,7 @@ Ext.define('MainApp.view.AdherentDisplay', {
 
 		Ext.define('MainApp.store.AdherentStore', {
 			extend: 'Ext.data.Store',
-			model: Adherent,
+			model: 'Adherent',
 			//requires: 'MainApp.model.PlModel',
 			//model: 'MainApp.model.PlModel',
 			proxy: {
