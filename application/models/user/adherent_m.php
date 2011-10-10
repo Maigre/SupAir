@@ -13,10 +13,10 @@ class Adherent_m extends Entity_m {
         $this->table('userAdherent');
 		
 		//Declaration des champs
-		$this->field('user-famille')->related()->required();
-		$this->field('user-statut')->related()->required();
-		$this->field('nom')->required();
-		$this->field('prenom')->required();
+		$this->field('userFamille')->related()->required();
+		$this->field('userStatut')->related()->required();
+		$this->field('nom')->required()->type('upper');
+		$this->field('prenom')->required()->type('upword');
 		$this->field('sexe')->type('bool');
 		$this->field('naissance')->type('date');
 		$this->field('sante')->type('bool');
@@ -26,8 +26,8 @@ class Adherent_m extends Entity_m {
 		$this->field('portable');
 		$this->field('fixe');
 		$this->field('bureau');
-		$this->field('user-situationfam')->related();
-		$this->field('user-codesociopro')->related();
+		$this->field('userSituationfam')->related();
+		$this->field('userCodesociopro')->related();
 		$this->field('employeur');
 		$this->field('allocataire')->type('bool');
 		$this->field('noalloc')->type('int');

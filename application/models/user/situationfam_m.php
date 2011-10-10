@@ -2,7 +2,7 @@
 
 //require_once(APPPATH.'models/entity.php');
 
-class Famille_m extends Entity_m {
+class Situationfam_m extends Entity_m {
 	
 	function __construct($id=false)
 	{
@@ -10,17 +10,13 @@ class Famille_m extends Entity_m {
         parent::__construct($id);	
         
         //Table
-        $this->table('userFamille');
+        $this->table('userSituationfam');
 		
 		//Declaration des champs
-		$this->field('adresse1')->required();
-		$this->field('adresse2');
-		$this->field('ville')->related()->def(1)->required();
-		$this->field('ext')->type('bool');
-		$this->field('qf')->type('int');
+		$this->field('nom')->required();
 		
 		// Errors
-		$this->error['notfound'] = 'Famille introuvable';
+		$this->error['notfound'] = 'Situation familiale introuvable';
 		
 		//load bean
 		$this->load($id);

@@ -2,7 +2,9 @@
 
 class Entity_m extends CI_Model {
 
-	protected $table;
+	private $debug = true;
+	
+	public $table;
     protected $bean = null;
     protected $fields = array();
 	protected $error = array();
@@ -14,8 +16,17 @@ class Entity_m extends CI_Model {
 	}
 
 	function load($id=false)
-	{
-		if ($id) $this->bean = R::load($this->table,(int) $id);
+	{		
+		//creer la table si inexistante
+		if (($this->debug) and (!$this->db->table_exists($this->table)))
+		{
+			$this->dBean();
+			R::store($this->bean);
+			R::trash($this->bean);
+		}
+
+		//charger un bean ou le bean par defaut
+		if (is_numeric($id) and ($id > 0)) $this->bean = R::load($this->table,(int) $id);
 		if (!isset($this->bean->id)) $this->dBean();
 	}
 	
@@ -48,8 +59,11 @@ class Entity_m extends CI_Model {
 	{
 		foreach($this->fields as $n=>$fi) 
 		{	
-			if ($fi->relatedTo) {if (isset($data[$n.'_id'])) $this->bean->{$n} = R::load($fi->relatedTo,(int) $data[$n.'_id']);}
-			else if (isset($data[$n])) $this->bean->{$n} = $data[$n];
+			if ($n != 'id')
+			{
+				if ($fi->relatedTo) {if (isset($data[$n.'_id'])) $this->bean->{$n} = R::load($fi->relatedTo,(int) $data[$n.'_id']);}
+				else if (isset($data[$n])) $this->bean->{$n} = $data[$n];
+			}
 		}
 	}
 	
@@ -61,6 +75,8 @@ class Entity_m extends CI_Model {
 			
 			if ($fi->type == 'bool') $this->bean->{$n} = (bool) $this->bean->{$n};
 			if ($fi->type == 'float') $this->bean->{$n} = str_replace(',','.',$this->bean->{$n});
+			if ($fi->type == 'upper') $this->bean->{$n} = strtoupper(',','.',$this->bean->{$n});
+			if ($fi->type == 'upword') $this->bean->{$n} = ucwords($this->bean->{$n});
 		}
 	}
 	
@@ -70,9 +86,25 @@ class Entity_m extends CI_Model {
 		
 		foreach($this->fields as $n=>$fi) 
 		{		
-			if (($fi->rule == 'notempty') or $fi->required) {if($fi->relatedTo) {if(!isset($this->bean->{$n}->id)) $error[$n][] = 'empty'; elseif (!$this->bean->{$n}) $error[$n][] = 'empty';}}
-			if (($fi->type == 'int') or ($fi->type == 'float')) {if (!is_numeric($this->bean->{$n})) $error[$n][] = 'notnumeric';}
-			if (($fi->type == 'date') and ($this->bean->{$n})) {list($y,$m,$d) = explode('-',$this->bean->{$n}); if (!checkdate($m,$d,$y)) $error[$n][] = 'notdate';}
+			if (($fi->rule == 'notempty') or $fi->required) 
+			{
+				if($fi->relatedTo) 
+				{
+					if(!isset($this->bean->{$n}->id)) $error[$n][] = 'empty'; 
+					elseif (!$this->bean->{$n}) $error[$n][] = 'empty';
+				}
+			}
+			if (($fi->type == 'int') or ($fi->type == 'float')) 
+			{
+				if (!is_numeric($this->bean->{$n})) $error[$n][] = 'notnumeric';
+				else if ($fi->type == 'int') $this->bean->{$n} = (int) $this->bean->{$n};
+				else if ($fi->type == 'float') $this->bean->{$n} = (float) $this->bean->{$n};
+			}
+			if (($fi->type == 'date') and ($this->bean->{$n})) 
+			{
+				list($y,$m,$d) = explode('-',$this->bean->{$n}); 
+				if (!checkdate($m,$d,$y)) $error[$n][] = 'notdate';
+			}
 		}
 		
 		if (!$error) return true;
@@ -84,8 +116,15 @@ class Entity_m extends CI_Model {
 		$this->format();
 		$validation = $this->valid();
 		
-		if ($validation === true) return R::store($this->bean);
-		else return $validation;
+		if ($validation === true) 
+		{
+			R::store($this->bean);
+			$out['success'] = true;
+			return $out;
+		}
+		else $validation['succes'] = false;
+		
+		return $validation;
 	}
 		
 	function getBean($id=null)
@@ -174,6 +213,7 @@ class Field {
 	function required()
 	{
 		$this->required = true;
+		return $this;
 	}
 	
 	function def($value=null)
