@@ -70,7 +70,7 @@ class Entity_m extends CI_Model {
 		
 		foreach($this->fields as $n=>$fi) 
 		{		
-			if ($fi->rule == 'notempty') {if($fi->relatedTo) {if(!$this->bean->{$n}->id) $error[$n][] = 'empty'; elseif (!$this->bean->{$n}) $error[$n][] = 'empty';}}
+			if (($fi->rule == 'notempty') or $fi->required) {if($fi->relatedTo) {if(!isset($this->bean->{$n}->id)) $error[$n][] = 'empty'; elseif (!$this->bean->{$n}) $error[$n][] = 'empty';}}
 			if (($fi->type == 'int') or ($fi->type == 'float')) {if (!is_numeric($this->bean->{$n})) $error[$n][] = 'notnumeric';}
 			if (($fi->type == 'date') and ($this->bean->{$n})) {list($y,$m,$d) = explode('-',$this->bean->{$n}); if (!checkdate($m,$d,$y)) $error[$n][] = 'notdate';}
 		}
@@ -156,6 +156,7 @@ class Field {
 	var $value = null;
 	var $type = 'str';
 	var $rule = null;
+	var $required = false;
 	
 	function __construct($name)
 	{
@@ -168,6 +169,11 @@ class Field {
 		elseif ($this->name) $this->relatedTo = $this->name;
 		$this->type = 'related';
 		return $this;
+	}
+	
+	function required()
+	{
+		$this->required = true;
 	}
 	
 	function def($value=null)

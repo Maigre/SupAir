@@ -10,12 +10,12 @@ class Famille_m extends Entity_m {
         parent::__construct($id);	
         
         //Table
-        $this->table('user_famille');
+        $this->table('userFamille');
 		
 		//Declaration des champs
-		$this->field('adresse1')->chk('notempty')->def('eheh');
+		$this->field('adresse1')->required();
 		$this->field('adresse2');
-		$this->field('ville')->related()->def(1)->chk('notempty');
+		$this->field('ville')->related()->def(1)->required();
 		$this->field('ext')->type('bool');
 		$this->field('qf')->type('int');
 		
