@@ -125,5 +125,32 @@ Ext.define('MainApp.view.AdherentDisplay', {
 	],
 	initComponent: function() {
 		this.callParent(arguments);
+		Ext.define('Adherent', {
+			extend: 'Ext.data.Model',
+			fields: ['id', 'nom','prenom']
+		});
+
+		Ext.define('MainApp.store.AdherentStore', {
+			extend: 'Ext.data.Store',
+			model: 'Adherent',
+			//requires: 'MainApp.model.PlModel',
+			//model: 'MainApp.model.PlModel',
+			proxy: {
+				type: 'ajax',
+				api: {
+					read: BASE_URL+'adherent/show/1'    		
+				},
+				actionMethods : {read: 'POST'},   	
+				reader: {
+					type: 'json',
+					root: 'data',
+					totalProperty: 'size',
+					successProperty: 'success'
+				}
+			},
+			baseParams: {
+				idPl:'' 
+			}
+		});
 	}
 });

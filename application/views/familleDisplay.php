@@ -106,5 +106,37 @@ Ext.define('MainApp.view.FamilleDisplay', {
 	],
 	initComponent: function() {
 		this.callParent(arguments);
+		
+		Ext.define('Famille', {
+			extend: 'Ext.data.Model',
+			fields: ['id', 'adresse1','adresse2']
+		});
+		
+		this.famillestore= new Ext.data.Store({
+			storeId: 'famillestore',
+			model: 'Famille',
+			//requires: 'MainApp.model.PlModel',
+			//model: 'MainApp.model.PlModel',
+			proxy: {
+				type: 'ajax',
+				api: {
+					read: BASE_URL+'famille/show/1'    		
+				},
+				actionMethods : {read: 'POST'},   	
+				reader: {
+					type: 'json',
+					root: 'data',
+					totalProperty: 'size',
+					successProperty: 'success'
+				}
+			},
+			baseParams: {
+				idPl:'' 
+			}
+		});
+		
+		
+		var nbstore = Ext.data.StoreManager.getCount();
+		console.info(nbstore);
 	}
 });

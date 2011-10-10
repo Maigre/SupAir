@@ -22,9 +22,23 @@ Ext.define('MainApp.view.menu', {
 				title: 'Adherents',
 				iconCls: 'user',
 				items:[{
+					xtype: 'button',
+					text : 'Nouvelle famille',
+					listeners: {
+						click: function() {
+							console.info('ok');
+							familleform=Ext.getCmp('familleform');
+							if (!familleform){
+								familleform= new Ext.widget('familleform');
+							}
+							famillecontainer=Ext.getCmp('famillecontainer');
+							famillecontainer.removeAll(false);
+							famillecontainer.add(familleform);
+						}		
+					}			
+				},{
 					xtype:'searchbar'
-				}]
-								
+				}]			
 			},{
 				xtype: 'panel',
 				id: 'menuactivitepanel',

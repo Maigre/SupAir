@@ -13,6 +13,7 @@ Ext.define('MainApp.view.AdherentMain', {
 	id    : 'adherentmain',
 	items: [{
 		xtype: 'panel',
+		id: 'famillecontainer',
 		layout: {
 			type: 'vbox',
 			flex: 'even'
@@ -22,6 +23,7 @@ Ext.define('MainApp.view.AdherentMain', {
         	xtype: 'familledisplay'
         },{
         	xtype: 'panel',
+        	id: 'adherentcontainer',
         	flex: 1,
         	layout: 'accordion',
         	height: 200,

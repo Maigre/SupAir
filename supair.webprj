@@ -1809,5 +1809,6 @@
     <item url="application/views/adherentDisplay.php" uploadstatus="1" />
     <item url="application/views/adherentMain.php" uploadstatus="1" />
     <item url="application/views/familleDisplay.php" uploadstatus="1" />
+    <item url="application/views/familleForm.php" />
   </project>
 </webproject>
