@@ -30,10 +30,6 @@
     background: url(../images/icons/cake.png) no-repeat !important;  
 } 
 
-.pig{  
-    background: url(../images/icons/pig.png) no-repeat !important;  
-}
-
 .piano{  
     background: url(../images/icons/piano.png) no-repeat !important;  
 } 

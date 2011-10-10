@@ -8,7 +8,7 @@
 		
 		<!-- ExtJS 4 -->
         <link rel="stylesheet" type="text/css" href="interface/ext4/resources/css/ext-all.css" />
-        <script type="text/javascript" src="interface/ext4/ext-all.js"></script>
+        <script type="text/javascript" src="interface/ext4/ext-all-debug.js"></script>
         <script type="text/javascript" src="interface/ext4/locale/ext-lang-fr.js"></script>
         <script type="text/javascript">Ext.BLANK_IMAGE_URL = 'interface/ext4/resources/s.gif';</script>
         
