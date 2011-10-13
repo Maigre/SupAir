@@ -36,6 +36,8 @@ class CrudControl extends CI_Controller {
 	
 	function listAll()
 	{
-		echo json_encode(R::find($this->load_model()->table));
+		$list = R::find($this->load_model()->table);
+		foreach($list as $l) $out[] = $l->export();
+		echo json_encode($out);
 	}
 }

@@ -72,12 +72,15 @@ class Entity_m extends CI_Model {
 	{
 		foreach($this->fields as $n=>$fi) 
 		{
-			$this->bean->{$n} = trim($this->bean->{$n});
-			
-			if ($fi->type == 'bool') $this->bean->{$n} = (bool) $this->bean->{$n};
-			if ($fi->type == 'float') $this->bean->{$n} = str_replace(',','.',$this->bean->{$n});
-			if ($fi->type == 'upper') $this->bean->{$n} = strtoupper(',','.',$this->bean->{$n});
-			if ($fi->type == 'upword') $this->bean->{$n} = ucwords($this->bean->{$n});
+			if (!$fi->relatedTo)
+			{
+				$this->bean->{$n} = trim($this->bean->{$n});
+				
+				if ($fi->type == 'bool') $this->bean->{$n} = (bool) $this->bean->{$n};
+				if ($fi->type == 'float') $this->bean->{$n} = str_replace(',','.',$this->bean->{$n});
+				if ($fi->type == 'upper') $this->bean->{$n} = strtoupper($this->bean->{$n});
+				if ($fi->type == 'upword') $this->bean->{$n} = ucwords($this->bean->{$n});
+			}
 		}
 	}
 	
@@ -119,7 +122,7 @@ class Entity_m extends CI_Model {
 		
 		if ($validation === true) 
 		{
-			R::store($this->bean);
+			$out['id'] = R::store($this->bean);
 			$out['success'] = true;
 			return $out;
 		}

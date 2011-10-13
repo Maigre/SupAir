@@ -26,14 +26,20 @@ Ext.define('MainApp.view.menu', {
 					text : 'Nouvelle famille',
 					listeners: {
 						click: function() {
-							console.info('ok');
+							
+							nouvellefamilleform=Ext.getCmp('nouvellefamilleform');
+							if (!nouvellefamilleform){
+								nouvellefamilleform=Ext.widget('nouvellefamilleform');
+							}
+							nouvellefamilleform.show();
+							/*console.info('ok');
 							familleform=Ext.getCmp('familleform');
 							if (!familleform){
 								familleform= new Ext.widget('familleform');
 							}
 							famillecontainer=Ext.getCmp('famillecontainer');
 							famillecontainer.removeAll();
-							famillecontainer.add(familleform);
+							famillecontainer.add(familleform);*/
 						}		
 					}			
 				},{
