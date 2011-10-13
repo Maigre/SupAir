@@ -1,3 +1,31 @@
+Ext.define('Adherent', {
+	extend: 'Ext.data.Model',
+	fields: ['id', 'nom','prenom','noalloc','sexe','naissance','sante','svsp','autosortie','email','portable','fixe','bureau']
+});
+
+adherentstore= new Ext.data.Store({
+	storeId: 'adherentstore',
+	model: 'Adherent',
+	//requires: 'MainApp.model.PlModel',
+	//model: 'MainApp.model.PlModel',
+	proxy: {
+		type: 'ajax',
+		api: {
+			read: BASE_URL+'user/adherent/show/1'    		
+		},
+		actionMethods : {read: 'POST'},   	
+		reader: {
+			type: 'json',
+			root: 'data',
+			totalProperty: 'size',
+			successProperty: 'success'
+		}
+	},
+	baseParams: {
+		idPl:'' 
+	}
+});
+
 Ext.define('MainApp.view.AdherentDisplay', {
 	extend		 : 'Ext.form.Panel',
 	alias 		 : 'widget.adherentdisplay',
@@ -72,13 +100,13 @@ Ext.define('MainApp.view.AdherentDisplay', {
 				//hideLabel : true,		
 				name      : 'svsp',
 				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-				cls       : 'pig',
+				cls       : 'pigyes',
 				anchor	  : '96%'
 			},{
 				xtype: 'displayfield',
 				fieldLabel: 'Allocataire',
 				//hideLabel : true,		
-				name      : 'svsp',
+				name      : 'alloc',
 				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
 				cls       : 'yes',
 				anchor	  : '96%'
@@ -100,7 +128,7 @@ Ext.define('MainApp.view.AdherentDisplay', {
 				fieldLabel: 'N&deg;',
 				labelWidth: 25,
 				//hideLabel : true,		
-				name      : 'noallocataire',
+				name      : 'noalloc',
 				value	  : '0458392039',
 				//cls       : 'grasyes',
 				anchor	  : '96%'
@@ -125,5 +153,6 @@ Ext.define('MainApp.view.AdherentDisplay', {
 	],
 	initComponent: function() {
 		this.callParent(arguments);
+		
 	}
 });

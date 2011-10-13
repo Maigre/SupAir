@@ -13,11 +13,12 @@ Ext.define('MainApp.view.AdherentMain', {
 	id    : 'adherentmain',
 	items: [{
 		xtype: 'panel',
+		id: 'famillecontainer',
 		layout: {
 			type: 'vbox',
 			flex: 'even'
 		},
-		width: '210',
+		width: '215',
 		items:[{
         	xtype: 'familledisplay'
         },{

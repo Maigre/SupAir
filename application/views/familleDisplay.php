@@ -32,17 +32,17 @@ Ext.define('MainApp.view.FamilleDisplay', {
 		cls       : 'house',
 		labelWidth: 20
 		},{
-		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-		//hideLabel : true,		
+		//fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+		hideLabel : true,		
 		name      : 'adresse2',
-		value	  : '64, bd des canuts',
-		cls       : 'house',
+		value	  : '3&egrav;me &eacute;tage',
+		//cls       : 'house',
 		labelWidth: 20
 		},{
 		fieldLabel: '',
 		hideLabel : true,		
-		name      : 'ville',
-		value	  : 'Lyon'
+		name      : 'villedisplay',
+		value	  : 'Lyon 69001'
 		//cls       : 'red'
 		},{
 		xtype: 'container',
@@ -82,12 +82,20 @@ Ext.define('MainApp.view.FamilleDisplay', {
 				xtype: 'displayfield',
 				fieldLabel: 'CCAS',
 				//hideLabel : true,		
-				name      : 'CCAS',
-				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+				name      : 'ccas',
+				value	  : '',
 				cls       : 'yes',
 				anchor	  : '96%',
-				labelWidth: 40
-				},{
+				labelWidth: 40,
+				tpl		  : new Ext.XTemplate(
+					'<tpl if="ccas == 0;">',
+					'no',
+					'</tpl>',
+					'<tpl if="ccas == 1;">',
+					'yes',
+					'</tpl>'
+				)
+			},{
 				xtype: 'displayfield',
 				fieldLabel: 'Q.F',
 				//hideLabel : true,		
@@ -97,14 +105,43 @@ Ext.define('MainApp.view.FamilleDisplay', {
 				labelWidth: 40
 				//cls       : 'yes'
 			}]}]},{
-			fieldLabel: 'Groupe',
-			//hideLabel : true,		
-			name      : 'groupe',
-			value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-			cls       : 'yes'
-		}
+				fieldLabel: 'Groupe',
+				//hideLabel : true,		
+				name      : 'groupe',
+				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+				cls       : 'yes'
+			}
 	],
 	initComponent: function() {
 		this.callParent(arguments);
+		
+		Ext.define('Famille', {
+			extend: 'Ext.data.Model',
+			fields: ['id', 'adresse1','adresse2','ext','qf','bonv','ccas','userVille_nom','userVille_cp',{name:'villedisplay', mapping: 'userVille_nom + " " + obj.userVille_cp'},]
+		});
+		
+		this.famillestore= new Ext.data.Store({
+			storeId: 'famillestore',
+			model: 'Famille',
+			//requires: 'MainApp.model.PlModel',
+			//model: 'MainApp.model.PlModel',
+			proxy: {
+				type: 'ajax',
+				api: {
+					read: BASE_URL+'user/famille/show/1'    		
+				},
+				actionMethods : {read: 'POST'},   	
+				reader: {
+					type: 'json',
+					root: 'data',
+					totalProperty: 'size',
+					successProperty: 'success'
+				}
+			},
+			baseParams: {
+				idPl:'' 
+			}
+		});
+
 	}
 });

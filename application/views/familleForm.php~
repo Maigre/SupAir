@@ -1,16 +1,16 @@
-Ext.define('MainApp.view.FamilleDisplay', {
+Ext.define('MainApp.view.FamilleForm', {
 	extend		 : 'Ext.form.Panel',
-	alias 		 : 'widget.familledisplay',
-	id           : 'familledisplay',
+	alias 		 : 'widget.familleform',
+	id           : 'familleform',
 	frame 		 : true,
-	height		 : 170,
-	ui			 : 'bubble',
+	height		 : 220,
+	//ui			 : 'bubble',
 	//width 		 : 240,
 	x     		 : 0,
 	y     		 : 0,
-	url   		 : BASE_URL+'data/plcontrol/save',
+	url   		 : BASE_URL+'user/famille/save',
 	frame 		 : true,
-	title 		 : 'Famille Byles',
+	title 		 : 'Nouvelle Famille',
 	iconCls 	 : 'group',
 	bodyStyle    : 'padding:5px 5px 0',
 	method       : 'post',
@@ -20,7 +20,7 @@ Ext.define('MainApp.view.FamilleDisplay', {
 		labelWidth: 60,
 		allowBlank:false
 	},
-	defaultType  : 'displayfield',
+	defaultType  : 'textfield',
 	/*defaults     : {
 		anchor: '100%'
 	},*/
@@ -41,7 +41,7 @@ Ext.define('MainApp.view.FamilleDisplay', {
 		},{
 		fieldLabel: '',
 		hideLabel : true,		
-		name      : 'ville',
+		name      : 'userVille',
 		value	  : 'Lyon'
 		//cls       : 'red'
 		},{
@@ -55,7 +55,7 @@ Ext.define('MainApp.view.FamilleDisplay', {
 			//height: 15,		
 			items : 
 			[{
-				xtype: 'displayfield',
+				xtype: 'textfield',
 				fieldLabel: 'Ext&eacute;rieur',
 				//hideLabel : true,		
 				name      : 'exterieur',
@@ -64,7 +64,7 @@ Ext.define('MainApp.view.FamilleDisplay', {
 				anchor	  : '96%',
 				labelWidth: 80
 				},{
-				xtype: 'displayfield',
+				xtype: 'textfield',
 				fieldLabel: 'Bon vacances',
 				//hideLabel : true,		
 				name      : 'bonvacance',
@@ -79,7 +79,7 @@ Ext.define('MainApp.view.FamilleDisplay', {
 			//height: 15,		
 			items : 
 			[{
-				xtype: 'displayfield',
+				xtype: 'textfield',
 				fieldLabel: 'CCAS',
 				//hideLabel : true,		
 				name      : 'CCAS',
@@ -88,10 +88,10 @@ Ext.define('MainApp.view.FamilleDisplay', {
 				anchor	  : '96%',
 				labelWidth: 40
 				},{
-				xtype: 'displayfield',
+				xtype: 'textfield',
 				fieldLabel: 'Q.F',
 				//hideLabel : true,		
-				name      : 'Q.F',
+				name      : 'qf',
 				value	  : '150',
 				anchor	  : '96%',
 				labelWidth: 40
@@ -104,39 +104,27 @@ Ext.define('MainApp.view.FamilleDisplay', {
 			cls       : 'yes'
 		}
 	],
+	buttons: [{
+        text: 'Submit',
+        formBind: true, //only enabled once the form is valid
+        disabled: true,
+        handler: function() {
+            var form = this.up('form').getForm();
+            form.url = BASE_URL+'user/famille/save';
+            console.info(form);
+            if (form.isValid()) {
+                form.submit({
+                    success: function(form, action) {
+                       Ext.Msg.alert('Success', action.result.msg);
+                    },
+                    failure: function(form, action) {
+                        Ext.Msg.alert('Failed', action.result.msg);
+                    }
+                });
+            }
+        }
+    }],
 	initComponent: function() {
-		this.callParent(arguments);
-		
-		Ext.define('Famille', {
-			extend: 'Ext.data.Model',
-			fields: ['id', 'adresse1','adresse2']
-		});
-		
-		this.famillestore= new Ext.data.Store({
-			storeId: 'famillestore',
-			model: 'Famille',
-			//requires: 'MainApp.model.PlModel',
-			//model: 'MainApp.model.PlModel',
-			proxy: {
-				type: 'ajax',
-				api: {
-					read: BASE_URL+'famille/show/1'    		
-				},
-				actionMethods : {read: 'POST'},   	
-				reader: {
-					type: 'json',
-					root: 'data',
-					totalProperty: 'size',
-					successProperty: 'success'
-				}
-			},
-			baseParams: {
-				idPl:'' 
-			}
-		});
-		
-		
-		var nbstore = Ext.data.StoreManager.getCount();
-		console.info(nbstore);
+		this.callParent(arguments);		
 	}
 });

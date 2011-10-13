@@ -18,13 +18,15 @@ class Famille_m extends Entity_m {
 		$this->field('userVille')->related()->def(1)->required();
 		$this->field('ext')->type('bool');
 		$this->field('qf')->type('int');
+		$this->field('ccas')->type('bool');
+		$this->field('bonv')->type('bool');
 		
 		// Errors
 		$this->error['notfound'] = 'Famille introuvable';
 		
 		//load bean
 		$this->load($id);
-	} 
+	}
 	
 	
 }

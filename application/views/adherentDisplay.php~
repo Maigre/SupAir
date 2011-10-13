@@ -8,7 +8,7 @@ Ext.define('MainApp.view.AdherentDisplay', {
 	x     		 : 0,
 	y     		 : 0,
 	url   		 : BASE_URL+'data/plcontrol/save',
-	frame 		 : true,
+	frame 		 : false,
 	title 		 : 'Junior Byles - R&eacute;f&eacute;rent',
 	iconCls 	 : 'user',
 	bodyStyle    : 'padding:5px 5px 0',
@@ -125,5 +125,32 @@ Ext.define('MainApp.view.AdherentDisplay', {
 	],
 	initComponent: function() {
 		this.callParent(arguments);
+		Ext.define('Adherent', {
+			extend: 'Ext.data.Model',
+			fields: ['id', 'nom','prenom']
+		});
+
+		Ext.define('MainApp.store.AdherentStore', {
+			extend: 'Ext.data.Store',
+			model: 'Adherent',
+			//requires: 'MainApp.model.PlModel',
+			//model: 'MainApp.model.PlModel',
+			proxy: {
+				type: 'ajax',
+				api: {
+					read: BASE_URL+'adherent/show/1'    		
+				},
+				actionMethods : {read: 'POST'},   	
+				reader: {
+					type: 'json',
+					root: 'data',
+					totalProperty: 'size',
+					successProperty: 'success'
+				}
+			},
+			baseParams: {
+				idPl:'' 
+			}
+		});
 	}
 });

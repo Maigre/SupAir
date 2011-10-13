@@ -1,4 +1,6 @@
-
+.bigtext{
+	font-size:30px;
+}
 .tableau_membre {
 	font-size:11px;
 	width: 100%;
@@ -27,7 +29,10 @@ hr {
 	line-height:16px !important;
 }
 
-.pig div {
+.pigyes {
+	background: url(../images/icons/pig.png) no-repeat !important;  
+}
+.pigyes div {
 	background: url(../images/icons/accept.png) no-repeat !important;  
 }
 
@@ -44,10 +49,24 @@ hr {
 	background: url(../images/icons/accept.png) no-repeat !important;  
 }
 
+.pill {
+	background: url(../images/icons/pill.png) no-repeat !important;  
+}
+
 .pillyes {
 	background: url(../images/icons/pill.png) no-repeat !important;  
 }
 .pillyes div {
 	background: url(../images/icons/accept.png) no-repeat !important;  
+}
+
+#loading .loading-indicator {
+background: url(../images/icons/user.png) no-repeat;
+color:      #555;
+font:       bold 13px tahoma,arial,helvetica;
+padding:    8px 42px;
+margin:     0;
+text-align: center;
+height:     auto;
 }
 

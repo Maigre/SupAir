@@ -4,21 +4,26 @@
     <itemcursorpositions>
       <item line="0" column="0" url="application/views/mainview.php" />
       <item line="0" column="0" url="application/controllers/welcome.php" />
-      <item line="6" column="52" url="application/views/Application.php" />
+      <item line="0" column="0" url="application/views/Application.php" />
       <item line="0" column="0" url="application/config/config.php" />
       <item line="0" column="0" url="application/views/menu.php" />
       <item line="0" column="0" url="application/views/searchBar.php" />
-      <item line="9" column="57" url="application/views/view/Viewport.js" />
-      <item line="11" column="23" url="application/views/familleDisplay.php" />
-      <item line="19" column="19" url="application/views/adherentMain.php" />
-      <item line="73" column="79" url="interface/css/icons.css" />
-      <item line="10" column="24" url="application/views/adherentDisplay.php" />
-      <item line="47" column="40" url="interface/css/viewport.css" />
+      <item line="0" column="0" url="application/views/view/Viewport.js" />
+      <item line="0" column="0" url="application/views/familleDisplay.php" />
+      <item line="0" column="0" url="application/views/adherentMain.php" />
+      <item line="0" column="0" url="interface/css/icons.css" />
+      <item line="0" column="0" url="application/views/adherentDisplay.php" />
+      <item line="63" column="52" url="interface/css/viewport.css" />
+      <item line="131" column="48" url="application/views/nouvelleFamilleForm.php" />
+      <item line="130" column="20" url="application/views/adherentForm.php" />
     </itemcursorpositions>
     <treestatus>
       <openfolder url="application" />
       <openfolder url="application/config" />
       <openfolder url="application/controllers" />
+      <openfolder url="application/controllers/user" />
+      <openfolder url="application/models" />
+      <openfolder url="application/models/user" />
       <openfolder url="application/views" />
       <openfolder url="application/views/view" />
       <openfolder url="interface" />

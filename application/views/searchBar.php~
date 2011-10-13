@@ -14,6 +14,22 @@ Ext.define('MainApp.view.tools.SearchBar', {
 	queryParam: 'text_search',
 	typeAheadDelay : 250,
 	hideTrigger: true,
+	listeners:{
+		keypress: {fn : function(){
+			console.info('ok');
+			var famillestore = Ext.getStore('famillestore');
+			famillestore.load();
+			
+			famillestore.on('load', function(database){
+				var familledisplay = Ext.getCmp('familledisplay');
+				if (!familledisplay){
+					var familledisplay = Ext.widget('familledisplay');
+				}	
+				var rec= database.getAt(0);
+				familledisplay.getForm().loadRecord(rec);				
+			});
+		}}
+	},
 	
 	initComponent: function() {
 		var searchstore = Ext.create('Ext.data.Store', {

@@ -22,9 +22,29 @@ Ext.define('MainApp.view.menu', {
 				title: 'Adherents',
 				iconCls: 'user',
 				items:[{
+					xtype: 'button',
+					text : 'Nouvelle famille',
+					listeners: {
+						click: function() {
+							
+							nouvellefamilleform=Ext.getCmp('nouvellefamilleform');
+							if (!nouvellefamilleform){
+								nouvellefamilleform=Ext.widget('nouvellefamilleform');
+							}
+							nouvellefamilleform.show();
+							/*console.info('ok');
+							familleform=Ext.getCmp('familleform');
+							if (!familleform){
+								familleform= new Ext.widget('familleform');
+							}
+							famillecontainer=Ext.getCmp('famillecontainer');
+							famillecontainer.removeAll();
+							famillecontainer.add(familleform);*/
+						}		
+					}			
+				},{
 					xtype:'searchbar'
-				}]
-								
+				}]			
 			},{
 				xtype: 'panel',
 				id: 'menuactivitepanel',

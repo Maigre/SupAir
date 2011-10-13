@@ -27,8 +27,8 @@ Ext.define('MainApp.view.Viewport', {
 			collapsible: true,
 			html: 'Information goes here',
 			split: true,
-			height: 100,
-			minHeight: 100
+			height: 50,
+			minHeight: 50
 		}, {
 			region: 'east',
 			title: 'East Panel',

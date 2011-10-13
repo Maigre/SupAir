@@ -14,7 +14,6 @@
         <script type="text/javascript" src="interface/ext4/locale/ext-lang-fr.js"></script>
         <script type="text/javascript">Ext.BLANK_IMAGE_URL = 'interface/ext4/resources/s.gif';</script>
      	<script type="text/javascript">BASE_URL = '<?=base_url()?>index.php/';</script>
-
      	<script type="text/javascript" src="application/views/view/Viewport.js"></script>
      	<link rel="stylesheet" type="text/css" href="interface/css/viewport.css" />
      	<link rel="stylesheet" type="text/css" href="interface/css/icons.css" />
@@ -34,10 +33,9 @@
 			
 			//load viewport
 			Main.Launch.init();
-			
+
 			//check if already logged in and display welcome message or login window
-			//MainApp.Login.ask();				  
-				
+			//MainApp.Login.ask();				  			
 		});
 		</script>
 
