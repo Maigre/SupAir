@@ -270,6 +270,11 @@ $config['cookie_domain']	= "";
 $config['cookie_path']		= "/";
 $config['cookie_secure']	= FALSE; //make it fail on classic HTTP !!! only enable on HTTPS !
 
+/*AutoDetection*/
+if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443)
+	$config['cookie_secure']	= TRUE;
+
+
 /*
 |--------------------------------------------------------------------------
 | Global XSS Filtering

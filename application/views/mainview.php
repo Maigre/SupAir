@@ -37,9 +37,6 @@
 			
 			//check if already logged in and display welcome message or login window
 			//MainApp.Login.ask();				  
-		
-			  Ext.Msg.alert('Hello', 'My hello world with Extjs'); 
-
 				
 		});
 		</script>

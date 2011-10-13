@@ -10,32 +10,43 @@ class CrudControl extends CI_Controller {
 		parent::__construct();
 	}
 	
-	private function load_model($id=false)
+	//permet de charger un model Entity (par defaut celui portant le meme nom que $this->type du controlleur)
+	protected function Entity($id=false,$model=false,$folder=false)
 	{
-		$class_model = $this->type.'_m';
-		$this->load->model($this->folder.'/'.$class_model);
+		//by default load the model corresponding to the controler type
+		//also usable to load another model
+		
+		if ($model) $class_model = $model.'_m';
+		else $class_model = $this->type.'_m';
+		
+		if ($folder) $path = $folder;
+		else $path = $this->folder;
+		
+		$this->Entity->model($this->folder.'/'.$class_model);
 		
 		return new $class_model($id);
 	}
 		
 	function show($id=false)
 	{	
-		echo json_encode($this->load_model($id)->show());
+		jse($this->Entity($id)->show());
 	}
 	
 	function edit($id=false)
 	{
-		echo json_encode($this->load_model($id)->edit());
+		jse($this->Entity($id)->edit());
 	}
 	
-	function save()
+	function save($id=false)
 	{
 		$results = $this->input->post(); 		
-		echo json_encode($this->load_model($id)->set($results)->save());
+		jse($this->Entity($id)->set($results)->save());
 	}
 	
 	function listAll()
 	{
-		echo json_encode(R::find($this->load_model()->table));
+		$all = R::find($this->Entity()->table);
+		foreach ($all as $a) $out[] = $a->export();
+		jse($out);
 	}
 }
