@@ -90,14 +90,8 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 			formBind: true, //only enabled once the form is valid
 			//disabled: true,
 			handler: function() {
-				Ext.getCmp('familleform').submit({
-                    success: function(form, action) {
-                       Ext.Msg.alert('Success', action.result.msg);
-                    },
-                    failure: function(form, action) {
-                        Ext.Msg.alert('Failed', action.result.msg);
-                    }
-                });
+				Ext.getCmp('familleform').submit
+				console.info('enregistrer maintenant');
 			}
 		}
 	}],		

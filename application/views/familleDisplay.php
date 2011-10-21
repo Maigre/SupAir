@@ -87,7 +87,7 @@ Ext.define('MainApp.view.FamilleDisplay', {
 				cls       : 'yes',
 				anchor	  : '96%',
 				labelWidth: 40,
-				tpl		  : new Ext.XTemplate(
+				renderTpl		  : new Ext.XTemplate(
 					'<tpl if="ccas == 0;">',
 					'no',
 					'</tpl>',
