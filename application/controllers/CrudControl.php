@@ -22,7 +22,8 @@ class CrudControl extends CI_Controller {
 		if ($folder) $path = $folder;
 		else $path = $this->folder;
 		
-		$this->Entity->model($this->folder.'/'.$class_model);
+		if (!isset($this->$class_model)) 
+			$this->load->model($this->folder.'/'.$class_model);
 		
 		return new $class_model($id);
 	}
