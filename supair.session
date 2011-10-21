@@ -13,21 +13,12 @@
       <item line="0" column="0" url="application/views/adherentMain.php" />
       <item line="0" column="0" url="interface/css/icons.css" />
       <item line="0" column="0" url="application/views/adherentDisplay.php" />
-      <item line="63" column="52" url="interface/css/viewport.css" />
-      <item line="131" column="48" url="application/views/nouvelleFamilleForm.php" />
-      <item line="130" column="20" url="application/views/adherentForm.php" />
+      <item line="0" column="0" url="interface/css/viewport.css" />
+      <item line="0" column="0" url="application/views/nouvelleFamilleForm.php" />
+      <item line="0" column="0" url="application/views/adherentForm.php" />
     </itemcursorpositions>
-    <treestatus>
-      <openfolder url="application" />
-      <openfolder url="application/config" />
-      <openfolder url="application/controllers" />
-      <openfolder url="application/controllers/user" />
-      <openfolder url="application/models" />
-      <openfolder url="application/models/user" />
-      <openfolder url="application/views" />
-      <openfolder url="application/views/view" />
-      <openfolder url="interface" />
-      <openfolder url="interface/css" />
-    </treestatus>
+    <uploadprofiles defaultProfile="@" >
+      <profile remote_host="" remote_port="" remote_path="" remote_protocol="ftp" user="" name="@" />
+    </uploadprofiles>
   </session>
 </webprojectsession>
