@@ -46,6 +46,14 @@
     background: url(../images/icons/palette.png) no-repeat !important;  
 } 
 
+.outils{
+	background: url(../images/icons/hammer_screwdriver.png) no-repeat !important;  
+}
+
+.calendrier{
+	background: url(../images/icons/calendar_1.png) no-repeat !important;  
+}
+
 .picture{  
     background: url(../images/icons/picture.png) no-repeat !important;  
 }

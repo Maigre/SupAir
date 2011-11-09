@@ -5,8 +5,8 @@ class Entity_m extends CI_Model {
 	private $debug = true;
 	
 	public $table;
-    protected $bean = null;
-    protected $fields = array();
+	protected $bean = null;
+	protected $fields = array();
 	protected $error = array();
 
 	function __construct()
@@ -115,7 +115,7 @@ class Entity_m extends CI_Model {
 				{
 					if($fi->relatedTo) 
 					{
-						if(!isset($this->bean->{$n}->id)) $error[$n][] = 'empty'; 
+						if(!isset($this->bean->{$n}->id) or (!($this->bean->{$n}->id>0))) $error[$n][] = 'empty'; 
 					}
 					elseif (!$this->bean->{$n}) $error[$n][] = 'empty';
 					
@@ -144,7 +144,7 @@ class Entity_m extends CI_Model {
 					$value = null;
 					if ($fi->relatedTo) 
 					{ 
-						if(!isset($this->bean->{$n}->id))
+						if(isset($this->bean->{$n}->id))
 							$value = $this->bean->{$n}->id;
 					}
 					elseif ($fi->type == 'date') $value = strtotime($this->bean->{$n});
@@ -173,7 +173,7 @@ class Entity_m extends CI_Model {
 		if ($validation === true) 
 		{
 			if (!$flashdata_store) $out['id'] = R::store($this->bean);
-			else $this->session->set_flashdata($flashdata_store,$this);
+			else $this->session->set_flashdata($flashdata_store,serialize($this->bean));
 			
 			$out['success'] = true;
 			return $out;
@@ -187,6 +187,11 @@ class Entity_m extends CI_Model {
 	{
 		if (!is_object($this->bean)) $this->load();
 		return $this->bean;
+	}
+	
+	function setBean($bean)
+	{
+		$this->bean = $bean;
 	}
 	
 	//ajoute des champs et leur proprietés de formatage et validation

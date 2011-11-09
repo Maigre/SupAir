@@ -44,8 +44,7 @@ class Adherent extends CrudControl {
 	//surcharge de la fonction save
 	function save($id=false)
 	{
-		$results = $this->input->post(); 
-		
+		$results = $this->input->post();
 		//normal save
 		if (($id) or ($results['userStatut_id'] != 1)) jse($this->Entity($id)->set($results)->save());
 		
@@ -53,7 +52,10 @@ class Adherent extends CrudControl {
 		else
 		{
 			// verification qu'une famille est bien en attente dans flashdata
-			$famille = $this->session->flashdata('newFamille');	
+			$this->load->model('user/famille_m');
+			$famille = new famille_m();
+			$famille->setBean(unserialize($this->session->flashdata('newFamille')));
+			
 			if ((!is_object($famille)) or ($famille->valid() !== true))
 			{
 				$out['success'] = false;
@@ -66,7 +68,8 @@ class Adherent extends CrudControl {
 			//ajoute une condition pour verifier que l'adherent sera bien referent
 			$referent = $this->Entity()->set($this->input->post());
 		
-			//validation en excluant le lien userFamille qui n'existe pas encore'
+			//validation en excluant le lien userFamille qui n'existe pas encore
+
 			$valid_referent = $referent->valid('userFamille');
 			if ($valid_referent === true)
 			{

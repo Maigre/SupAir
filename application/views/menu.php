@@ -24,22 +24,17 @@ Ext.define('MainApp.view.menu', {
 				items:[{
 					xtype: 'button',
 					text : 'Nouvelle famille',
+					iconCls: 'add',
 					listeners: {
 						click: function() {
 							
-							nouvellefamilleform=Ext.getCmp('nouvellefamilleform');
-							if (!nouvellefamilleform){
+							//nouvellefamilleform=Ext.getCmp('nouvellefamilleform');
+							//if (!nouvellefamilleform){
+								console.info('okwidget');
 								nouvellefamilleform=Ext.widget('nouvellefamilleform');
-							}
+							//}
 							nouvellefamilleform.show();
-							/*console.info('ok');
-							familleform=Ext.getCmp('familleform');
-							if (!familleform){
-								familleform= new Ext.widget('familleform');
-							}
-							famillecontainer=Ext.getCmp('famillecontainer');
-							famillecontainer.removeAll();
-							famillecontainer.add(familleform);*/
+							
 						}		
 					}			
 				},{
@@ -50,6 +45,38 @@ Ext.define('MainApp.view.menu', {
 				id: 'menuactivitepanel',
 				title: 'Activites',
 				iconCls: 'palette'								
+			},{
+				xtype: 'panel',
+				id: 'menuoutilspanel',
+				title: 'Outils',
+				iconCls: 'outils',
+				items:[{
+					xtype: 'button',
+					text : 'Calendrier',
+					iconCls: 'calendrier',
+					listeners: {
+						click: function() {
+							calendrier_window=Ext.widget('calendrier_window');
+							calendrier_window.show();
+						}		
+					}			
+				},{
+					xtype: 'button',
+					text : 'Nouvelle famille',
+					listeners: {
+						click: function() {
+														
+						}		
+					}			
+				},{
+					xtype: 'button',
+					text : 'Nouvelle famille',
+					listeners: {
+						click: function() {
+														
+						}		
+					}			
+				}]
 			}];
 					
 		me.callParent(arguments);

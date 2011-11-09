@@ -1,10 +1,12 @@
 Ext.ns('Main');
 
+
+
 Main.Launch = {
 	
 	init : function() {
 		
-		Ext.Loader.setConfig({enabled:true});		
+				
 		
 		Ext.create ('Ext.app.Application',{
 			name: 'MainApp',    

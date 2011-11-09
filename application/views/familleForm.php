@@ -4,7 +4,7 @@ villestore= new Ext.data.Store({
 	autoLoad: true,
 	proxy: {
 		type: 'ajax',
-		url: BASE_URL+'user/ville/listAll',  // url that will load data
+		url: BASE_URL+'user/ville/listAll/nom',  // url that will load data
 		actionMethods : {read: 'POST'},
 		reader : {
 			type : 'json',
@@ -14,10 +14,55 @@ villestore= new Ext.data.Store({
 	}          			
 });
 
+add_ville_window= new Ext.window.Window({
+	title	: 'Nouvelle Ville',
+	modal	: true,
+	items	: [{
+		xtype 	: 'form',
+		url		: BASE_URL+'user/ville/save',
+		items	: [{
+			xtype	: 'textfield',
+			fieldLabel	: 'Ville',
+			name	: 'nom'
+		},{
+			xtype	: 'textfield',
+			fieldLabel	: 'Code Postal',
+			name	: 'cp'
+		},{
+			xtype	: 'container',
+			layout	: {
+				type: 'hbox',
+				pack: 'end'
+			},
+			items : [{
+				xtype	: 'button',
+				text: 'Submit',
+				formBind: true, //only enabled once the form is valid
+				//disabled: true,
+				handler: function() {
+					var form = this.up('form').getForm();
+					if (form.isValid()) {
+					    form.submit({
+					        success: function(form, action) {
+					           Ext.Msg.alert('Info', 'Ville Sauvegard&eacute;e');
+					           //Close the window
+					           this.form.owner.ownerCt.close();
+					        },
+					        failure: function(form, action) {
+					            Ext.Msg.alert('Failed', action.result.msg);
+					        }
+					    });
+					}
+				}
+			}]
+		}]
+	}]
+});
+
 Ext.define('MainApp.view.FamilleForm', {
 	extend		 : 'Ext.form.Panel',
 	alias 		 : 'widget.familleform',
-	id           : 'familleform',
+	id           	 : 'familleform',
 	frame 		 : true,
 	height		 : 220,
 	//ui			 : 'bubble',
@@ -56,24 +101,34 @@ Ext.define('MainApp.view.FamilleForm', {
 			//cls       : 'house',
 			labelWidth: 20
 		},{
-			xtype	  : 'combobox',
-			store	  : 'villestore',
-			fieldLabel: '',
-			hideLabel : true,		
-			name      : 'userVille_id',
-			value	  : '',
-			/*listConfig: {
-                loadingText: 'Searching...',
-                emptyText: 'No matching posts found.',
-
-                // Custom rendering template for each item
-                getInnerTpl: function() {
-                    return '{nom} {cp}';
-                }
-            },*/
-			displayField: 'todisplay',
-			valueField: 'id'
-			//cls       : 'red'
+			xtype		: 'container',
+			anchor		: '96%',
+			layout		: 'hbox',
+			items		:[
+				{
+					flex	  	: 5,
+					xtype	  	: 'combobox',
+					typeAhead	: true,  //allow typing text to select value.
+					hideTrigger	: true,
+					store	  	: 'villestore',
+					fieldLabel	: '',
+					hideLabel 	: true,		
+					name      	: 'userVille_id',
+					displayField	: 'todisplay',
+					valueField	: 'id'
+					//cls       : 'red'
+				},{
+					flex	  	: 1,
+					margin		: '0 0 0 10',
+					xtype		: 'button',
+					//text		: 'Add',
+					iconCls		: 'add',
+					style	: "padding-left:6px",	
+					handler		: function () {
+						add_ville_window.show();
+					}
+				}
+			] 		
 		},{
 		xtype: 'container',
 		anchor: '100%',
@@ -116,16 +171,8 @@ Ext.define('MainApp.view.FamilleForm', {
 				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
 				//cls       : 'yes',
 				anchor	  : '96%',
-				labelWidth: 40, 
-				tpl : new Ext.XTemplate(
-					'<tpl if="ccas == 0">',
-					'no',
-					'</tpl>', 
-					'<tpl if="ccas == 1">', 
-					'yes', 
-					'</tpl>'
-				) 
-				},{
+				labelWidth: 40
+			},{
 				xtype: 'textfield',
 				fieldLabel: 'Q.F',
 				//hideLabel : true,		
@@ -143,7 +190,7 @@ Ext.define('MainApp.view.FamilleForm', {
 			//cls       : 'yes'
 		}
 	],
-	buttons: [{
+	/*buttons: [{
         text: 'Submit',
         formBind: true, //only enabled once the form is valid
         disabled: true,
@@ -193,7 +240,7 @@ Ext.define('MainApp.view.FamilleForm', {
                 });
             }
         }
-    }],
+    }],*/
 	initComponent: function() {
 		this.callParent(arguments);		
 	}
