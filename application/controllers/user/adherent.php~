@@ -1,0 +1,95 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+require(APPPATH.'controllers/CrudControl.php');
+
+class Adherent extends CrudControl {
+
+	function __construct()
+	{
+		parent::__construct();
+		$this->folder = 'user';
+		$this->type = 'adherent';
+	}
+	
+	//Recherche un adherent par son nom via sql LIKE txt%
+	function search($txt)
+	{
+		jse(
+			$this->db->select('id','nom','prenom')
+						->like('nom',$txt,'after')
+						->get('userAdherent')
+						->result_array()
+			);
+	}
+	
+	//renvoi l'id de la famille et celui de chaque adherent
+	function loadFamille($id_adherent=false)
+	{	
+		$adherents = $this->db->select('id','userStatut_id')
+								->where('userFamille_id',$this->Entity($id_adherent)->get('userFamille_id'))
+								->get('userAdherent')
+								->result_array();
+			
+		$out['famille'] = $adh->userFamille->id;
+		foreach($adherents as $adh) 
+		{
+			if ($adh['userStatut_id'] == 1) 	$out['referent']  = $adh['id'];
+			elseif ($adh['userStatut_id'] == 2) $out['conjoint']  = $adh['id'];
+			else  								$out['enfants'][] = $adh['id'];
+		}
+		
+		jse($out);
+	}
+	
+	//surcharge de la fonction save
+	function save($id=false)
+	{
+		$results = $this->input->post();
+		//normal save
+		if (($id) or ($results['userStatut_id'] != 1)) jse($this->Entity($id)->set($results)->save());
+		
+		// referent d'une nouvelle famille
+		else
+		{
+			// verification qu'une famille est bien en attente dans flashdata
+			$this->load->model('user/famille_m');
+			$famille = new famille_m();
+			$famille->setBean(unserialize($this->session->flashdata('newFamille')));
+			
+			if ((!is_object($famille)) or ($famille->valid() !== true))
+			{
+				$out['success'] = false;
+				$out['error'][]	= 'nofamily';
+			
+				jse($out);
+				exit;
+			}
+		
+			//ajoute une condition pour verifier que l'adherent sera bien referent
+			$referent = $this->Entity()->set($this->input->post());
+		
+			//validation en excluant le lien userFamille qui n'existe pas encore
+
+			print_r($referent->edit());
+			$valid_referent = $referent->valid('userFamille');
+			if ($valid_referent === true)
+			{
+				//store Famille
+				$famille->save();
+		
+				//store Adherent with the new Famille id
+				$referent->set(array('userFamille_id' => $famille->get('id')));
+				$out = $referent->save();
+				$out['userFamille_id'] = $famille->get('id');
+			
+				jse($out);
+			}
+			// echec de validation du referent, on garde la famille en flashdata et on envoie les erreurs
+			else
+			{
+				$this->session->keep_flashdata('newFamille');
+				jse($valid_referent);
+			}
+		}
+	}
+}

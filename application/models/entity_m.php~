@@ -53,6 +53,18 @@ class Entity_m extends CI_Model {
 		if (!is_object($this->bean)) $this->load();
 		$out['data'] = $this->bean->export();
 		return $out;
+	}
+	
+	function get($field_name)
+	{
+		$fields = explode('_',$field_name);
+		
+		$bean = $this->bean;		
+		foreach($fields as $n) 
+			if (isset($bean->{$n})) $bean = $bean->{$n}; 
+			else return null;
+		
+		return $bean;
 	}	
 	
 	function set($data)
@@ -65,45 +77,86 @@ class Entity_m extends CI_Model {
 				else if (isset($data[$n])) $this->bean->{$n} = $data[$n];
 			}
 		}
+		return $this;
 	}
 	
 	function format()
 	{
 		foreach($this->fields as $n=>$fi) 
 		{
-			$this->bean->{$n} = trim($this->bean->{$n});
-			
-			if ($fi->type == 'bool') $this->bean->{$n} = (bool) $this->bean->{$n};
-			if ($fi->type == 'float') $this->bean->{$n} = str_replace(',','.',$this->bean->{$n});
-			if ($fi->type == 'upper') $this->bean->{$n} = strtoupper(',','.',$this->bean->{$n});
-			if ($fi->type == 'upword') $this->bean->{$n} = ucwords($this->bean->{$n});
+			if (!$fi->relatedTo)
+			{
+				$this->bean->{$n} = trim($this->bean->{$n});
+				
+				if ($fi->type == 'bool') $this->bean->{$n} = (bool) $this->bean->{$n};
+				if ($fi->type == 'float') $this->bean->{$n} = str_replace(',','.',$this->bean->{$n});
+				if ($fi->type == 'upper') $this->bean->{$n} = strtoupper($this->bean->{$n});
+				if ($fi->type == 'upword') $this->bean->{$n} = ucwords($this->bean->{$n});
+			}
 		}
+		
+		return $this;
 	}
 	
-	function valid()
+	function valid($exclude=null)
 	{
+		$this->format();
+		
+		if (!is_array($exclude)) $exclude = array($exclude);
+		
 		$error = null;
 		
 		foreach($this->fields as $n=>$fi) 
 		{		
-			if (($fi->rule == 'notempty') or $fi->required) 
+			if (!in_array($n,$exclude))
 			{
-				if($fi->relatedTo) 
+				//notempty
+				if (($fi->rule == 'notempty') or $fi->required) 
 				{
-					if(!isset($this->bean->{$n}->id)) $error[$n][] = 'empty'; 
+					if($fi->relatedTo) 
+					{
+						if(!isset($this->bean->{$n}->id) or (!($this->bean->{$n}->id>0))) $error[$n][] = 'empty'; 
+					}
 					elseif (!$this->bean->{$n}) $error[$n][] = 'empty';
+					
 				}
-			}
-			if (($fi->type == 'int') or ($fi->type == 'float')) 
-			{
-				if (!is_numeric($this->bean->{$n})) $error[$n][] = 'notnumeric';
-				else if ($fi->type == 'int') $this->bean->{$n} = (int) $this->bean->{$n};
-				else if ($fi->type == 'float') $this->bean->{$n} = (float) $this->bean->{$n};
-			}
-			if (($fi->type == 'date') and ($this->bean->{$n})) 
-			{
-				list($y,$m,$d) = explode('-',$this->bean->{$n}); 
-				if (!checkdate($m,$d,$y)) $error[$n][] = 'notdate';
+				//
+				
+				//isnumeric
+				if (($fi->type == 'int') or ($fi->type == 'float')) 
+				{
+					if (!is_numeric($this->bean->{$n})) $error[$n][] = 'notnumeric';
+					else if ($fi->type == 'int') $this->bean->{$n} = (int) $this->bean->{$n};
+					else if ($fi->type == 'float') $this->bean->{$n} = (float) $this->bean->{$n};
+				}
+				//
+				
+				//date
+				if (($fi->type == 'date') and ($this->bean->{$n})) 
+				{
+					list($y,$m,$d) = explode('-',$this->bean->{$n}); 
+					if (!checkdate($m,$d,$y)) $error[$n][] = 'notdate';
+				}
+				//
+				
+				//min/max/equal
+					//prepare value
+					$value = null;
+					if ($fi->relatedTo) 
+					{ 
+						if(isset($this->bean->{$n}->id))
+							$value = $this->bean->{$n}->id;
+					}
+					elseif ($fi->type == 'date') $value = strtotime($this->bean->{$n});
+					else $value = $this->bean->{$n};
+				
+				//equal
+				if ((isset($fi->equal)) and ($value !== $fi->equal)) $error[$n][] = 'not=='.$fi->equal;
+				//max
+				if ((isset($fi->max)) and ($value > $fi->max)) $error[$n][] = 'not<='.$fi->max;
+				//min
+				if ((isset($fi->min)) and ($value < $fi->min)) $error[$n][] = 'not>='.$fi->min;
+				//
 			}
 		}
 		
@@ -111,18 +164,21 @@ class Entity_m extends CI_Model {
 		else return $error;
 	}
 	
-	function save()
+	//sauvegarde le bean dans la base de donnée 
+	//ou l'entité en flashdata pour utilisation à la prochaine requete'
+	function save($flashdata_store=false)
 	{
-		$this->format();
 		$validation = $this->valid();
 		
 		if ($validation === true) 
 		{
-			R::store($this->bean);
+			if (!$flashdata_store) $out['id'] = R::store($this->bean);
+			else $this->session->set_flashdata($flashdata_store,serialize($this->bean));
+			
 			$out['success'] = true;
 			return $out;
 		}
-		else $validation['succes'] = false;
+		else $validation['success'] = false;
 		
 		return $validation;
 	}
@@ -133,16 +189,24 @@ class Entity_m extends CI_Model {
 		return $this->bean;
 	}
 	
+	function setBean($bean)
+	{
+		$this->bean = $bean;
+	}
+	
+	//ajoute des champs et leur proprietés de formatage et validation
+	function field($name)
+	{
+		if(!isset($this->fields[$name])) 
+			$this->fields[$name] = new Field($name);
+	
+		return $this->fields[$name];
+	}
+	
 	protected function error($name)
 	{
 		if (isset($this->error[$name])) return 'Erreur : '.$this->error[$name];
 		else return 'Erreur : '.$this->table.' '.$name;
-	}
-	
-	protected function field($name)
-	{
-		$this->fields[$name] = new Field($name);
-		return $this->fields[$name];
 	}
 	
 	protected function table($table)
@@ -231,6 +295,27 @@ class Field {
 	function chk($rule=false)
 	{
 		if ($rule) $this->rule = $rule;
+		return $this;
+	}
+	
+	function equal($value)
+	{
+		if ($this->type == 'date') $value = strtotime($value);
+		$this->equal = $value;
+		return $this;
+	}
+	
+	function max($value)
+	{
+		if ($this->type == 'date') $value = strtotime($value);
+		$this->max = $value;
+		return $this;
+	}
+	
+	function min($value)
+	{
+		if ($this->type == 'date') $value = strtotime($value);
+		$this->min = $value;
 		return $this;
 	}
 }

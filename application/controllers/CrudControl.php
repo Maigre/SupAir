@@ -44,9 +44,12 @@ class CrudControl extends CI_Controller {
 		jse($this->Entity($id)->set($results)->save());
 	}
 	
-	function listAll()
+	function listAll($order=false)
 	{
-		$all = R::find($this->Entity()->table);
+		$orderSQL = null;
+		if($order) $orderSQL='1 ORDER BY `'.$order.'`';
+		$all = R::find($this->Entity()->table,$orderSQL);
+		$out=array();
 		foreach ($all as $a) $out[] = $a->export();
 		jse($out);
 	}

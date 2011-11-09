@@ -2,6 +2,8 @@ Ext.define('MainApp.view.AdherentForm', {
 	extend		 : 'Ext.form.Panel',
 	alias 		 : 'widget.adherentform',
 	//id           : 'adherentform',
+	statut		 : '',
+	masked		 : false,
 	frame 		 : true,
 	height		 : 300,
 	width 		 : 220,
@@ -21,49 +23,40 @@ Ext.define('MainApp.view.AdherentForm', {
 		//labelAlign : "top",
 	},
 	defaultType  : 'textfield',
-	/*defaults     : {
-		anchor: '100%'
-	},*/
 	items 		 : [{
-			xtype: 'hiddenfield',
-			id   : 'id_famille_adherent_form',
-			name : 'userFamille_id',
-			value: 49
-		},{
-			xtype: 'hiddenfield',
-			id   : 'id_statut_adherent_form',
-			name : 'userStatut_id',
-			value: 1
-		},{
-			fieldLabel: 'Pr&eacute;nom',
-			//hideLabel : true,		
+			fieldLabel: 'Pr&eacute;nom',	
 			name      : 'prenom',
 			value	  : 'Junior',
-			//cls       : 'cake',
 			labelWidth: 50,
 			anchor	  : '96%'
 		},{
-			fieldLabel: 'Nom',
-			//hideLabel : true,		
+			fieldLabel: 'Nom',		
 			name      : 'nom',
 			value	  : 'Byles',
-			//cls       : 'cake',
 			labelWidth: 50,
 			anchor	  : '96%',
 			listeners 	:{
 				'change': function(me) {
 					form=this.up('form');
-					if (form.getForm().findField('userStatut_id').value==1){
+					if (form.statut==1){
 						set_nom_enfant(form);
 					}
-					
-					//f.hidden = true;
 				}
 			}			
 		},{
-        xtype      : 'fieldcontainer',
+        xtype      : 'radiogroup',
         fieldLabel : 'Sexe',
-        defaultType: 'radiofield',
+        columns: 2,
+        vertical: true,
+        listeners 	:
+        	{'beforeactivate': function(){
+			return false;
+		},
+		'beforedeactivate': function(){
+			return false;
+		}
+       	},
+        /*defaultType: 'radiofield',
         defaults   : {
             flex: 1
         },
@@ -72,37 +65,61 @@ Ext.define('MainApp.view.AdherentForm', {
 			'change': function(me) {
 				form=this.up('form');
 				set_nosecu_begin(form);
-				//f.hidden = true;
-			}
-		},
+				set_icon(form);
+			},
+       			'beforeactivate': function(){
+       				return false;
+       			},
+       			'beforedeactivate': function(){
+       				return false;
+       			}
+		},*/
         items      : [
-            {
+            { boxLabel: 'Homme', name: 'sexe', inputValue: '0' },
+            { boxLabel: 'Femme', name: 'sexe', inputValue: '1', checked: true}
+            /*{
                 boxLabel  : 'Femme',
                 hideLabel : true,
                 name      : 'sexe',
-                inputValue: '1'//,
-                //id        : 'radiofemme'
+                inputValue: '1',
+		listeners 	:{
+			'change': function(me) {
+        			form=this.up('form');
+				set_nosecu_begin(form);				
+				set_icon(form);
+       			},
+       			'beforeactivate': function(){
+       				return false;
+       			},
+       			'beforedeactivate': function(){
+       				return false;
+       			}
+		}
             },{
                 boxLabel  : 'Homme',
                 hideLabel : true,
                 name      : 'sexe',
-                inputValue: '0'//,
-                //id        : 'radiohomme'
-            }
+                inputValue: '0',
+		listeners 	:{
+			'change': function(me) {
+        			form=this.up('form');
+				set_nosecu_begin(form);
+       			}
+		}
+            }*/
         ]},{
 			xtype		: 'datefield',
-			fieldLabel	: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-			//hideLabel : true,		
+			fieldLabel	: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',	
 			name      	: 'naissance',
 			value	  	: '04-12-73',
+			format		: 'Y-m-d',
 			cls       	: 'cake',
 			labelWidth	: 20,
 			listeners 	:{
 				'change': function(me) {
-                	
-                	form=this.up('form');
+                			form=this.up('form');
 					set_nosecu_begin(form);
-                }
+               			}
 			}
 		},{
 			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -194,7 +211,7 @@ Ext.define('MainApp.view.AdherentForm', {
 				}
 			}]}]},{
 			xtype: 'textfield',
-			fieldLabel: 'N&deg;',
+			fieldLabel: 'N&deg; Alloc',
 			labelWidth: 25,
 			//hideLabel : true,		
 			name      : 'noalloc',
@@ -278,20 +295,6 @@ Ext.define('MainApp.view.AdherentForm', {
 									
 								
 								
-								Ext.Ajax.request({
-									url: BASE_URL+'data/process/menumensuel',
-									method : 'POST',
-									success: function(response){
-										var options = Ext.decode(response.responseText).data;
-						
-										//console.info(options);
-										Ext.each(options, function(op) {
-											
-										})
-										// process server response here
-									}
-								});
-								
 							},
 							failure: function(form, action) {
 								Ext.Msg.alert('Failed', action.result.msg);
@@ -302,10 +305,16 @@ Ext.define('MainApp.view.AdherentForm', {
 			}
 		}
 	],
+	tools:[{
+	    type:'close',
+	    tooltip: 'D&eacute;sactiver',
+	    handler: function(event, toolEl, panel){
+		if (panel.ownerCt.statut!=1){
+			panel.up('form').getEl().mask();
+		}
+	    }
+	}],
 	initComponent: function() {
-		
-		
-		this.callParent(arguments);
-		
+		this.callParent(arguments);		
 	}
 });

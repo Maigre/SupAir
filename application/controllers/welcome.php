@@ -8,7 +8,10 @@ class Welcome extends CI_Controller {
 
 		//Charger ici toutes les classes de Extjs contenues dans le dossier application/views de CodeIgniter
 		
+		
+		$data['views'][]=$this->load->view('Application',null,true);
 		$data['views'][]=$this->load->view('menu',null,true);
+		$data['views'][]=$this->load->view('calendrierWindow',null,true);
 		$data['views'][]=$this->load->view('searchBar',null,true);
 		$data['views'][]=$this->load->view('adherentDisplay',null,true);
 		$data['views'][]=$this->load->view('adherentForm',null,true);
@@ -17,7 +20,6 @@ class Welcome extends CI_Controller {
 		$data['views'][]=$this->load->view('familleForm',null,true);
 		$data['views'][]=$this->load->view('nouvelleFamilleForm',null,true);
 		$data['views'][]=$this->load->view('adherentMain',null,true);
-		$data['views'][]=$this->load->view('Application',null,true);
 		$this->load->view('mainview',$data);
 	}
 }

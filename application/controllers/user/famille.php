@@ -15,12 +15,12 @@ class Famille extends CrudControl {
 	function loadFamille($id_famille=false)
 	{
 		
-		$adherents = $this->db->select('id','userStatut_id')
+		$adherents = $this->db->select('id, userStatut_id')
 								->where('userFamille_id',$this->Entity($id_famille)->get('id'))
 								->get('userAdherent')
 								->result_array();
 			
-		$out['famille'] = $fam->id;
+		$out['famille'] = $id_famille;
 		foreach($adherents as $adh) 
 		{
 			if ($adh['userStatut_id'] == 1) 	$out['referent']  = $adh['id'];

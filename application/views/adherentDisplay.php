@@ -3,36 +3,16 @@ Ext.define('Adherent', {
 	fields: ['id', 'nom','prenom','noalloc','sexe','naissance','sante','svsp','autosortie','email','portable','fixe','bureau']
 });
 
-adherentstore= new Ext.data.Store({
-	storeId: 'adherentstore',
-	model: 'Adherent',
-	//requires: 'MainApp.model.PlModel',
-	//model: 'MainApp.model.PlModel',
-	proxy: {
-		type: 'ajax',
-		api: {
-			read: BASE_URL+'user/adherent/show/1'    		
-		},
-		actionMethods : {read: 'POST'},   	
-		reader: {
-			type: 'json',
-			root: 'data',
-			totalProperty: 'size',
-			successProperty: 'success'
-		}
-	},
-	baseParams: {
-		idPl:'' 
-	}
-});
+
 
 Ext.define('MainApp.view.AdherentDisplay', {
 	extend		 : 'Ext.form.Panel',
 	alias 		 : 'widget.adherentdisplay',
-	id           : 'adherentdisplay',
+	id           	 : 'adherentdisplay',
 	frame 		 : true,
-	height		 : 200,
-	//width 		 : 240,
+	statut		 : '',
+	height	 	 : 200,
+	width 		 : 200,
 	x     		 : 0,
 	y     		 : 0,
 	url   		 : BASE_URL+'data/plcontrol/save',
@@ -55,7 +35,7 @@ Ext.define('MainApp.view.AdherentDisplay', {
 	items 		 : [{
 		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
 		//hideLabel : true,		
-		name      : 'datenaissance',
+		name      : 'naissance',
 		value	  : '04-12-73',
 		cls       : 'cake',
 		labelWidth: 20
@@ -69,19 +49,19 @@ Ext.define('MainApp.view.AdherentDisplay', {
 		},{
 		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; perso',
 		//hideLabel : false,		
-		name      : 'telportable',
+		name      : 'portable',
 		value	  : '0637483920',
 		cls       : 'telephone'
 		},{
 		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fixe',
 		//hideLabel : true,		
-		name      : 'teldomicile',
+		name      : 'fixe',
 		value	  : '0473829102',
 		cls       : 'telephone'
 		},{
 		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pro',
 		//hideLabel : true,		
-		name      : 'telprofessionel',
+		name      : 'bureau',
 		value	  : '0637281928',
 		cls       : 'telephone'
 		},{
@@ -100,13 +80,13 @@ Ext.define('MainApp.view.AdherentDisplay', {
 				//hideLabel : true,		
 				name      : 'svsp',
 				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-				cls       : 'pigyes',
+				//cls       : 'pigyes',
 				anchor	  : '96%'
 			},{
 				xtype: 'displayfield',
 				fieldLabel: 'Allocataire',
 				//hideLabel : true,		
-				name      : 'alloc',
+				name      : 'allocataire',
 				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
 				cls       : 'yes',
 				anchor	  : '96%'
@@ -119,13 +99,13 @@ Ext.define('MainApp.view.AdherentDisplay', {
 				xtype: 'displayfield',
 				fieldLabel: 'A. sortie',
 				//hideLabel : true,		
-				name      : 'autorisationsortie',
+				name      : 'autosortie',
 				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-				cls       : 'grasyes',
+				//cls       : 'grasyes',
 				anchor	  : '96%'
 			},{
 				xtype: 'displayfield',
-				fieldLabel: 'N&deg;',
+				fieldLabel: 'N&deg; Alloc',
 				labelWidth: 25,
 				//hideLabel : true,		
 				name      : 'noalloc',
@@ -135,10 +115,17 @@ Ext.define('MainApp.view.AdherentDisplay', {
 			}]}]},{
 		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sant&eacute;',
 		//hideLabel : true,		
-		name      : 'fichesanitaire',
+		name      : 'sante',
 		value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-		cls       : 'pillyes',
-		anchor	  : '96%'
+		//cls       : 'pillyes',
+		anchor	  : '96%',
+		tpl : [
+			'<tpl if={sante}" == 0;">',
+			'<img src="interface/images/icons/cross.png">',
+			'</tpl>',
+			'<tpl if={sante}" == 1;">',
+			'<img src="interface/images/icons/accept.png">',
+			'</tpl>']
 		},{
 		fieldLabel: 'Employeur',
 		name      : 'employeur',
@@ -152,7 +139,42 @@ Ext.define('MainApp.view.AdherentDisplay', {
 		}
 	],
 	initComponent: function() {
+		var me=this;
+		this.on('render', function(){
+			console.info(me.statut);
+			if (me.statut==3){
+				var fieldtohide= ['bureau','fixe','noalloc','allocataire','employeur'];
+				Ext.each(fieldtohide, function(tohide) {
+					console.info('ok2');
+					me.getForm().findField(tohide).hidden = true;
+					console.info(me.getForm().findField(tohide));
+				})
+			}
+			
+		});
 		this.callParent(arguments);
+		this.store= adherentstore= new Ext.data.Store({
+			storeId: 'adherentstore',
+			model: 'Adherent',
+			//requires: 'MainApp.model.PlModel',
+			//model: 'MainApp.model.PlModel',
+			proxy: {
+				type: 'ajax',
+				api: {
+					read: BASE_URL+'user/adherent/show/1'    		
+				},
+				actionMethods : {read: 'POST'},   	
+				reader: {
+					type: 'json',
+					root: 'data',
+					totalProperty: 'size',
+					successProperty: 'success'
+				}
+			}/*,
+			baseParams: {
+				idPl:'' 
+			}*/
+		});
 		
 	}
 });
