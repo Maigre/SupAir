@@ -99,9 +99,16 @@ class RedBean_Plugin_BeanExport {
 	 * @return array|null $array Array export of bean
 	 */
 	public function exportBean(RedBean_OODBBean $bean) {
-		$bid = $bean->getMeta('type').'-'.$bean->getID();
+		
+		//select loop shield
+		$prevent_type_loop = true;
+		if ($prevent_type_loop) $bid = $bean->getMeta('type'); // type loop
+		else $bid = $bean->getMeta('type').'-'.$bean->getID(); //infinite loop
+		
+		//loop checking
 		if (isset($this->recurCheck[$bid])) return null;
 		$this->recurCheck[$bid]=$bid;
+		
 		$export = $bean->export();
 		foreach($export as $key=>$value) {
 			if (strpos($key,'_id')!==false) {
