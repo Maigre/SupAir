@@ -142,15 +142,14 @@ Ext.define('MainApp.view.AdherentDisplay', {
 		var me=this;
 		this.on('render', function(){
 			console.info(me.statut);
-			if (me.statut==3){
+			if (me.statut==3){ //enfant, cacher certains champs
 				var fieldtohide= ['bureau','fixe','noalloc','allocataire','employeur'];
 				Ext.each(fieldtohide, function(tohide) {
 					console.info('ok2');
 					me.getForm().findField(tohide).hidden = true;
 					console.info(me.getForm().findField(tohide));
 				})
-			}
-			
+			}			
 		});
 		this.callParent(arguments);
 		this.store= adherentstore= new Ext.data.Store({
