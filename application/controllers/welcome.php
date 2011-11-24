@@ -19,7 +19,7 @@ class Welcome extends CI_Controller {
 		$data['views'][]=$this->load->view('familleForm',null,true);
 		$data['views'][]=$this->load->view('nouvelleFamilleForm',null,true);
 		$data['views'][]=$this->load->view('adherentMain',null,true);
-		
+		$data['views'][]=$this->load->view('activiteForm',null,true);
 		
 		
 

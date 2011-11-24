@@ -4,113 +4,47 @@
     'Extensible.calendar.CalendarPanel',
     'Extensible.example.calendar.data.Events'
 ]);*/
-/*
-Ext.override(Ext.ensible.cal.EventEditForm, {
-			layout: 'form',
 
-			initComponent: function() {
-				this.addEvents({
-					eventadd: true,
-					eventupdate: true,
-					eventdelete: true,
-					eventcancel: true
-				});
-
-				this.titleField = new Ext.form.TextField({
-					fieldLabel: this.titleLabelText,
-					name: Ext.ensible.cal.EventMappings.Title.name,
-					anchor: '95%'
-				});
-				this.dateRangeField = new Ext.ensible.cal.DateRangeField({
-					fieldLabel: this.datesLabelText,
-					singleLine: false,
-					anchor: '95%',
-					listeners: {
-						'change': this.onDateChange.createDelegate(this)
-					}
-				});
-				this.reminderField = new Ext.ensible.cal.ReminderField({
-					name: Ext.ensible.cal.EventMappings.Reminder.name,
-					fieldLabel: this.reminderLabelText
-				});
-				this.notesField = new Ext.form.HtmlEditor({
-					fieldLabel: this.notesLabelText,
-					name: Ext.ensible.cal.EventMappings.Notes.name,
-					grow: true,
-					growMax: 150,
-					anchor: '95%',
-					height: 150
-				});
-				this.locationField = new Ext.form.TextField({
-					fieldLabel: this.locationLabelText,
-					name: Ext.ensible.cal.EventMappings.Location.name,
-					anchor: '95%'
-				});
-				this.urlField = new Ext.form.TextField({
-					fieldLabel: this.webLinkLabelText,
-					name: Ext.ensible.cal.EventMappings.Url.name,
-					anchor: '95%'
-				});
-
-				this.recurrenceField = new Ext.ensible.cal.RecurrenceField({
-					name: Ext.ensible.cal.EventMappings.RRule.name,
-					fieldLabel: this.repeatsLabelText,
-					anchor: '95%'
-				});
-
-				this.calendarField = new Ext.ensible.cal.CalendarCombo({
-					store: this.calendarStore,
-					fieldLabel: this.calendarLabelText,
-					name: Ext.ensible.cal.EventMappings.CalendarId.name
-				});
-
-				this.items = [this.titleField, this.locationField, this.dateRangeField, this.calendarField, this.recurrenceField, this.reminderField, this.notesField, this.urlField];
-
-				this.fbar = [
-					{
-						text: this.saveButtonText, scope: this, handler: this.onSave
-					}, {
-						cls: 'ext-del-btn', text: this.deleteButtonText, scope: this, handler: this.onDelete
-					}, {
-						text: this.cancelButtonText, scope: this, handler: this.onCancel
-					}
-				];
-
-				Ext.ensible.cal.EventEditForm.superclass.initComponent.call(this);
-			},
-
-			onLayout: Ext.ensible.cal.EventEditForm.prototype.onLayout.createSequence(function() {
-				//This fix is not required in my application. But on this demonstration page, the form height is 0 if autoHeight is set to false.
-				//But that is required for attaching scrollbars in form layout.
-				this.el.child('form').dom.style.height = '';
-			})
-		});
-*/
-/*
-Extensible.calendar.data.EventMappings = {
-    EventId:     {name: 'ID', mapping:'evt_id', type:'int'},
-    CalendarId:  {name: 'CalID', mapping: 'cal_id', type: 'int'},
-    Title:       {name: 'EvtTitle', mapping: 'evt_title'},
-    StartDate:   {name: 'StartDt', mapping: 'start_dt', type: 'date', dateFormat: 'c'},
-    EndDate:     {name: 'EndDt', mapping: 'end_dt', type: 'date', dateFormat: 'c'},
-    RRule:       {name: 'RecurRule', mapping: 'recur_rule'},
-    Location:    {name: 'Ville', mapping: 'location', defaultValue: 'Lyon'},
-    Notes:       {name: 'Desc', mapping: 'full_desc'},
-    Url:         {name: 'LinkUrl', mapping: 'link_url'},
-    IsAllDay:    {name: 'AllDay', mapping: 'all_day', type: 'boolean'},
-    Jsr:         {name: 'Jsr', mapping: 'jsr', type: 'boolean'},
-    Reminder:    {name: 'Reminder', mapping: 'reminder'},
-    
-    // We can also add some new fields that do not exist in the standard EventRecord:
-    CreatedBy:   {name: 'CreatedBy', mapping: 'created_by'},
-    IsPrivate:   {name: 'Private', mapping:'private', type:'boolean'}
-};
-// Don't forget to reconfigure!
-Extensible.calendar.data.EventModel.reconfigure();
-*/
 Ext.onReady(function(){
 
 	
+	Ext.override(Extensible.calendar.view.AbstractCalendar , { 
+		ddCreateEventText : 'Ajouter un &eacute;v&egrave;nement au {0}',
+		ddResizeEventText: 'Mettre à jour un &eacute;v&egrave;nement au {0}',
+		ddMoveEventText: 'D&eacute;placer un &eacute;v&egrave;nement au {0}',
+	}); 
+	
+	Ext.override(Extensible.calendar.form.EventDetails, { 
+		titleLabelText	: 'Titre',
+		title		: 'Ajout d\'un &eacute;v&egrave;nement',
+		titleTextAdd	: 'Nouvel &eacute;v&egrave;nement',
+		datesLabelText	: 'Du :',
+		saveButtonText	: 'O.K',
+		deleteButtonText: 'Supprimer',
+		cancelButtonText: 'Annuler'
+	});
+	
+	Ext.override(Extensible.form.field.DateRange, { 
+		allDayText	: 'Journ&eacute;e',
+		toText		: 'au',
+		dateFormat	: 'j/n/Y'		
+	}); 
+	
+	Ext.override(Extensible.calendar.form.EventWindow, { 
+		titleTextAdd	: 'Nouvel &eacute;v&egrave;nement',
+		titleTextEdit	: 'Edit Event',
+		width		: 600,
+		labelWidth	: 65,
+		detailsLinkText	: 'Détails...',
+		savingMessage	: 'Enregistrement...',
+		deletingMessage	: 'Suppression...',
+		saveButtonText	: 'O.K',
+		deleteButtonText: 'Delete',
+		cancelButtonText: 'Cancel',
+		titleLabelText	: 'Nom',
+    		datesLabelText  : 'Du :',		
+	}); 
+
 	// For complete details on how to customize the EventMappings object to match your
 	// application data model see the header documentation for the EventMappings class.
 
@@ -119,21 +53,21 @@ Ext.onReady(function(){
 		// names and mappings have all been customized. Note that the name of each field
 		// definition object (e.g., 'EventId') should NOT be changed for the default fields
 		// as it is the key used to access the field data programmatically.
-		EventId:     {name: 'ID', mapping:'evt_id', type:'string'}, // int by default
-		CalendarId:  {name: 'CalID', mapping: 'cal_id', type: 'string'}, // int by default
-		Title:       {name: 'EvtTitle', mapping: 'evt_title'},
-		StartDate:   {name: 'StartDt', mapping: 'start_dt', type: 'date', dateFormat: 'c'},
-		EndDate:     {name: 'EndDt', mapping: 'end_dt', type: 'date', dateFormat: 'c'},
-		RRule:       {name: 'RecurRule', mapping: 'recur_rule'},
-		Location:    {name: 'AR', mapping: 'location'},
-		Notes:       {name: 'Desc', mapping: 'full_desc'},
-		Url:         {name: 'LinkUrl', mapping: 'link_url'},
-		IsAllDay:    {name: 'AllDay', mapping: 'all_day', type: 'boolean'},
-		Reminder:    {name: 'Reminder', mapping: 'reminder'},
+		EventId		: {name: 'ID', mapping:'evt_id', type:'string'}, // int by default
+		CalendarId	: {name: 'CalID', mapping: 'cal_id', type: 'string'}, // int by default
+		Title		: {name: 'EvtTitle', mapping: 'evt_title', defaultValue:'Vacances de Noel'},
+		StartDate	: {name: 'StartDt', mapping: 'start_dt', type: 'date', dateFormat: 'c'},
+		EndDate		: {name: 'EndDt', mapping: 'end_dt', type: 'date', dateFormat: 'c'},
+		RRule		: {name: 'RecurRule', mapping: 'recur_rule'},
+		Location	: {name: 'AR', mapping: 'location', defaultValue: 'Lyon'},
+		Notes		: {name: 'Desc', mapping: 'full_desc'},
+		Url		: {name: 'LinkUrl', mapping: 'link_url'},
+		IsAllDay	: {name: 'AllDay', mapping: 'all_day', type: 'boolean', defaultValue: true},
+		Reminder	: {name: 'Reminder', mapping: 'reminder'},
 
 		// We can also add some new fields that do not exist in the standard EventRecord:
-		CreatedBy:   {name: 'CreatedBy', mapping: 'created_by'},
-		IsPrivate:   {name: 'Private', mapping:'private', type:'boolean'}
+		CreatedBy	: {name: 'CreatedBy', mapping: 'created_by'},
+		IsPrivate	: {name: 'Private', mapping:'private', type:'boolean'}
 	};
 	// Don't forget to reconfigure!
 	Extensible.calendar.data.EventModel.reconfigure();
@@ -222,9 +156,9 @@ Ext.onReady(function(){
 		extend	: 'Ext.window.Window',
 		layout	: 'fit',
 		alias	: 'widget.calendrier_window',
-		title	: 'Calendar Window',
+		title	: 'Calendrier',
 		width	: 850,
-		height	: 700,
+		height	: 600,
 		modal	: true,
 		closeAction: 'hide',
 		items: [{
@@ -239,7 +173,89 @@ Ext.onReady(function(){
 			monthText	: 'Mois',
 			multiWeekText	: '{0} Semaines',
 			goText		: 'OK',
-			enableEditDetails : false
+			enableEditDetails : false,
+			showDayView	: false
+		}]
+	});
+	
+	exercicestore= new Ext.data.Store({
+		storeId: 'exercicestore',
+		fields: ['id', 'nom','datedebut', 'datefin'],
+		autoLoad: true,
+		proxy: {
+			type: 'ajax',
+			url: BASE_URL+'calendrier/calendrier/listAll/nom',  // url that will load data
+			actionMethods : {read: 'POST'},
+			reader : {
+				type : 'json',
+				totalProperty: 'size',
+				root: 'combobox'
+			}
+		}          			
+	});
+	
+	Ext.define('MainApp.view.exerciceWindow', {
+		extend	: 'Ext.window.Window',
+		layout	: 'fit',
+		alias	: 'widget.exercice_window',
+		title	: 'S&eacute;lection de l\'exercice',
+		
+		//width	: 850,
+		//height	: 600,
+		modal	: true,
+		closeAction: 'hide',
+		items: [{
+			xtype	: 'form',
+			//margins : 2,
+			items	:[{
+				xtype		: 'combo',
+				fieldLabel	: 'Exercice',
+				store		: exercicestore,
+				margins  	: 2,	
+				
+			},{
+				xtype		:'fieldset',
+				title		: 'Nouvel Exercice',
+				collapsible	: true,
+				collapsed	: true,
+				//defaultType	: 'textfield',
+				layout		: 'anchor',
+				defaults	: {
+					anchor	: '100%'
+				},
+				items :[{
+					xtype		: 'textfield',
+					fieldLabel	: 'Nom de l\'exercice',
+					name		: 'nom',
+					value		: '2011/2012'
+					},{
+					xtype		: 'datefield',
+					fieldLabel	: 'D&eacute;but',
+					name		: 'debut_exercice'
+					},{
+					xtype		: 'datefield',
+					fieldLabel	: 'Fin',
+					name		: 'fin_exercice'
+				}]
+			},{
+				xtype	  : 'container',
+				layout	  : {
+					type  : 'hbox',
+					align : 'middle',
+					pack  : 'end'
+				},
+				items: {
+					xtype 	: 'button',
+					margin 	: 2,
+					text: 'OK',
+					formBind: true, //only enabled once the form is valid
+					disabled: true,
+					handler	: function() {
+						calendrier_window=Ext.widget('calendrier_window');
+						calendrier_window.show();
+					}
+				}
+			}]
 		}]
 	});
 });

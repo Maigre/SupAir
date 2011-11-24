@@ -7,7 +7,10 @@ save_famille_and_referent = function(){
 		//On succes, sauvegarde le referent (côté php la famille est enregistrée après le post du formulaire du referent)
 		success: function(action, form) {
 			referentform = Ext.getCmp('referentform').getForm();
+			referentform.findField('sexeref').name='sexe';
+			referentform.findField('sexeref').name='sexe';
     			referentform.url=BASE_URL+'user/adherent/save';
+    			console.info(form);
 			referentform.submit({
 				params:{
 					userStatut_id : 1
@@ -15,8 +18,10 @@ save_famille_and_referent = function(){
 				success: function(form, action) {
 					Ext.getCmp('familleform').hide();
 					form.owner.hide();
+					//SAVE famille id
+					ID_FAMILLE = action.result['userFamille_id'];
 					//Lance la sauvegarde du conjoint et des enfants
-					save_conjoint_and_enfants(action.result['userFamille_id']);
+					save_adherents(0);
 				},
 				failure:function(form,action) {
 					allsuccess=false;
@@ -30,33 +35,49 @@ save_famille_and_referent = function(){
 	});
 };
 
-save_adherents= function(idfamille,indiceform){
+save_adherents= function(indiceform){
 	formtosubmit=['conjointform','enfantform1','enfantform2','enfantform3','enfantform4'];
 	idform=formtosubmit[indiceform];
-	if (idform=='conjointform'){
-		userStatut_id=2;
-	}
-	else{
-		userStatut_id=3;
-	}
 	form = Ext.getCmp(idform);
 	//Sauvegarde des formulaires non masqués
 	if (form.masked==false){
 		if (form.getForm().isValid()==false){
 			allvalid=false;
 		}
+		
 		form.getForm().url=BASE_URL+'user/adherent/save';
+		if (form.id=='conjointform'){
+			form.getForm().findField('sexeconj').name='sexe';
+			form.getForm().findField('sexeconj').name='sexe';
+		}
+		else if(form.id=='enfantform1'){
+			form.getForm().findField('sexe1').name='sexe';
+			form.getForm().findField('sexe1').name='sexe';
+		}
+		else if(form.id=='enfantform2'){
+			form.getForm().findField('sexe2').name='sexe';
+			form.getForm().findField('sexe2').name='sexe';
+		}
+		else if(form.id=='enfantform3'){
+			form.getForm().findField('sexe3').name='sexe';
+			form.getForm().findField('sexe3').name='sexe';
+		}
+		else if(form.id=='enfantform4'){
+			form.getForm().findField('sexe4').name='sexe';
+			form.getForm().findField('sexe4').name='sexe';
+		}
+		
 		form.getForm().submit({
 			params:{
-				userStatut_id : userStatut_id,
-				userFamille_id: idfamille
+				userStatut_id : form.statut,
+				userFamille_id: ID_FAMILLE
 			},
 			success: function(form, action) {
 				form.owner.hide();
 				if (form.id=='enfantform4'){
 					if ((allsuccess==true) && (allvalid==true)){
 						//Dernier enfant sauvegardé fermeture de la fenêtre et affichage de la famille
-						displayfamille(idfamille);
+						displayfamille();
 						Ext.getCmp('nouvellefamilleform').close();						
 					}
 				}
@@ -64,7 +85,7 @@ save_adherents= function(idfamille,indiceform){
 					//Sauvegarde de l'adherent suivant
 					indiceform=indiceform+1;
 					if (indiceform<5){
-						save_adherents(idfamille,indiceform);
+						save_adherents(indiceform);
 					}
 				}
 			},
@@ -76,7 +97,7 @@ save_adherents= function(idfamille,indiceform){
 	else{
 		if (form.id=='enfantform4'){
 			if ((allsuccess==true) && (allvalid==true)){
-				displayfamille(idfamille);
+				displayfamille();
 				Ext.getCmp('nouvellefamilleform').close();				
 			}
 		}
@@ -84,17 +105,10 @@ save_adherents= function(idfamille,indiceform){
 			//Sauvegarde de l'adherent suivant
 			indiceform=indiceform+1
 			if (indiceform<5){
-				save_adherents(idfamille,indiceform);
+				save_adherents(indiceform);
 			}
 		}
 	}
-}
-
-
-save_conjoint_and_enfants = function(idfamille){
-	
-	//fonction recursive qui lance le post de tous les formulaires les uns après les autres
-	save_adherents(idfamille,0);
 }
 
 Ext.define('MainApp.view.NouvelleFamilleForm', {
@@ -105,12 +119,12 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 	height		: 615,
 	autoHeight	: true,
 	width		: 1150,
-	layout		:{
+	layout		: {
 		type	: 'vbox', //1er item avec tous les formulaires. 2eme item avec button "enregistrer"
 		align	: 'stretch',
 		flex	: 'ratio'
 	},
-	items		:[{
+	items		: [{
 		xtype 	: 'container',
 		id	: 'famillerefconjpanel',
 		height 	: 550,
@@ -119,7 +133,7 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 			align	: 'stretch',
 			flex	: 'ratio'
 		},
-		items	:[{
+		items	: [{
 			xtype	: 'container',
 			id	: 'familleformcontainer',
 			items	: [{
@@ -134,7 +148,8 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 				xtype	: 'adherentform',
 				title	: 'R&eacute;f&eacute;rent',
 				id	: 'referentform',
-				height	: 550
+				height	: 550,
+				statut  : 1
 				
 			}]
 		},{
@@ -146,6 +161,7 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 				title	: 'Conjoint',
 				id	: 'conjointform',
 				height	: 550,
+				statut  : 2
 			}]
 		},{
 			xtype	: 'container',
@@ -154,7 +170,7 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 				type:'vbox',
 				align:'stretch'
 			},
-			items:[{
+			items: [{
 				xtype	: 'container',
 				id	: 'enfantformcontainer',
 				width   : 200,
@@ -167,12 +183,14 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 					xtype	: 'adherentform',
 					title	: 'Enfant 1',
 					id	: 'enfantform1',
-					flex    : 1
+					flex    : 1,
+					statut  : 3
 				},{
 					xtype	: 'adherentform',
 					title	: 'Enfant 2',
 					id	: 'enfantform2',
-					flex    : 1
+					flex    : 1,
+					statut  : 3
 				}]
 			},{
 				xtype	: 'container',
@@ -185,12 +203,14 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 					xtype	: 'adherentform',
 					title	: 'Enfant 3',
 					id	: 'enfantform3',
-					flex    : 1
+					flex    : 1,
+					statut  : 3
 				},{
 					xtype	: 'adherentform',
 					title	: 'Enfant 4',
 					id	: 'enfantform4',
-					flex    : 1
+					flex    : 1,
+					statut  : 3
 				}]
 			}]
 		}]
@@ -227,30 +247,28 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 		
 		
 		this.on('render', function(){
-			/*Ext.getCmp('referentform').getForm().findField('userStatut_id').value=1;
-			console.info(Ext.getCmp('referentform').getForm().findField('userStatut_id').value);
-			Ext.getCmp('conjointform').getForm().findField('userStatut_id').value=2;*/
 			
 			Ext.getCmp('referentform').statut = 1;
-			console.info(Ext.getCmp('referentform'));
-			var fieldtohide= ['bureau','fixe','noalloc','allocataire','employeur'];
 			i=0;
 			Ext.each(enfantform, function(form) {
 				i=i+1;
 				f = Ext.getCmp(form);
-				Ext.each(fieldtohide, function(field) {
-					f.getForm().findField(field).hidden = true;
-				})
-				f.getForm().findField('sexe').id='sexefield'+i;
-				//console.info(form.getEl());
-				//form.getEl().mask();
-				//form.disable();
+				f.getForm().findField('sexe').name='sexe'+i;
+				f.getForm().findField('sexe').name='sexe'+i;
+				
 				f.down('button').hide();
 			})
+			//Differenciate all radiobuttons
+			Ext.getCmp('referentform').getForm().findField('sexe').name='sexeref';
+			Ext.getCmp('referentform').getForm().findField('sexe').name='sexeref';
+			Ext.getCmp('conjointform').getForm().findField('sexe').name='sexeconj';
+			Ext.getCmp('conjointform').getForm().findField('sexe').name='sexeconj';
+			
 			Ext.getCmp('enfantform1').enable();
 			//Ext.getCmp('familleform').down('button').hide();
 			Ext.getCmp('referentform').down('button').hide();
 			Ext.getCmp('conjointform').down('button').hide();
+			
 		});
 		
 		this.on('afterrender', function(){
@@ -312,7 +330,6 @@ Ext.define('MainApp.view.NouvelleFamilleForm', {
 			annee=annee.substr(3, 2);
 			var sexe = form.getForm().findField('sexe');
 			hf= sexe.value;
-			console.info(hf);
 			if (hf==0){
 				hf=1; //homme
 			}

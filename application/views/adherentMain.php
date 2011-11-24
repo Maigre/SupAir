@@ -1,7 +1,8 @@
-displayfamille= function(idfamille){
+displayfamille= function(){
+	//famille id stockée en variable globale : ID_FAMILLE
 	
 	Ext.Ajax.request({
-		url: BASE_URL+'user/famille/loadFamille/'+idfamille,
+		url: BASE_URL+'user/famille/loadFamille/'+ID_FAMILLE,
 		method : 'POST',
 		success: function(response){
 			var response = Ext.JSON.decode(response.responseText);
@@ -14,7 +15,7 @@ displayfamille= function(idfamille){
 			Ext.getCmp('infofamille_container').removeAll(false);
 			Ext.getCmp('infofamille_container').add(familledisplay);
 			var famillestore = Ext.getStore('famillestore');
-			famillestore.proxy.api.read = BASE_URL+'user/famille/show/'+idfamille; 
+			famillestore.proxy.api.read = BASE_URL+'user/famille/show/'+ID_FAMILLE; 
 			famillestore.load();
 			famillestore.on('load', function(database){
 				var rec= database.getAt(0);
@@ -33,7 +34,32 @@ displayfamille= function(idfamille){
 			//CONJOINT
 			if (response.conjoint){
 				show_adherent(response.conjoint,'conjointdisplay');
+			//Modifie le bouton nouvel adhérent en nouvel enfant
+				nouveladherent_button=  Ext.getCmp('nouveladherent_button');
+				if(nouveladherent_button){
+					nouveladherent_button.destroy();
+				}
+				nouvelenfant_button=  Ext.getCmp('nouvelenfant_button');
+				if(nouvelenfant_button){
+					nouvelenfant_button.destroy();
+				}
+				nouvelenfant_button=  Ext.widget('nouvelenfant_button');
+				console.info(nouvelenfant_button);							
+				Ext.getCmp('menuadherentpanel').add(nouvelenfant_button);				
 			}
+			else{
+				nouveladherent_button=  Ext.getCmp('nouveladherent_button');
+				if(nouveladherent_button){
+					nouveladherent_button.destroy();
+				}
+				nouvelenfant_button=  Ext.getCmp('nouvelenfant_button');
+				if(nouvelenfant_button){
+					nouvelenfant_button.destroy();
+				}
+								
+				Ext.getCmp('menuadherentpanel').add(Ext.widget('nouveladherent_button'));
+			}
+			
 			//ENFANTS
 			if (response.enfants){
 				no_enfant=0;
@@ -66,7 +92,7 @@ show_adherent= function(idadherent,idpanel){
 			rec.data=seticonfield(rec.data,field);
 		})
 		//Set icon
-		if (rec.data.prenom==0){
+		if (rec.data.sexe==0){
 			adherentdisplay.iconCls='user';
 		}
 		else{
@@ -76,19 +102,20 @@ show_adherent= function(idadherent,idpanel){
 		adherentdisplay.getForm().loadRecord(rec);
 		if (idpanel=='referentdisplay'){
 			adherentdisplay.title=rec.data.prenom+' '+rec.data.nom+' - R&eacute;f&eacute;rent';
+			adherentdisplay.statut='referent';
 			Ext.getCmp('adherent_container').insert(0,adherentdisplay);
 		}
 		else if(idpanel=='conjointdisplay'){
 			adherentdisplay.title=rec.data.prenom+' '+rec.data.nom+' - Conjoint';
+			adherentdisplay.statut='conjoint';
 			Ext.getCmp('adherent_container').insert(1,adherentdisplay);
 		}
 		else{
 			adherentdisplay.title=rec.data.prenom+' '+rec.data.nom+' - Enfant';
-			adherentdisplay.statut=3;
+			adherentdisplay.statut='enfant';
 			Ext.getCmp('adherent_container').insert(2,adherentdisplay);						
 		}
-	});
-	
+	});	
 }
 
 //Remplace les champs booleens par des icones yes no
@@ -162,12 +189,11 @@ Ext.define('MainApp.view.AdherentMain', {
 			id 	: 'adherent_container',
 			xtype   : 'panel', 
 			width	: 220,
-			layout	: 'accordion'/*,
-			items	: {
-				xtype	:'panel',
-				frame	: true,
-				layout	: 'accordion'
-			}*/
+			layout	: 'accordion',
+		    	layoutConfig: {
+				// layout-specific configs go here
+				hideCollapseTool : true
+		    	}
 		},{
 			id 	: 'main_container',
 			flex	:1,

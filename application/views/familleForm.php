@@ -18,7 +18,38 @@ add_ville_window= new Ext.window.Window({
 	title	: 'Nouvelle Ville',
 	modal	: true,
 	items	: [{
+		xtype	: 'grid',
+		store	: 'villestore',
+		columns	: [
+			{header: 'Ville', dataIndex: 'nom', flex:1,
+				editor: {
+					xtype: 'textfield',
+					allowBlank: true,
+					//triggerAction: 'all',
+					selectOnTab: true//,
+					//lazyRender: true,
+					//listClass: 'x-combo-list-small'
+			    	}
+			},
+			{header: 'Code Postal', dataIndex: 'cp',flex: 1,
+				editor: {
+					xtype: 'textfield',
+					allowBlank: true,
+					//triggerAction: 'all',
+					selectOnTab: true//,
+					//lazyRender: true,
+					//listClass: 'x-combo-list-small'
+			    	}
+			}
+		],
+		plugins : [
+		    Ext.create('Ext.grid.plugin.CellEditing', {
+		        clicksToEdit: 1
+		    })
+		]		
+	},{
 		xtype 	: 'form',
+		frame	: true,
 		url		: BASE_URL+'user/ville/save',
 		items	: [{
 			xtype	: 'textfield',
@@ -42,16 +73,16 @@ add_ville_window= new Ext.window.Window({
 				handler: function() {
 					var form = this.up('form').getForm();
 					if (form.isValid()) {
-					    form.submit({
-					        success: function(form, action) {
-					           Ext.Msg.alert('Info', 'Ville Sauvegard&eacute;e');
-					           //Close the window
-					           this.form.owner.ownerCt.close();
-					        },
-					        failure: function(form, action) {
-					            Ext.Msg.alert('Failed', action.result.msg);
-					        }
-					    });
+						form.submit({
+							success: function(form, action) {
+								Ext.Msg.alert('Info', 'Ville Sauvegard&eacute;e');
+							   	//Close the window
+							   	this.form.owner.ownerCt.close();
+							},
+							failure: function(form, action) {
+							    	Ext.Msg.alert('Failed', action.result.msg);
+							}	
+						});
 					}
 				}
 			}]
@@ -91,15 +122,16 @@ Ext.define('MainApp.view.FamilleForm', {
 			name      : 'adresse1',
 			value	  : '10, rue des charmettes',
 			cls       : 'house',
-			labelWidth: 20
+			labelWidth: 25
 		},{
 			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
 			//hideLabel : true,
 			labelSeparator : '',		
 			name      : 'adresse2',
+			allowBlank: true,
 			value	  : '64, bd des canuts',
 			//cls       : 'house',
-			labelWidth: 20
+			labelWidth: 25
 		},{
 			xtype		: 'container',
 			anchor		: '96%',
@@ -110,9 +142,10 @@ Ext.define('MainApp.view.FamilleForm', {
 					xtype	  	: 'combobox',
 					typeAhead	: true,  //allow typing text to select value.
 					hideTrigger	: true,
+					labelWidth	: 25,
 					store	  	: 'villestore',
-					fieldLabel	: '',
-					hideLabel 	: true,		
+					fieldLabel	: 'Ville',
+					hideLabel 	: false,		
 					name      	: 'userVille_id',
 					displayField	: 'todisplay',
 					valueField	: 'id'
@@ -123,7 +156,7 @@ Ext.define('MainApp.view.FamilleForm', {
 					xtype		: 'button',
 					//text		: 'Add',
 					iconCls		: 'add',
-					style	: "padding-left:6px",	
+					style		: "padding-left:6px",	
 					handler		: function () {
 						add_ville_window.show();
 					}

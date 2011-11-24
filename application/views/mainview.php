@@ -21,15 +21,12 @@
      	<link rel="stylesheet" type="text/css" href="interface/css/icons.css" />
      		
      		<!-- Calendar plugin -->
-     	
-
-     	
-    
-	
+     		
      	<script type="text/javascript" src="interface/ext4/plugins/calendar/extensible-all-debug.js"></script>
      	<script type="text/javascript" src="interface/ext4/plugins/calendar/examples/examples.js"></script>
-	
-     	
+		
+		<!-- Global variables -->
+     	<script type="text/javascript">ID_FAMILLE = 1;</script>
      	<script type="text/javascript">
      	
      	
