@@ -12,9 +12,10 @@ class Entity_m extends CI_Model {
 	function __construct()
 	{
 		// Call the Model constructor
-        parent::__construct();		
+        	parent::__construct();		
 	}
 
+	//load bean from id
 	function load($id=false)
 	{		
 		//creer la table si inexistante
@@ -30,6 +31,7 @@ class Entity_m extends CI_Model {
 		if (!isset($this->bean->id)) $this->dBean();
 	}
 	
+	//get array of bean values for display (recursive)
 	function show()
 	{
 		if ($this->bean->id)
@@ -47,7 +49,8 @@ class Entity_m extends CI_Model {
 		
 		return $out;
 	}
-
+	
+	//get array of bean values for edit (not recursive)
 	function edit()
 	{	
 		if (!is_object($this->bean)) $this->load();
@@ -55,6 +58,7 @@ class Entity_m extends CI_Model {
 		return $out;
 	}
 	
+	//get value from bean
 	function get($field_name)
 	{
 		$fields = explode('_',$field_name);
@@ -67,6 +71,7 @@ class Entity_m extends CI_Model {
 		return $bean;
 	}	
 	
+	//build bean from posted data
 	function set($data)
 	{
 		foreach($this->fields as $n=>$fi) 
@@ -80,6 +85,7 @@ class Entity_m extends CI_Model {
 		return $this;
 	}
 	
+	//formatage des champs
 	function format()
 	{
 		foreach($this->fields as $n=>$fi) 
@@ -92,12 +98,22 @@ class Entity_m extends CI_Model {
 				if ($fi->type == 'float') $this->bean->{$n} = str_replace(',','.',$this->bean->{$n});
 				if ($fi->type == 'upper') $this->bean->{$n} = strtoupper($this->bean->{$n});
 				if ($fi->type == 'upword') $this->bean->{$n} = ucwords($this->bean->{$n});
+				if ($fi->type == 'date') 
+				{
+					$xpld = explode('-',$this->bean->{$n});
+					if (count($xpld != 3))
+					{ 
+						$xpld = explode('/',$this->bean->{$n}); 
+						if (count($xpld == 3)) $this->bean->{$n} = $xpld[2].'-'.$xpld[1].'-'.$xpld[0];
+					}
+				}
 			}
 		}
 		
 		return $this;
 	}
 	
+	//validation des champs
 	function valid($exclude=null)
 	{
 		$this->format();
@@ -148,8 +164,16 @@ class Entity_m extends CI_Model {
 				//date
 				if (($fi->type == 'date') and ($this->bean->{$n})) 
 				{
-					$xpld = explode('/',$this->bean->{$n}); 		
-					if (!checkdate($xpld[1],$xpld[0],$xpld[2])) $error[$n][] = 'notdate';
+					$xpld = explode('-',$this->bean->{$n}); 		
+					if (!checkdate($xpld[1],$xpld[2],$xpld[0])) $error[$n][] = 'invaliddate';
+				}
+				//
+				
+				//minimum relative to another field (must be tested before min/max/equal !)
+				//usefull fo date upside down test
+				if (($fi->later) and isset($this->bean->{$fi->later}))
+				{
+					$fi->min($this->bean->{$fi->later});
 				}
 				//
 				
@@ -165,17 +189,39 @@ class Entity_m extends CI_Model {
 					else $value = $this->bean->{$n};
 				
 				//equal
-				if ((isset($fi->equal)) and ($value !== $fi->equal)) $error[$n][] = 'not=='.$fi->equal;
+				if ((isset($fi->equal)) and ($value !== $fi->equal))
+				{	
+					if ($fi->type == 'date') $error[$n][] = 'not=='.date('Y-m-d',$fi->max);
+					else $error[$n][] = 'not=='.$fi->equal;
+				}
 				//max
-				if ((isset($fi->max)) and ($value > $fi->max)) $error[$n][] = 'not<='.$fi->max;
+				if ((isset($fi->max)) and ($value > $fi->max))
+				{	
+					if ($fi->type == 'date') $error[$n][] = 'not<='.date('Y-m-d',$fi->max);
+					else $error[$n][] = 'not<='.$fi->max;
+				}
 				//min
-				if ((isset($fi->min)) and ($value < $fi->min)) $error[$n][] = 'not>='.$fi->min;
+				if ((isset($fi->min)) and ($value < $fi->min)) 
+				{	
+					if ($fi->type == 'date') $error[$n][] = 'not>='.date('Y-m-d',$fi->min);
+					else $error[$n][] = 'not>='.$fi->min;
+				}
 				//
 			}
 		}
 		
+		//start custom validation (overloaded in model description)
+		custom_valid($error);
+		
 		if (!$error) return true;
 		else return $error;
+	}
+	
+	//custom validation 
+	//to be overloaded in model description
+	function custom_valid(&$error)
+	{
+		//do nothing here.. overload it !
 	}
 	
 	//sauvegarde le bean dans la base de donnée 
@@ -278,6 +324,7 @@ class Field {
 	var $rule = null;
 	var $required = false;
 	var $unique = false;
+	var $later = null;
 	
 	function __construct($name)
 	{
@@ -340,6 +387,12 @@ class Field {
 	{
 		if ($this->type == 'date') $value = strtotime($value);
 		$this->min = $value;
+		return $this;
+	}
+	
+	function later($field)
+	{
+		$this->later = $field;
 		return $this;
 	}
 }

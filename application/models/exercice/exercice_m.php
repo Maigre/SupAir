@@ -15,7 +15,7 @@ class Exercice_m extends Entity_m {
 		//Declaration des champs
 		$this->field('nom')->required()->unique();
 		$this->field('debut')->required()->type('date');
-		$this->field('fin')->required()->type('date');
+		$this->field('fin')->required()->type('date')->later('debut');
 		
 		// Errors
 		$this->error['notfound'] = 'Exercice introuvable';
@@ -24,5 +24,14 @@ class Exercice_m extends Entity_m {
 		$this->load($id);
 	}
 	
-	
+	//test if a date is in the loaded exercice
+	function test_date($date)
+	{
+		$debut = strtotime($this->get('debut'));
+		$fin = strtotime($this->get('fin'));
+		$date = strtotime($date);
+		
+		if (($debut) and ($fin) and ($date) and ($date >= $debut) and ($date <= $fin)) return true;
+		else return false;
+	}
 }
