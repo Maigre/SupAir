@@ -190,11 +190,14 @@ class Entity_m extends CI_Model {
 			else $this->session->set_flashdata($flashdata_store,serialize($this->bean));
 			
 			$out['success'] = true;
-			return $out;
 		}
-		else $validation['success'] = false;
+		else 
+		{
+			$out['error'] = $validation;
+			$out['success'] = false;
+		}
 		
-		return $validation;
+		return $out;
 	}
 		
 	function getBean($id=null)
