@@ -134,8 +134,8 @@ class Entity_m extends CI_Model {
 				//date
 				if (($fi->type == 'date') and ($this->bean->{$n})) 
 				{
-					list($y,$m,$d) = explode('-',$this->bean->{$n}); 
-					if (!checkdate($m,$d,$y)) $error[$n][] = 'notdate';
+					$xpld = explode('/',$this->bean->{$n}); 		
+					if (!checkdate($xpld[1],$xpld[0],$xpld[2])) $error[$n][] = 'notdate';
 				}
 				//
 				

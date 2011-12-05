@@ -22,7 +22,7 @@ class Exercice_m extends Entity_m {
 		
 		//load bean
 		$this->load($id);
-	} 
+	}
 	
 	
 }
