@@ -246,7 +246,7 @@ class Entity_m extends CI_Model {
 		return $out;
 	}
 		
-	function getBean($id=null)
+	function getBean()
 	{
 		if (!is_object($this->bean)) $this->load();
 		return $this->bean;
