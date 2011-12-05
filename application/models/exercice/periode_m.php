@@ -2,7 +2,7 @@
 
 //require_once(APPPATH.'models/entity.php');
 
-class Exercice_m extends Entity_m {
+class Periode_m extends Entity_m {
 	
 	function __construct($id=false)
 	{
@@ -10,15 +10,13 @@ class Exercice_m extends Entity_m {
         	parent::__construct($id);	
         
         	//Table
-        	$this->table('exExercice');
+        	$this->table('exPeriode');
 		
 		//Declaration des champs
 		$this->field('nom')->required()->unique();
-		$this->field('debut')->required()->type('date');
-		$this->field('fin')->required()->type('date');
 		
 		// Errors
-		$this->error['notfound'] = 'Exercice introuvable';
+		$this->error['notfound'] = 'Periode introuvable';
 		
 		//load bean
 		$this->load($id);

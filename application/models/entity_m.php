@@ -122,6 +122,20 @@ class Entity_m extends CI_Model {
 				}
 				//
 				
+				//unique
+				if ($fi->unique) 
+				{
+					$r_u = array();
+					
+					if($fi->relatedTo) $r_u = $this->db->where($n.'_id',$this->bean->{$n}->id)->get($this->table)->result_array();
+					else $r_u = $this->db->where($n,$this->bean->{$n})->get($this->table)->result_array();
+
+					if (count($r_u) > 0)
+							foreach($r_u as $rr_u) 
+								if ($rr_u['id'] != $this->bean->id) {$error[$n][] = 'alreadyexist'; break;}
+				}
+				//
+				
 				//isnumeric
 				if (($fi->type == 'int') or ($fi->type == 'float')) 
 				{
@@ -277,6 +291,12 @@ class Field {
 	function required()
 	{
 		$this->required = true;
+		return $this;
+	}
+	
+	function unique()
+	{
+		$this->unique = true;
 		return $this;
 	}
 	
