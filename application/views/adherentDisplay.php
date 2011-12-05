@@ -1,6 +1,6 @@
 Ext.define('Adherent', {
 	extend: 'Ext.data.Model',
-	fields: ['id', 'nom','prenom','noalloc','sexe','naissance','sante','svsp','autosortie','email','portable','fixe','bureau']
+	fields: ['id', 'nom','prenom','noalloc',{name:'sexe', mapping: 'sexe'},'naissance','sante','svsp','autosortie','email','portable','fixe','bureau']
 });
 
 
@@ -38,14 +38,14 @@ Ext.define('MainApp.view.AdherentDisplay', {
 		name      : 'naissance',
 		value	  : '04-12-73',
 		cls       : 'cake',
-		labelWidth: 20
+		labelWidth: 25
 		},{
 		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
 		//hideLabel : true,		
 		name      : 'email',
 		value	  : 'junior.byles@supair.fr',
 		cls       : 'email',
-		labelWidth: 20
+		labelWidth: 25
 		},{
 		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; perso',
 		//hideLabel : false,		
@@ -141,16 +141,13 @@ Ext.define('MainApp.view.AdherentDisplay', {
 	initComponent: function() {
 		var me=this;
 		this.on('render', function(){
-			console.info(me.statut);
-			if (me.statut==3){
+			if (me.statut=='enfant'){ //enfant, cacher certains champs
 				var fieldtohide= ['bureau','fixe','noalloc','allocataire','employeur'];
 				Ext.each(fieldtohide, function(tohide) {
-					console.info('ok2');
 					me.getForm().findField(tohide).hidden = true;
 					console.info(me.getForm().findField(tohide));
 				})
-			}
-			
+			}			
 		});
 		this.callParent(arguments);
 		this.store= adherentstore= new Ext.data.Store({

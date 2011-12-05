@@ -10,7 +10,7 @@
 		
 		<!-- ExtJS 4 -->
         <link rel="stylesheet" type="text/css" href="interface/ext4/resources/css/ext-all.css" />
-        <link rel="stylesheet" type="text/css" href="interface/ext4/plugins/calendar/resources/css/extensible-all.css" />
+        <link rel="stylesheet" type="text/css" href="interface/ext4/plugins/calendar/resources/css/extensible-all.css" /> 
         
         <script type="text/javascript" src="interface/ext4/ext-all.js"></script>
         <script type="text/javascript" src="interface/ext4/locale/ext-lang-fr.js"></script>
@@ -21,12 +21,12 @@
      	<link rel="stylesheet" type="text/css" href="interface/css/icons.css" />
      		
      		<!-- Calendar plugin -->
-     	
-     	<script type="text/javascript" src="interface/ext4/plugins/calendar/src/Extensible.js"></script>
-     	<script type="text/javascript" src="interface/ext4/plugins/calendar/examples/examples.js"></script>	
-	
-	
-     	
+     		
+     	<script type="text/javascript" src="interface/ext4/plugins/calendar/extensible-all-debug.js"></script>
+     	<script type="text/javascript" src="interface/ext4/plugins/calendar/examples/examples.js"></script>
+		
+		<!-- Global variables -->
+     	<script type="text/javascript">ID_FAMILLE = 1;</script>
      	<script type="text/javascript">
      	
      	
@@ -36,9 +36,10 @@
 		    enabled: true,
 		    paths: {
 		        'Extensible': 'interface/ext4/plugins/calendar/src',
-		        'Extensible.example': 'interface/ext4/plugins/calendar/examples/'
+		        'Extensible.example': 'interface/ext4/plugins/calendar/examples'
 		    }
 	});
+	
 	
 	
 	
