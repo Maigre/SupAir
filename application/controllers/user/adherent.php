@@ -12,14 +12,17 @@ class Adherent extends CrudControl {
 	}
 	
 	//Recherche un adherent par son nom via sql LIKE txt%
-	function search($txt)
+	function search()
 	{
-		jse(
-			$this->db->select('id','nom','prenom','userFamille_id')
-						->like('nom',$txt,'after')
-						->get('userAdherent')
-						->result_array()
-			);
+		if ($this->input->post('text'))
+		{
+			jse(
+				$this->db->select('id','nom','prenom','userFamille_id')
+							->like('nom',$this->input->post('text'),'after')
+							->get('userAdherent')
+							->result_array()
+				);
+		}
 	}
 	
 	//renvoi l'id de la famille et celui de chaque adherent
