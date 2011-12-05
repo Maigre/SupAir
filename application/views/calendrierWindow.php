@@ -23,16 +23,14 @@ Ext.onReady(function(){
 		deleteButtonText: 'Supprimer',
 		cancelButtonText: 'Annuler'
 	});
-	
 	Ext.override(Extensible.form.field.DateRange, { 
 		allDayText	: 'Journ&eacute;e',
 		toText		: 'au',
 		dateFormat	: 'j/n/Y'		
-	}); 
-	
+	});
 	Ext.override(Extensible.calendar.form.EventWindow, { 
 		titleTextAdd	: 'Nouvel &eacute;v&egrave;nement',
-		titleTextEdit	: 'Edit Event',
+		titleTextEdit	: 'Nouvel &eacute;v&egrave;nement',
 		width		: 600,
 		labelWidth	: 65,
 		detailsLinkText	: 'Détails...',
@@ -43,7 +41,7 @@ Ext.onReady(function(){
 		cancelButtonText: 'Cancel',
 		titleLabelText	: 'Nom',
     		datesLabelText  : 'Du :',		
-	}); 
+	});
 
 	// For complete details on how to customize the EventMappings object to match your
 	// application data model see the header documentation for the EventMappings class.
@@ -71,15 +69,12 @@ Ext.onReady(function(){
 	};
 	// Don't forget to reconfigure!
 	Extensible.calendar.data.EventModel.reconfigure();
-
+	
 	// One key thing to remember is that any record reconfiguration you want to perform
 	// must be done PRIOR to initializing your data store, otherwise the changes will
 	// not be reflected in the store's records.
 
-	var eventStore = Ext.create('Extensible.calendar.data.MemoryEventStore', {
-	// defined in ../data/EventsCustom.js
-		data: Ext.create('Extensible.example.calendar.data.EventsCustom')
-	});
+
 
 	Extensible.calendar.data.CalendarMappings = {
 		// Same basic concept for the CalendarMappings as above
@@ -95,28 +90,31 @@ Ext.onReady(function(){
 	// Enable event color-coding:
 	var calendarStore = Ext.create('Extensible.calendar.data.MemoryCalendarStore', {
 		// defined in ../data/CalendarsCustom.js
-		data: Ext.create('Extensible.example.calendar.data.CalendarsCustom')
+		data: Ext.create('Extensible.example.calendar.data.CalendarsCustom'),
+		
 	});
 	var eventStore = Ext.create('Extensible.calendar.data.MemoryEventStore', {
-	});
-	/*
+		data: Ext.create('Extensible.example.calendar.data.Events'),
+		//url: BASE_URL+'exercice/calendrier/save',
 		// defined in ../data/Events.js
 		autoLoad: true,
+		
 		proxy: {
 			type: 'rest',
 			url: BASE_URL+'exercice/calendrier/save',
 			noCache: false,
-
+			api: {
+		    		read: BASE_URL+'exercice/calendrier/load',
+		    		update: BASE_URL+'exercice/calendrier/update'
+		    	},
 			reader: {
 				type: 'json',
 				root: 'data'
 			},
-
 			writer: {
 				type: 'json',
 				nameProperty: 'mapping'
 			},
-
 			listeners: {
 				exception: function(proxy, response, operation, options){
 					var msg = response.message ? response.message : Ext.decode(response.responseText).message;
@@ -136,36 +134,125 @@ Ext.onReady(function(){
 			var title = Ext.value(operation.records[0].data[Extensible.calendar.data.EventMappings.Title.name], '(No title)');
 			switch(operation.action){
 			    case 'create': 
-				Extensible.example.msg('Add', 'Added "' + title + '"');
+				//Extensible.example.msg('Add', 'Added "' + title + '"');
 				break;
 			    case 'update':
-				Extensible.example.msg('Update', 'Updated "' + title + '"');
+				//Extensible.example.msg('Update', 'Updated "' + title + '"');
 				break;
 			    case 'destroy':
-				Extensible.example.msg('Delete', 'Deleted "' + title + '"');
+				//Extensible.example.msg('Delete', 'Deleted "' + title + '"');
 				break;
 			}
 		    }
 		}//,
-	});*/
+	});
 
 	//
 	// Now just create a standard calendar using our custom data
 	//
-	Ext.define('MainApp.view.calendrierWindow', {
-		extend	: 'Ext.window.Window',
+	Ext.define('MainApp.view.calendriertabpanel', {
+		extend	: 'Ext.TabPanel',
 		layout	: 'fit',
-		alias	: 'widget.calendrier_window',
-		title	: 'Calendrier',
+		id	: 'calendriertabpanel',
+		alias	: 'widget.calendriertabpanel',
 		width	: 850,
 		height	: 600,
 		modal	: true,
 		closeAction: 'hide',
 		items: [{
+			//premier onglet contient 
+			//  **une combobox permettant de selectionner un exercice parmis ceux déjà enregistrés.
+			//  **un formulaire permettant de créer un nouvel exercice
+			xtype	: 'panel',
+			title	: 'Exercice',
+			id	: 'exercicepanel',
+			items: [{
+				xtype	: 'form',
+				url 	: BASE_URL+'exercice/exercice/save',
+				id	: 'exerciceform',
+				items	:[{
+					xtype		: 'combo',
+					fieldLabel	: 'Exercice',
+					store		: exercicestore,
+					padding		: 10				
+				},{
+					xtype		: 'fieldset',
+					id		: 'fieldsetexercice',
+					title		: 'Nouvel Exercice',					
+					collapsible	: true,
+					collapsed	: true,
+					layout		: 'anchor',
+					defaults	: {
+						anchor	: '40%'
+					},
+					items :[{
+						xtype	: 'form',
+						frame	: false,
+						border  : 0,
+						width	: 500, 
+						fieldDefaults	: {
+							allowBlank:false
+						},
+						items	:[
+							{
+								xtype		: 'textfield',
+								fieldLabel	: 'Nom de l\'exercice',
+								name		: 'nom',
+								value		: '2011/2012'
+							},{
+								xtype		: 'datefield',
+								fieldLabel	: 'D&eacute;but',
+								name		: 'debut_exercice'
+							},{
+								xtype		: 'datefield',
+								fieldLabel	: 'Fin',
+								name		: 'fin_exercice'
+							},{
+								xtype	  : 'container',
+								layout	  : {
+									type  : 'hbox',
+									align : 'middle',
+									pack  : 'end'
+								},
+								items: {
+									xtype 	: 'button',
+									margin 	: 2,
+									text: 'OK',
+									formBind: true, //only enabled once the form is valid
+									disabled: true,
+									handler	: function() {
+								
+										var form = this.up('form').getForm();
+										form.url= BASE_URL+'exercice/exercice/save';
+										if (form.isValid()) {
+											form.submit({
+												success: function(form, action) {
+													Ext.Msg.alert('Info', 'Exercice Sauvegard&eacute;');
+												   	//Close the window
+												   	Ext.getCmp('fieldsetexercice').collapse();
+												},
+												failure: function(form, action) {
+												    	Ext.Msg.alert('Failed', action.result.msg);
+												}	
+											});
+										}
+										Ext.getCmp('fieldsetexercice').collapse();
+									}
+								}
+							}
+						]
+					}]
+				}]
+			}]
+		},{
 			xtype		: 'extensible.calendarpanel',
-		        eventStore	: eventStore,
+			id		: 'calendarpanel',
+		        title		: 'Calendrier',
+		        eventStore	: eventStore,		/*Ext.create('Extensible.calendar.data.MemoryEventStore', {
+		                // defined in ../data/Events.js
+		                data: Ext.create('Extensible.example.calendar.data.Events')
+			}),*/
 			calendarStore	: calendarStore,
-		        title		: 'Custom Event Mappings',
 			todayText 	: 'Aujourd\'hui',
 			jumpToText	: 'Aller au',
 			weekText	: 'Semaine', 
@@ -174,10 +261,24 @@ Ext.onReady(function(){
 			multiWeekText	: '{0} Semaines',
 			goText		: 'OK',
 			enableEditDetails : false,
-			showDayView	: false
+			showDayView	: false,
+			showWeekView	: false,
+			showMultiWeekView : false,
+			listeners:{
+				activate : function(panel){
+					datedebut=Ext.getCmp('exerciceform').getForm().findField('debut_exercice').value;
+					console.info(eventStore);
+					//eventStore.proxy.url = BASE_URL+'exercice/calendrier/load';
+					eventStore.load();
+					Ext.getCmp('calendarpanel').setStartDate(datedebut);
+					
+					
+				}
+			}
 		}]
 	});
 	
+		
 	exercicestore= new Ext.data.Store({
 		storeId: 'exercicestore',
 		fields: ['id', 'nom','datedebut', 'datefin'],
@@ -194,143 +295,16 @@ Ext.onReady(function(){
 		}          			
 	});
 	
-	Ext.define('MainApp.view.exerciceWindow', {
+	Ext.define('MainApp.view.calendrierWindow', {
 		extend	: 'Ext.window.Window',
 		layout	: 'fit',
-		alias	: 'widget.exercice_window',
-		title	: 'S&eacute;lection de l\'exercice',
-		
-		//width	: 850,
-		//height	: 600,
+		alias	: 'widget.calendrier_window',
+		title	: 'Calendrier',
 		modal	: true,
 		closeAction: 'hide',
 		items: [{
-			xtype	: 'form',
-			//margins : 2,
-			items	:[{
-				xtype		: 'combo',
-				fieldLabel	: 'Exercice',
-				store		: exercicestore,
-				margins  	: 2,	
-				
-			},{
-				xtype		:'fieldset',
-				title		: 'Nouvel Exercice',
-				collapsible	: true,
-				collapsed	: true,
-				//defaultType	: 'textfield',
-				layout		: 'anchor',
-				defaults	: {
-					anchor	: '100%'
-				},
-				items :[{
-					xtype		: 'textfield',
-					fieldLabel	: 'Nom de l\'exercice',
-					name		: 'nom',
-					value		: '2011/2012'
-					},{
-					xtype		: 'datefield',
-					fieldLabel	: 'D&eacute;but',
-					name		: 'debut_exercice'
-					},{
-					xtype		: 'datefield',
-					fieldLabel	: 'Fin',
-					name		: 'fin_exercice'
-				}]
-			},{
-				xtype	  : 'container',
-				layout	  : {
-					type  : 'hbox',
-					align : 'middle',
-					pack  : 'end'
-				},
-				items: {
-					xtype 	: 'button',
-					margin 	: 2,
-					text: 'OK',
-					formBind: true, //only enabled once the form is valid
-					disabled: true,
-					handler	: function() {
-						calendrier_window=Ext.widget('calendrier_window');
-						calendrier_window.show();
-					}
-				}
-			}]
+			xtype	: 'calendriertabpanel'
 		}]
 	});
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*showDayView: false,
-		todayText : 'Aujourd\'hui',
-		jumpToText: 'Aller au',
-		weekText : 'Semaine', 
-		monthText: 'Mois',
-		multiWeekText: '{0} Semaines',
-		
-		
-		/*Ext.create('Extensible.calendar.data.MemoryEventStore', {
-		// defined in ../data/Events.js
-		autoLoad: true,
-		proxy: {
-			type: 'rest',
-			url: BASE_URL+'exercice/calendrier/save',
-			noCache: false,
-
-			reader: {
-				type: 'json',
-				root: 'data'
-			},
-
-			writer: {
-				type: 'json',
-				nameProperty: 'mapping'
-			},
-
-			listeners: {
-				exception: function(proxy, response, operation, options){
-					var msg = response.message ? response.message : Ext.decode(response.responseText).message;
-					// ideally an app would provide a less intrusive message display
-					Ext.Msg.alert('Server Error', msg);
-				}
-			}
-		},
-
-		// It's easy to provide generic CRUD messaging without having to handle events on every individual view.
-		// Note that while the store provides individual add, update and remove events, those fire BEFORE the
-		// remote transaction returns from the server -- they only signify that records were added to the store,
-		// NOT that your changes were actually persisted correctly in the back end. The 'write' event is the best
-		// option for generically messaging after CRUD persistence has succeeded.
-		listeners: {
-		    'write': function(store, operation){
-			var title = Ext.value(operation.records[0].data[Extensible.calendar.data.EventMappings.Title.name], '(No title)');
-			switch(operation.action){
-			    case 'create': 
-				Extensible.example.msg('Add', 'Added "' + title + '"');
-				break;
-			    case 'update':
-				Extensible.example.msg('Update', 'Updated "' + title + '"');
-				break;
-			    case 'destroy':
-				Extensible.example.msg('Delete', 'Deleted "' + title + '"');
-				break;
-			}
-		    }
-		}//,
-
-		})*/

@@ -71,16 +71,15 @@ Ext.define('MainApp.view.menu', {
 								modal	: true,
 								items	: [{
 									xtype	: 'activiteform',
-									height  : 260,
-									border	: false	
+									height  : 220,
+									border	: false,
+									frame	: false
 								}]
 							});
 							nouvelleactivite_window.show();
 							
 						}		
 					}			
-				},{
-					xtype:'searchbar'
 				}]							
 			},{
 				xtype	: 'panel',
@@ -100,8 +99,8 @@ Ext.define('MainApp.view.menu', {
 					margin	: 2,
 					listeners: {
 						click: function() {
-							exercice_window=Ext.widget('exercice_window');
-							exercice_window.show();
+							calendrier_window=Ext.widget('calendrier_window');
+							calendrier_window.show();
 						}		
 					}			
 				}]

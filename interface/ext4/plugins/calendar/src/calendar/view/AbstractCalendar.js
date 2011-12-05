@@ -142,6 +142,7 @@ Ext.define('Extensible.calendar.view.AbstractCalendar', {
      * The text to display inside the drag proxy while dragging over the calendar to create a new event (defaults to 
      * 'Create event for {0}' where {0} is a date range supplied by the view)
      */
+	ddCreateEventText: 'Create event for {0}',
     /**
      * @cfg {String} ddMoveEventText
      * The text to display inside the drag proxy while dragging an event to reposition it (defaults to 
