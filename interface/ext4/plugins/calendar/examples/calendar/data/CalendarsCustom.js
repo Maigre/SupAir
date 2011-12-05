@@ -8,22 +8,14 @@ Ext.define('Extensible.example.calendar.data.CalendarsCustom', {
     constructor: function() {
         return {
             "calendars":[{
-                "cal_id":"vacances",
+                "cal_id":"C1",
                 "cal_title":"Vacances",
-                "cal_color":7
-            },{
-                "cal_id":"jourferme",
-                "cal_title":"Jours Fermés",
                 "cal_color":2
-            }/*,{
-                "cal_id":"C3",
-                "cal_title":"School",
-                "cal_color":7
             },{
-                "cal_id":"C4",
-                "cal_title":"Sports",
-                "cal_color":26
-            }*/]
+                "cal_id":"C2",
+                "cal_title":"Jour Ferm&eacute;",
+                "cal_color":22
+            }]
         }
     }
 });

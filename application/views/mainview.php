@@ -27,40 +27,39 @@
 		
 		<!-- Global variables -->
      	<script type="text/javascript">ID_FAMILLE = 1;</script>
+     	
      	<script type="text/javascript">
-     	
-     	
-	
-     	//Charge les classes de extjs
-     	Ext.Loader.setConfig({
-		    enabled: true,
-		    paths: {
-		        'Extensible': 'interface/ext4/plugins/calendar/src',
-		        'Extensible.example': 'interface/ext4/plugins/calendar/examples'
-		    }
-	});
+     		
+	     	//Charge les classes de extjs
+	     	Ext.Loader.setConfig({
+			    enabled: true,
+			    paths: {
+				'Extensible': 'interface/ext4/plugins/calendar/src',
+				'Extensible.example': 'interface/ext4/plugins/calendar/examples'
+			    }
+		});
 	
 	
 	
 	
-     	<?php 
-     	foreach ($views as $view){
-     		echo $view;
-     	}
-     	?>
-     	
-     	Ext.ns('MainApp');     	
-     	    	
-     	
-     	     	
-     	Ext.onReady(function(){
+	     	<?php 
+	     	foreach ($views as $view){
+	     		echo $view;
+	     	}
+	     	?>
+	     	
+	     	Ext.ns('MainApp');     	
+	     	    	
+	     	
+	     	     	
+	     	Ext.onReady(function(){
 			
-		//load viewport
-		Main.Launch.init();
+			//load viewport
+			Main.Launch.init();
 
-		//check if already logged in and display welcome message or login window
-		//MainApp.Login.ask();				  			
-	});
+			//check if already logged in and display welcome message or login window
+			//MainApp.Login.ask();				  			
+		});
 	</script>
 
     </head>

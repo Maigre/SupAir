@@ -44,7 +44,6 @@ displayfamille= function(){
 					nouvelenfant_button.destroy();
 				}
 				nouvelenfant_button=  Ext.widget('nouvelenfant_button');
-				console.info(nouvelenfant_button);							
 				Ext.getCmp('menuadherentpanel').add(nouvelenfant_button);				
 			}
 			else{

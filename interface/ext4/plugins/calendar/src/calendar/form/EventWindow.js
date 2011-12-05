@@ -54,16 +54,15 @@ Ext.define('Extensible.calendar.form.EventWindow', {
     titleTextEdit: 'Edit Event',
     width: 600,
     labelWidth: 65,
-    detailsLinkText: 'Détails...',
-    savingMessage: 'Enregistrement...',
-    deletingMessage: 'Suppression...',
-    saveButtonText: 'O.K',
+    detailsLinkText: 'Edit Details...',
+    savingMessage: 'Saving changes...',
+    deletingMessage: 'Deleting event...',
+    saveButtonText: 'Save',
     deleteButtonText: 'Delete',
     cancelButtonText: 'Cancel',
-    titleLabelText: 'Nom',
-    datesLabelText: 'Du :',
+    titleLabelText: 'Title',
+    datesLabelText: 'When',
     calendarLabelText: 'Calendar',
-    jsrLabelText: 'JSR',
     
     // General configs
     closeAction: 'hide',
@@ -204,16 +203,6 @@ Ext.define('Extensible.calendar.form.EventWindow', {
                 store: this.calendarStore
             });
         }
-        /*//More fields here
-        items.push({
-                xtype: 'checkbox',
-                itemId: this.id + '-jsr',
-                name: Extensible.calendar.data.EventMappings.Jsr.name,
-                anchor: '100%',
-                fieldLabel: this.jsrLabelText//,
-                //store: this.calendarStore
-        });*/
-        
         
         return items;
     },

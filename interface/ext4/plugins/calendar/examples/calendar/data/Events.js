@@ -18,22 +18,40 @@ Ext.define('Extensible.example.calendar.data.Events', {
         return {
             "evts":[{
                 "id":1001,
-                "cid":1,
-                "title":"Vacation",
-                "start":makeDate(-20, 10),
-                "end":makeDate(-10, 15),
-                "notes":"Have fun"
+                "cid": 'C1',
+                "title":"Toussaint",
+                "start":'2011-10-22 00:00:00',
+                "end":'2011-11-03 00:00:00',
+                "ad":true
             },{
                 "id":1002,
-                "cid":2,
-                "title":"Lunch with Matt",
-                "start":makeDate(0, 11, 30),
-                "end":makeDate(0, 13),
-                "loc":"Chuy's!",
-                "url":"http://chuys.com",
-                "notes":"Order the queso",
-                "rem":"15"
+                "cid": 'C1',
+                "title":"Noel",
+                "start":'2011-12-17 00:00:00',
+                "end":'2012-01-03 00:00:00',
+                "ad":true
             },{
+                "id":1003,
+                "cid": 'C1',
+                "title":"F&eacute;vrier",
+                "start":'2012-02-11 00:00:00',
+                "end":'2012-02-27 00:00:00',
+                "ad":true
+            },{
+                "id":1004,
+                "cid": 'C1',
+                "title":"Paques",
+                "start":'2012-04-07 00:00:00',
+                "end":'2012-04-23 00:00:00',
+                "ad":true
+            },{
+                "id":1005,
+                "cid": 'C1',
+                "title":"Et&eacute;",
+                "start":'2012-07-05 00:00:00',
+                "end":'2012-09-04 00:00:00',
+                "ad":true
+            }/*,{
                 "id":1003,
                 "cid":3,
                 "title":"Project due",
@@ -111,7 +129,7 @@ Ext.define('Extensible.example.calendar.data.Events', {
                 "title":"Toby's soccer game",
                 "start":makeDate(5, 10),
                 "end":makeDate(5, 12)
-            }]
+            }*/]
         }
     }
 });
