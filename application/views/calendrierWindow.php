@@ -198,7 +198,7 @@ Ext.onReady(function(){
 								xtype		: 'textfield',
 								fieldLabel	: 'Nom de l\'exercice',
 								name		: 'nom',
-								value		: '2011/2012'
+								value		: '2011 - 2012'
 							},{
 								xtype		: 'datefield',
 								fieldLabel	: 'D&eacute;but',
