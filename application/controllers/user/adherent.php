@@ -15,7 +15,7 @@ class Adherent extends CrudControl {
 	function search($txt)
 	{
 		jse(
-			$this->db->select('id','nom','prenom')
+			$this->db->select('id','nom','prenom','userFamille_id')
 						->like('nom',$txt,'after')
 						->get('userAdherent')
 						->result_array()
