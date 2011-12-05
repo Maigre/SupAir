@@ -19,6 +19,7 @@ class Adherent extends CrudControl {
 			jse(
 				$this->db->select('id','nom','prenom','userFamille_id')
 							->like('nom',$this->input->post('text'),'after')
+							->or_like('prenom',$this->input->post('text'),'after')
 							->get('userAdherent')
 							->result_array()
 				);
