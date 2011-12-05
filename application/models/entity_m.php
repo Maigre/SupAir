@@ -274,6 +274,7 @@ class Field {
 	var $type = 'str';
 	var $rule = null;
 	var $required = false;
+	var $unique = false;
 	
 	function __construct($name)
 	{
