@@ -19,8 +19,8 @@ class Welcome extends CI_Controller {
 		$data['views'][]=$this->load->view('familleForm',null,true);
 		$data['views'][]=$this->load->view('nouvelleFamilleForm',null,true);
 		$data['views'][]=$this->load->view('adherentMain',null,true);
-		$data['views'][]=$this->load->view('activiteForm',null,true);
-		
+	//***TOOLS
+		$data['views'][]=$this->load->view('tools/ListWindow',null,true);	
 		
 
 	//***CALENDAR
@@ -28,6 +28,8 @@ class Welcome extends CI_Controller {
 
 		
 		$data['views'][]=$this->load->view('calendrierWindow',null,true);
+		
+		$data['views'][]=$this->load->view('activiteForm',null,true);
 		
 		
 		$this->load->view('mainview',$data);

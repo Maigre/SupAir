@@ -24,13 +24,13 @@ Ext.define('MainApp.view.AdherentForm', {
 			fieldLabel: 'Pr&eacute;nom',	
 			name      : 'prenom',
 			value	  : 'Junior',
-			labelWidth: 50,
+			//labelWidth: 50,
 			anchor	  : '96%'
 		},{
 			fieldLabel: 'Nom',		
 			name      : 'nom',
 			value	  : 'Byles',
-			labelWidth: 50,
+			//labelWidth: 50,
 			anchor	  : '96%',
 			listeners 	:{
 				'change': function(me) {
@@ -53,11 +53,12 @@ Ext.define('MainApp.view.AdherentForm', {
 			xtype		: 'datefield',
 			fieldLabel	: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',	
 			name      	: 'naissance',
-			value	  	: '04-12-73',
-			format		: 'Y-m-d',
+			format		: 'd/m/Y',
+			value	  	: '04/12/1973',
 			cls       	: 'cake',
-			labelWidth	: 20/*,
-			listeners 	:{
+			anchor		: '96%',
+			//labelWidth	: 50,
+			/*listeners 	:{
 				'change': function(me) {
                 			form=this.up('form');
 					set_nosecu_begin(form);
@@ -68,7 +69,7 @@ Ext.define('MainApp.view.AdherentForm', {
 			name      : 'email',
 			value	  : 'junior.byles@supair.fr',
 			cls       : 'email',
-			labelWidth: 20,
+			//labelWidth: 20,
 			anchor	  : '96%'
 		},{
 			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; perso',
@@ -84,9 +85,9 @@ Ext.define('MainApp.view.AdherentForm', {
 			anchor	  : '96%',
 			listeners 	:{
 				'change': function(me) {
-                	form=this.up('form');
+					form=this.up('form');
 					set_fixe_conjoint(form);
-                }
+				}
 			}
 		},{
 			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pro',
@@ -142,7 +143,7 @@ Ext.define('MainApp.view.AdherentForm', {
 			}]}]},{
 			xtype: 'textfield',
 			fieldLabel: 'N&deg; Alloc',
-			labelWidth: 25,		
+			//labelWidth: 25,		
 			name      : 'noalloc',
 			value	  : '0458392039',
 			anchor	  : '96%'

@@ -4,7 +4,7 @@ exercicestore= new Ext.data.Store({
 	autoLoad: true,
 	proxy: {
 		type: 'ajax',
-		url: BASE_URL+'calendrier/calendrier/listAll/nom',  // url that will load data
+		url: BASE_URL+'exercice/exercice/listAll/debut',  // url that will load data
 		actionMethods : {read: 'POST'},
 		reader : {
 			type : 'json',
@@ -37,7 +37,7 @@ Ext.define('MainApp.view.ActiviteForm', {
 	items 		: [{
 			xtype	  	: 'combobox',
 			typeAhead	: true,  //allow typing text to select value.
-			hideTrigger	: true,
+			//hideTrigger	: true,
 			store	  	: exercicestore,
 			fieldLabel	: 'Exercice',
 			hideLabel 	: false,		
@@ -52,9 +52,9 @@ Ext.define('MainApp.view.ActiviteForm', {
 		},{
 			xtype	  	: 'combobox',
 			typeAhead	: true,  //allow typing text to select value.
-			hideTrigger	: true,
+			//hideTrigger	: true,
 			store	  	: exercicestore,
-			fieldLabel	: 'Secteur-Type',
+			fieldLabel	: 'Type',
 			hideLabel 	: false,		
 			name      	: 'secteurtype_id',
 			displayField	: 'nom',

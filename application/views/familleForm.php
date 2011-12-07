@@ -96,7 +96,7 @@ Ext.define('MainApp.view.FamilleForm', {
 	id           	 : 'familleform',
 	frame 		 : true,
 	height		 : 220,
-	//ui			 : 'bubble',
+	//ui		 : 'bubble',
 	width 		 : 240,
 	x     		 : 0,
 	y     		 : 0,
@@ -104,8 +104,8 @@ Ext.define('MainApp.view.FamilleForm', {
 	frame 		 : true,
 	title 		 : 'Nouvelle Famille',
 	iconCls 	 : 'group',
-	bodyStyle    : 'padding:5px 5px 0',
-	method       : 'post',
+	bodyStyle    	 : 'padding:5px 5px 0',
+	method       	 : 'post',
 	trackResetOnLoad : 'true',
 	fieldDefaults: {
 		msgTarget: 'side',
@@ -158,7 +158,14 @@ Ext.define('MainApp.view.FamilleForm', {
 					iconCls		: 'add',
 					style		: "padding-left:6px",	
 					handler		: function () {
-						add_ville_window.show();
+						listwindow=Ext.getCmp('listwindow');
+						if(!listwindow){
+							listwindow=Ext.widget('listwindow',{
+								title: 'Nouvelle Ville'
+							});
+						}
+						listwindow.show();
+						//console.info(Ext.widget('listwindow'));
 					}
 				}
 			] 		

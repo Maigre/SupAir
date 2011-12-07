@@ -33,11 +33,11 @@ Ext.define('MainApp.view.menu', {
 					listeners: {
 						click: function() {
 							
-							//nouvellefamilleform=Ext.getCmp('nouvellefamilleform');
-							//if (!nouvellefamilleform){
+							nouvellefamilleform=Ext.getCmp('nouvellefamilleform');
+							if (!nouvellefamilleform){
 								//console.info('okwidget');
 								nouvellefamilleform=Ext.widget('nouvellefamilleform');
-							//}
+							}
 							nouvellefamilleform.show();
 							
 						}		
