@@ -56,12 +56,7 @@ class CrudControl extends CI_Controller {
 		$all = $this->db->get($this->Entity()->table)->result_array();
 		
 		$out=array();
-		foreach ($all as $a) 
-		{
-			$temp = $this->Entity($a['id']);
-			var_dump($temp);
-			$out[] = $this->Entity($a['id'])->getBean->export();
-		}
+		foreach ($all as $a) $out[] = $this->Entity($a['id'])->getBean()->export();
 		
 		jse($out);
 	}
