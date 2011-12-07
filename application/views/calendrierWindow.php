@@ -7,7 +7,85 @@
 
 Ext.onReady(function(){
 
+	periodestore= new Ext.data.Store({
+		storeId: 'periodestore',
+		fields: ['id', 'nom'],
+		autoLoad: true,
+		proxy: {
+			type: 'ajax',
+			url: BASE_URL+'exercice/periode/listAll/nom',  // url that will load data
+			actionMethods : {read: 'POST'},
+			reader : {
+				type : 'json',
+				totalProperty: 'size',
+				root: 'combobox'
+			}
+		}          			
+	});
 	
+	add_periode_window= new Ext.window.Window({
+		title	: 'Nouvelle Periode',
+		modal	: true,
+		items	: [{
+			xtype	: 'grid',
+			store	: 'periodestore',
+			columns	: [
+				{header: 'Nom', dataIndex: 'nom', flex:1,
+					editor: {
+						xtype: 'textfield',
+						allowBlank: true,
+						//triggerAction: 'all',
+						selectOnTab: true//,
+						//lazyRender: true,
+						//listClass: 'x-combo-list-small'
+				    	}
+				}
+			],
+			plugins : [
+			    Ext.create('Ext.grid.plugin.CellEditing', {
+				clicksToEdit: 1
+			    })
+			]		
+		},{
+			xtype 	: 'form',
+			frame	: true,
+			url		: BASE_URL+'exercice/periode/save',
+			items	: [{
+				xtype	: 'textfield',
+				fieldLabel	: 'Nom',
+				name	: 'nom'
+			},{
+				xtype	: 'container',
+				layout	: {
+					type: 'hbox',
+					pack: 'end'
+				},
+				items : [{
+					xtype	: 'button',
+					text	: 'Submit',
+					formBind: true, //only enabled once the form is valid
+					//disabled: true,
+					handler: function() {
+						var form = this.up('form').getForm();
+						if (form.isValid()) {
+							form.submit({
+								success: function(form, action) {
+									Ext.Msg.alert('Info', 'P&eacuteriode Sauvegard&eacute;e');
+								   	//Close the window
+								   	this.form.owner.ownerCt.close();
+								},
+								failure: function(form, action) {
+								    	Ext.Msg.alert('Failed', action.result.msg);
+								}	
+							});
+						}
+					}
+				}]
+			}]
+		}]
+	});	
+	
+		
 	Ext.override(Extensible.calendar.view.AbstractCalendar , { 
 		ddCreateEventText : 'Ajouter un &eacute;v&egrave;nement au {0}',
 		ddResizeEventText: 'Mettre à jour un &eacute;v&egrave;nement au {0}',
@@ -40,7 +118,69 @@ Ext.onReady(function(){
 		deleteButtonText: 'Delete',
 		cancelButtonText: 'Cancel',
 		titleLabelText	: 'Nom',
-    		datesLabelText  : 'Du :',		
+    		datesLabelText  : 'Du :',
+    		getFormItemConfigs: function() {
+			var items = [{
+				xtype		: 'container',
+				anchor		: '56%',
+				layout		: 'hbox',
+				items		:[
+					{
+						flex	  	: 5,
+						xtype	  	: 'combobox',
+						typeAhead	: true,  //allow typing text to select value.
+						//hideTrigger	: true,
+						labelWidth	: 25,
+						store	  	: 'periodestore',
+						itemId		: this.id + '-title',
+						fieldLabel	: 'Nom',
+						//hideLabel 	: false,		
+						name      	: Extensible.calendar.data.EventMappings.Title.name,
+						displayField	: 'nom',
+						valueField	: 'id'
+						//cls       : 'red'
+					},{
+						flex	  	: 1,
+						margin		: '0 0 0 10',
+						xtype		: 'button',
+						//text		: 'Add',
+						iconCls		: 'add',
+						style		: "padding-left:6px",	
+						handler		: function () {
+							listwindow=Ext.getCmp('listwindow');
+							if(!listwindow){
+								listwindow=Ext.widget('listwindow',{
+									title: 'Nouvelle P&eacuteriode',
+									store: 'periodestore',
+									columnparams	: [['Nom','nom']],
+								});
+							}
+							listwindow.show();
+						}
+					}
+				] 		
+			},{
+			    xtype: 'extensible.daterangefield',
+			    itemId: this.id + '-dates',
+			    name: 'dates',
+			    anchor: '95%',
+			    singleLine: true,
+			    fieldLabel: this.datesLabelText
+			}];
+		
+			if(this.calendarStore){
+			    items.push({
+				xtype: 'extensible.calendarcombo',
+				itemId: this.id + '-calendar',
+				name: Extensible.calendar.data.EventMappings.CalendarId.name,
+				anchor: '100%',
+				fieldLabel: this.calendarLabelText,
+				store: this.calendarStore
+			    });
+			}
+		
+			return items;
+	    	}		
 	});
 
 	// For complete details on how to customize the EventMappings object to match your
@@ -105,7 +245,7 @@ Ext.onReady(function(){
 			noCache: false,
 			api: {
 		    		read: BASE_URL+'exercice/calendrier/load',
-		    		update: BASE_URL+'exercice/calendrier/update'
+		    		update: BASE_URL+'exercice/calendrier/save'
 		    	},
 			reader: {
 				type: 'json',
@@ -146,6 +286,40 @@ Ext.onReady(function(){
 		    }
 		}//,
 	});
+	
+	
+	//Change the event form 
+	/*Ext.override('Extensible.calendar.form.EventWindow', {
+		getFormItemConfigs: function() {
+			var items = [{
+			    xtype: 'textfield',
+			    itemId: this.id + '-title',
+			    name: Extensible.calendar.data.EventMappings.Title.name,
+			    fieldLabel: 'YA',
+			    anchor: '100%'
+			},{
+			    xtype: 'extensible.daterangefield',
+			    itemId: this.id + '-dates',
+			    name: 'dates',
+			    anchor: '95%',
+			    singleLine: true,
+			    fieldLabel: this.datesLabelText
+			}];
+		
+			if(this.calendarStore){
+			    items.push({
+				xtype: 'extensible.calendarcombo',
+				itemId: this.id + '-calendar',
+				name: Extensible.calendar.data.EventMappings.CalendarId.name,
+				anchor: '100%',
+				fieldLabel: this.calendarLabelText,
+				store: this.calendarStore
+			    });
+			}
+		
+			return items;
+	    	}
+	});*/
 
 	//
 	// Now just create a standard calendar using our custom data
@@ -172,9 +346,21 @@ Ext.onReady(function(){
 				id	: 'exerciceform',
 				items	:[{
 					xtype		: 'combo',
+					id		: 'comboexercice',
 					fieldLabel	: 'Exercice',
 					store		: exercicestore,
-					padding		: 10				
+    					displayField	: 'nom',
+    					valueField	: 'id',
+					padding		: 10,
+					listeners: {
+						select: {
+						    //element: 'el', //bind to the underlying body property on the panel
+						    fn: function(){ 
+						    	console.log(Ext.getCmp('comboexercice').getRawValue());
+						    	Ext.getCmp('calendarpanel').setTitle('Exercice '+Ext.getCmp('comboexercice').getRawValue());
+						    }
+						}
+					}				
 				},{
 					xtype		: 'fieldset',
 					id		: 'fieldsetexercice',
@@ -201,12 +387,14 @@ Ext.onReady(function(){
 								value		: '2011 - 2012'
 							},{
 								xtype		: 'datefield',
+								format		: 'd/m/Y',
 								fieldLabel	: 'D&eacute;but',
-								name		: 'debut_exercice'
+								name		: 'debut'
 							},{
 								xtype		: 'datefield',
+								format		: 'd/m/Y',
 								fieldLabel	: 'Fin',
-								name		: 'fin_exercice'
+								name		: 'fin'
 							},{
 								xtype	  : 'container',
 								layout	  : {
@@ -230,9 +418,30 @@ Ext.onReady(function(){
 													Ext.Msg.alert('Info', 'Exercice Sauvegard&eacute;');
 												   	//Close the window
 												   	Ext.getCmp('fieldsetexercice').collapse();
+												   	Ext.getStore('exercicestore').load();
 												},
 												failure: function(form, action) {
-												    	Ext.Msg.alert('Failed', action.result.msg);
+												    	error=action.result.error;
+												    	console.info(error);
+												    	for (var key in error){
+												    		if (error[key][0]=='alreadyexist'){
+												    			Ext.Msg.alert('Failed', 'Cet exercice a d&eacutej&agrave &eacutet&eacute cr&eacute&eacute. Veuillez choisir un autre nom.');												    			
+												    		}
+												    		console.info(key);
+												    		console.info(error[key][0]);
+												    	}
+												    	//console.info(error.key);
+													console.info('after');
+												    	Ext.each(error, function(field, value, c, d) {
+   														/*console.info(field);
+   														console.info(value);
+   														console.info(c);
+   														console.info('ok');
+   														console.info(field[0]);
+   														console.info(c);
+   														console.info(d);*/
+													});
+												    	//Ext.Msg.alert('Failed', action.result.msg);
 												}	
 											});
 										}
@@ -266,9 +475,8 @@ Ext.onReady(function(){
 			showMultiWeekView : false,
 			listeners:{
 				activate : function(panel){
-					datedebut=Ext.getCmp('exerciceform').getForm().findField('debut_exercice').value;
+					datedebut=Ext.getCmp('exerciceform').getForm().findField('debut').value;
 					console.info(eventStore);
-					//eventStore.proxy.url = BASE_URL+'exercice/calendrier/load';
 					eventStore.load();
 					Ext.getCmp('calendarpanel').setStartDate(datedebut);
 					
@@ -279,13 +487,13 @@ Ext.onReady(function(){
 	});
 	
 		
-	exercicestore= new Ext.data.Store({
+	/*exercicestore= new Ext.data.Store({
 		storeId: 'exercicestore',
-		fields: ['id', 'nom','datedebut', 'datefin'],
+		fields: ['id', 'nom','debut', 'fin'],
 		autoLoad: true,
 		proxy: {
 			type: 'ajax',
-			url: BASE_URL+'calendrier/calendrier/listAll/nom',  // url that will load data
+			url: BASE_URL+'exercice/exercice/listAll/debut',  // url that will load data
 			actionMethods : {read: 'POST'},
 			reader : {
 				type : 'json',
@@ -293,12 +501,13 @@ Ext.onReady(function(){
 				root: 'combobox'
 			}
 		}          			
-	});
+	});*/
 	
 	Ext.define('MainApp.view.calendrierWindow', {
 		extend	: 'Ext.window.Window',
 		layout	: 'fit',
 		alias	: 'widget.calendrier_window',
+		id 	: 'calendrierwindow',
 		title	: 'Calendrier',
 		modal	: true,
 		closeAction: 'hide',

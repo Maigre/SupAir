@@ -2,7 +2,7 @@ Ext.define('MainApp.view.tools.SearchBar', {
 	extend: 'Ext.form.field.ComboBox',
 	alias : 'widget.searchbar',
 	displayField: 'todisplay',
-	valueField: 'id',
+	valueField: 'userFamille_id',
 	enableKeyEvents: true,
 	//loadingText: 'Recherche...',
 	//typeAhead: true,
@@ -11,38 +11,45 @@ Ext.define('MainApp.view.tools.SearchBar', {
 	border: 0,
 	width: 140,
 	height: 30,
-	queryParam: 'text_search',
+	queryParam: 'text',
 	typeAheadDelay : 250,
 	hideTrigger: true,
 	listeners:{
-		keypress: {fn : function(){
-			console.info('ok');
-			ID_FAMILLE=1;
-			displayfamille(ID_FAMILLE);
+		select: {fn : function(a,b){
+			ID_FAMILLE=a.getValue();
+			displayfamille();
+			//console.info(a.getValue());
+			//console.info(b.getValue());
+			//console.info(this);
+			//ID_FAMILLE=1;
+			//displayfamille(ID_FAMILLE);
 			//var famillestore = Ext.data.StoreManager.lookup('famillestore');
 			//
-			/*this.store.load();
+			//this.store.url=BASE_URL+'user/adherent/search'
+			//this.store.load();
 			
-			this.store.on('load', function(database){
+			//this.store.on('load', function(database){
+				
+			//	console.info(database);
 				/*var familledisplay = Ext.getCmp('familledisplay');
 				if (!familledisplay){
 					var familledisplay = Ext.widget('familledisplay');
 				}	
 				var rec= database.getAt(0);
-				familledisplay.getForm().loadRecord(rec);
-				displayfamille(1);				
-			});*/
+				familledisplay.getForm().loadRecord(rec);*/
+				//displayfamille(1);				
+			//});
 		}}
 	},
 	
 	initComponent: function() {
 		var searchstore = Ext.create('Ext.data.Store', {
 			//extend: 'Ext.data.Store',
-			fields: ['id', 'todisplay'], //put more field here like 'idfamille'
+			fields: ['id', 'nom', 'prenom', 'userFamille_id', {name:'todisplay', mapping: 'prenom + " " + obj.nom'}], //put more field here like 'idfamille'
 			proxy: {
 				type: 'ajax',
 				api: {
-					read: BASE_URL+'user/famille/search',
+					read: BASE_URL+'user/adherent/search',
 				},
 				actionMethods : {read: 'POST'},   	
 				reader: {
