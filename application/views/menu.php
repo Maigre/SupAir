@@ -103,6 +103,29 @@ Ext.define('MainApp.view.menu', {
 							calendrier_window.show();
 						}		
 					}			
+				},{
+					xtype	: 'button',
+					text 	: 'Secteur',
+					iconCls	: 'add',					
+					width 	: 110,
+					margin	: 2,
+					listeners: {
+						click: function() {
+							nouveausecteur_window= new Ext.window.Window({
+								id	: 'nouveausecteur_window',
+								title	: 'Nouveau Secteur',
+								//iconCls	: 'palette',
+								modal	: true,
+								items	: [{
+									xtype	: 'secteurform',
+									height  : 220,
+									border	: false,
+									frame	: false
+								}]
+							});
+							nouveausecteur_window.show();
+						}		
+					}			
 				}]
 			}];
 					

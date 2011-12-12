@@ -100,11 +100,12 @@ class Entity_m extends CI_Model {
 				if ($fi->type == 'upword') $this->bean->{$n} = ucwords($this->bean->{$n});
 				if ($fi->type == 'date') 
 				{
+					$this->bean->{$n} = substr($this->bean->{$n},0,10);
 					$xpld = explode('-',$this->bean->{$n});
 					if (count($xpld != 3))
 					{ 
 						$xpld = explode('/',$this->bean->{$n}); 
-						if (count($xpld == 3)) $this->bean->{$n} = $xpld[2].'-'.$xpld[1].'-'.$xpld[0];
+						if (count($xpld) == 3) $this->bean->{$n} = $xpld[2].'-'.$xpld[1].'-'.$xpld[0];
 					}
 				}
 			}
@@ -211,7 +212,7 @@ class Entity_m extends CI_Model {
 		}
 		
 		//start custom validation (overloaded in model description)
-		custom_valid($error);
+		$this->custom_valid($error);
 		
 		if (!$error) return true;
 		else return $error;
