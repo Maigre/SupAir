@@ -30,6 +30,7 @@ class Welcome extends CI_Controller {
 		$data['views'][]=$this->load->view('calendrierWindow',null,true);
 		
 		$data['views'][]=$this->load->view('activiteForm',null,true);
+		$data['views'][]=$this->load->view('secteurForm',null,true);
 		
 		
 		$this->load->view('mainview',$data);

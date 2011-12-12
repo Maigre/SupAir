@@ -2,7 +2,8 @@ villestore= new Ext.data.Store({
 	storeId: 'villestore',
 	fields: ['id', 'nom', 'cp',{name:'todisplay', mapping: 'nom + " " + obj.cp'}],
 	autoLoad: true,
-	proxy: {
+	autoSync: true,
+	/*proxy: {
 		type: 'ajax',
 		url: BASE_URL+'user/ville/listAll/nom',  // url that will load data
 		actionMethods : {read: 'POST'},
@@ -11,83 +12,27 @@ villestore= new Ext.data.Store({
 			totalProperty: 'size',
 			root: 'combobox'
 		}
-	}          			
-});
-
-add_ville_window= new Ext.window.Window({
-	title	: 'Nouvelle Ville',
-	modal	: true,
-	items	: [{
-		xtype	: 'grid',
-		store	: 'villestore',
-		columns	: [
-			{header: 'Ville', dataIndex: 'nom', flex:1,
-				editor: {
-					xtype: 'textfield',
-					allowBlank: true,
-					//triggerAction: 'all',
-					selectOnTab: true//,
-					//lazyRender: true,
-					//listClass: 'x-combo-list-small'
-			    	}
-			},
-			{header: 'Code Postal', dataIndex: 'cp',flex: 1,
-				editor: {
-					xtype: 'textfield',
-					allowBlank: true,
-					//triggerAction: 'all',
-					selectOnTab: true//,
-					//lazyRender: true,
-					//listClass: 'x-combo-list-small'
-			    	}
-			}
-		],
-		plugins : [
-		    Ext.create('Ext.grid.plugin.CellEditing', {
-		        clicksToEdit: 1
-		    })
-		]		
-	},{
-		xtype 	: 'form',
-		frame	: true,
-		url		: BASE_URL+'user/ville/save',
-		items	: [{
-			xtype	: 'textfield',
-			fieldLabel	: 'Ville',
-			name	: 'nom'
-		},{
-			xtype	: 'textfield',
-			fieldLabel	: 'Code Postal',
-			name	: 'cp'
-		},{
-			xtype	: 'container',
-			layout	: {
-				type: 'hbox',
-				pack: 'end'
-			},
-			items : [{
-				xtype	: 'button',
-				text: 'Submit',
-				formBind: true, //only enabled once the form is valid
-				//disabled: true,
-				handler: function() {
-					var form = this.up('form').getForm();
-					if (form.isValid()) {
-						form.submit({
-							success: function(form, action) {
-								Ext.Msg.alert('Info', 'Ville Sauvegard&eacute;e');
-							   	//Close the window
-							   	this.form.owner.ownerCt.close();
-							},
-							failure: function(form, action) {
-							    	Ext.Msg.alert('Failed', action.result.msg);
-							}	
-						});
-					}
-				}
-			}]
-		}]
-	}]
+	},*/
+	proxy: {
+		type: 'ajax',
+		url: BASE_URL+'user/ville/listAll/nom',  // url that will load data
+		api: {
+			read: BASE_URL+'user/ville/listAll/nom',
+			update: BASE_URL+'user/ville/save',
+		},
+		actionMethods : {read: 'POST', update: 'POST'},   	
+		reader: {
+			type: 'json',
+			totalProperty: 'size',
+			root: 'combobox'
+		},
+		writer: {
+			type: 'json',
+			//encode: 'false',
+			writeAllFields: true//,
+			//root: 'data'
+		}
+	},          			
 });
 
 Ext.define('MainApp.view.FamilleForm', {
@@ -158,10 +103,18 @@ Ext.define('MainApp.view.FamilleForm', {
 					iconCls		: 'add',
 					style		: "padding-left:6px",	
 					handler		: function () {
-						listwindow=Ext.getCmp('listwindow');
+						listwindow=Ext.getCmp('listwindowville');
 						if(!listwindow){
 							listwindow=Ext.widget('listwindow',{
-								title: 'Nouvelle Ville'
+								id	: 'listwindowville',
+								nom	: 'ville',
+								title	: 'Nouvelle Ville',
+								url	: BASE_URL+'user/ville/save',
+								gridtitle : 'Modifier une ville existante',
+								formfield1: ['Ville', 'nom'],
+								formfield2: ['Code Postal', 'cp'],
+								store	: 'villestore'
+							
 							});
 						}
 						listwindow.show();

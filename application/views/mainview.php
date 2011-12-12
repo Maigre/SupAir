@@ -27,6 +27,8 @@
 		
 		<!-- Global variables -->
      	<script type="text/javascript">ID_FAMILLE = 1;</script>
+     	<script type="text/javascript">EXERCICE = '2011-2012';</script>
+     	<script type="text/javascript">EXERCICE_ID = 1;</script>
      	
      	<script type="text/javascript">
      		

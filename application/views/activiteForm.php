@@ -21,7 +21,7 @@ Ext.define('MainApp.view.ActiviteForm', {
 	statut		: '',
 	frame 		: true,
 	height		: 220,
-	//width 		: 300,
+	width 		: 300,
 	x     		: 0,
 	y     		: 0,
 	url   		: '',
@@ -31,6 +31,7 @@ Ext.define('MainApp.view.ActiviteForm', {
 	fieldDefaults	: {
 		msgTarget : 'side',
 		labelWidth: 80,
+		anchor	  : '96%',
 		allowBlank:false
 	},
 	defaultType  	: 'textfield',
@@ -50,17 +51,13 @@ Ext.define('MainApp.view.ActiviteForm', {
 			name      	: 'nom',
 			value	  	: 'Chant'
 		},{
-			xtype	  	: 'combobox',
-			typeAhead	: true,  //allow typing text to select value.
-			//hideTrigger	: true,
-			store	  	: exercicestore,
-			fieldLabel	: 'Type',
-			hideLabel 	: false,		
-			name      	: 'secteurtype_id',
-			displayField	: 'nom',
-			valueField	: 'id'
+			xtype		: 'textfield',
+			hidden		: true,
+			fieldLabel	: 'Nom',
+			name      	: 'secteur_id',
+			value	  	: 1
 		},{
-			xtype		: 'numberfield',
+			xtype		: 'textfield',
 			fieldLabel	: 'Code Analytique',
 			name      	: 'codeanalytique',
 			value	  	: '350'
@@ -72,7 +69,7 @@ Ext.define('MainApp.view.ActiviteForm', {
 			value	  	: true,
 			anchor	  	: '96%',
 			labelWidth	: 120
-		},{
+		},/*{
 			xtype		: 'checkboxfield',
 			fieldLabel	: 'Pack (si dispo)',
 			//hideLabel 	: true,		
@@ -81,7 +78,7 @@ Ext.define('MainApp.view.ActiviteForm', {
 			//cls       	: 'yes',
 			anchor	  	: '96%',
 			labelWidth	: 120
-		},{
+		},*/{
 			xtype		: 'checkboxfield',
 			fieldLabel	: 'Certificat M&eacute;dical',
 			//hideLabel 	: true,		

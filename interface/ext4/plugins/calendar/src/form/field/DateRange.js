@@ -418,8 +418,7 @@ Ext.define('Extensible.form.field.DateRange', {
             return val;
             //return Ext.Date.parseDate(dt+' '+time, this[startend+'Date'].format+' '+this[startend+'Time'].format);
         }
-        return Ext.Date.parseDate(dt, this[startend+'Date'].format);
-        
+        return Ext.Date.parseDate(dt, this[startend+'Date'].format);        
     },
     
     /**

@@ -13,8 +13,8 @@ class Calendrier_m extends Entity_m {
         	$this->table('exCalendrier');
 		
 		//Declaration des champs
-		$this->field('exExercice')->required();
-		$this->field('exPeriode')->required();
+		$this->field('exExercice')->required()->related();
+		$this->field('exPeriode')->required()->related();
 		$this->field('debut')->required()->type('date');
 		$this->field('fin')->required()->type('date')->later('debut');
 		
@@ -36,8 +36,8 @@ class Calendrier_m extends Entity_m {
 			$ex_start = strtotime($exercice->get('debut'));
 			$ex_stop = strtotime($exercice->get('fin'));
 		
-			if (!$exercice->test_date($this->bean->debut)) $error['debut'][] = 'outofex';
-			if (!$exercice->test_date($this->bean->fin)) $error['debut'][] = 'outofex';
+			//if (!$exercice->test_date($this->bean->debut)) $error['debut'][] = 'outofex';
+			//if (!$exercice->test_date($this->bean->fin)) $error['debut'][] = 'outofex';
 		}
 	}
 }
