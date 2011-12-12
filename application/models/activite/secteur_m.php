@@ -10,7 +10,7 @@ class Secteur_m extends Entity_m {
         parent::__construct($id);	
         
         //Table
-        $this->table('activiteSecteur');
+        $this->table('actiSecteur');
 		
 		//Declaration des champs
 		$this->field('nom')->required();

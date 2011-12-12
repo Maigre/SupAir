@@ -10,7 +10,7 @@ class Activite_m extends Entity_m {
 		parent::__construct($id);	
 		
 		//Table
-		$this->table('activiteActivite');
+		$this->table('actiActivite');
 		
 		//Declaration des champs
 		$this->field('nom')->required()->unique();

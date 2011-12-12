@@ -56,8 +56,8 @@ class CrudControl extends CI_Controller {
 			if (($id == 'where') and (is_array($val))) foreach ($val as $w=>$v) $post['where'][$w] = $v;
 			else
 			{
-				list(,$where_id) = explode('__',$id);
-				if ($where_id) $post['where'][$where_id] = $val;
+				$where_id = explode('__',$id);
+				if ($where_id[1]) $post['where'][$where_id[1]] = $val;
 			}
 		}
 				
