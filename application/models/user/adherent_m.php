@@ -7,10 +7,10 @@ class Adherent_m extends Entity_m {
 	function __construct($id=false)
 	{
 		// Call the Entity constructor
-        parent::__construct($id);	
-        
-        //Table
-        $this->table('userAdherent');
+		parent::__construct($id);	
+		
+		//Table
+		$this->table('userAdherent');
 		
 		//Declaration des champs
 		$this->field('userFamille')->related()->required();
