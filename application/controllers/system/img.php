@@ -8,10 +8,14 @@ class Img extends CI_Controller {
 	}
 	
 	//list all img in a given directory
-	public function listAll($dir)
+	public function listAll($dir=null)
 	{
+		if (!$dir) $dir = '';
+		else $dir .= '/';
+		
 		$out = array();
-		$img_list = get_dir_file_info('style/'.$dir.'/',false);
+		
+		$img_list = get_dir_file_info('style/'.$dir,false);
 		
 		if ($img_list)
 		foreach ($img_list as $img)

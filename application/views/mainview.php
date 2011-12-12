@@ -73,6 +73,9 @@
 
     </head>
     <body>
+    	<?php
+    		
+    	?>
     	<div id="working-area"></div>
     </body>
 </html>
