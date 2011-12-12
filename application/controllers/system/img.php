@@ -10,20 +10,20 @@ class Img extends CI_Controller {
 	//list all img in a given directory
 	public function listAll($dir)
 	{
-		if ($handle = opendir('style/'.$dir.'/')) {
+		$out = array();
+		$img_list = get_dir_file_info('style/'.$dir.'/',false);
 		
-		    /* This is the correct way to loop over the directory. */
-		    while (false !== ($entry = readdir($handle))) {
-			if (preg_match("/.+(jpe?g|gif|png)$/i",$entry)) $out['files'][] = $entry;
-		    }
-
-		    closedir($handle);
-		    $out['success'] = true;
-		}
-		else 
+		if ($img_list)
+		foreach ($img_list as $img)
 		{
-			$out['success'] = false;
-			$out['error'] = 'Unknown directory';
+			$ext = strtolower(substr($img['name'],-3,3));
+			if (($ext == 'png') or ($ext == 'gif') or ($ext == 'jpg') or ($ext == 'jpeg'))
+			{
+				list(,$path) = explode(APP.'/style/',$img['server_path']);
+				$class = str_replace('/','_',substr($path,0,-4));
+		
+				$out[] = $class;
+			}
 		}
 		
 		jse($out);
