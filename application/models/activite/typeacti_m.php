@@ -2,15 +2,15 @@
 
 //require_once(APPPATH.'models/entity.php');
 
-class Adherent_m extends Entity_m {
+class Typeacti_m extends Entity_m {
 	
 	function __construct($id=false)
 	{
 		// Call the Entity constructor
-        parent::__construct($id);	
-        
-        //Table
-        $this->table('activiteType');
+		parent::__construct($id);	
+		
+		//Table
+		$this->table('activiteTypeacti');
 		
 		//Declaration des champs
 		$this->field('nom')->required();
