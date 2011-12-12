@@ -26,7 +26,7 @@ class Img extends CI_Controller {
 				list(,$path) = explode(APP.'/style/',$img['server_path']);
 				$class = str_replace('/','_',substr($path,0,-4));
 		
-				$out[] = $class;
+				$out[] = array('nom' => $class);
 			}
 		}
 		
