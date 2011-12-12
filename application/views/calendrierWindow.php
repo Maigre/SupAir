@@ -282,14 +282,15 @@ Ext.onReady(function(){
 		//data: Ext.create('Extensible.example.calendar.data.Events'),
 		//url: BASE_URL+'exercice/calendrier/save',
 		// defined in ../data/Events.js
-		autoLoad: true,
+		autoLoad: false,
 		proxy: {
 			type: 'rest',
 			url: BASE_URL+'exercice/calendrier/save',
 			noCache: false,
 			actionMethods : {read: 'POST', write: 'POST'},
+			
 			api: {
-		    		read: BASE_URL+'exercice/calendrier/load',
+		    		read: BASE_URL+'exercice/calendrier/listAll',
 		    		update: BASE_URL+'exercice/calendrier/save'
 		    	},
 			reader: {
@@ -330,10 +331,24 @@ Ext.onReady(function(){
 				//Extensible.example.msg('Delete', 'Deleted "' + title + '"');
 				break;
 			}
+		    },
+		    'beforeload': function(store, operation){
+		    	console.info('okbeforeload');
+		    	//store.proxy.baseParams = {where: 1};
+		    	console.info(store);
+
 		    }
 		}
 
 	});
+	
+	eventStore.load({
+		params: {
+			where__exExercice_id: 1
+		}
+	});
+	
+	
 	
 	
 	//Change the event form 
