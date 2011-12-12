@@ -2,12 +2,12 @@
 
 require(APPPATH.'controllers/CrudControl.php');
 
-class Adherent extends CrudControl {
+class Typeacti extends CrudControl {
 
 	function __construct()
 	{
 		parent::__construct();
 		$this->folder = 'activite';
-		$this->type = 'Type';
+		$this->type = 'Typeacti';
 	}
 }

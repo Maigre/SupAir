@@ -2,7 +2,7 @@
 
 require(APPPATH.'controllers/CrudControl.php');
 
-class Adherent extends CrudControl {
+class Activite extends CrudControl {
 
 	function __construct()
 	{

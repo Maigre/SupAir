@@ -2,7 +2,7 @@
 
 //require_once(APPPATH.'models/entity.php');
 
-class Adherent_m extends Entity_m {
+class Activite_m extends Entity_m {
 	
 	function __construct($id=false)
 	{
@@ -16,7 +16,7 @@ class Adherent_m extends Entity_m {
 		$this->field('nom')->required()->unique();
 		$this->field('exExercice')->related()->required();
 		$this->field('activiteSecteur')->related()->required();
-		$this->field('activiteType')->related()->required();
+		$this->field('activiteTypeacti')->related()->required();
 		$this->field('analytique');
 		$this->field('maj_ext')->type('bool');
 		$this->field('red_multi')->type('bool');

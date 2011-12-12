@@ -2,7 +2,7 @@
 
 //require_once(APPPATH.'models/entity.php');
 
-class Adherent_m extends Entity_m {
+class Session_m extends Entity_m {
 	
 	function __construct($id=false)
 	{
