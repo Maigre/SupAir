@@ -1,6 +1,6 @@
 secteurstore= new Ext.data.Store({
 	storeId: 'secteurstore',
-	fields: ['id', 'nom'],
+	fields: ['id', 'nom', 'icon'],
 	autoLoad: true,
 	proxy: {
 		type: 'ajax',
@@ -13,6 +13,28 @@ secteurstore= new Ext.data.Store({
 		}
 	}          			
 });
+
+iconsecteurstore= Ext.create('Ext.data.Store', {
+	storeId: 'iconsecteurstore',
+	fields: ['id', 'file', 'nom', {name: 'todisplay', mapping: '<img border="0" src="interface/images/icons/{nom}.png'+'obj.nom'+'.png"/>'}],
+	autoLoad: true,
+	proxy: {
+		type: 'ajax',
+		url: BASE_URL+'system/img/listAll/iconsecteur',  // url that will load data
+		actionMethods : {read: 'POST'},
+		reader : {
+			type : 'json',
+			totalProperty: 'size',
+			root: 'combobox'
+		}
+	},
+	data : [
+		{id: 1,    file: 'palette',	nom: 'Palette'},
+		{id: 2,    file: 'music',	nom: ''}
+	]
+});
+
+
 
 Ext.define('MainApp.view.SecteurForm', {
 	extend		: 'Ext.form.Panel',
@@ -40,6 +62,29 @@ Ext.define('MainApp.view.SecteurForm', {
 			fieldLabel	: 'Nom',
 			name      	: 'nom',
 			value	  	: 'Activites'
+		},{
+			xtype		: 'combobox',
+			fieldLabel	: 'Icone',
+			name      	: 'icon',
+			value	  	: 'Activites',
+			store		: 'iconsecteurstore',
+			displayField	: 'todisplay',
+			valueField	: 'id',
+			
+			//typeAhead	: false,
+			//hideLabel	: true,
+			//hideTrigger	:true,
+			anchor	: '50%',
+
+			listConfig: {
+				//loadingText: 'Searching...',
+				//emptyText: 'No matching posts found.',
+
+				// Custom rendering template for each item
+				getInnerTpl: function() {
+				    return '<img border="0" src="interface/images/icons/{nom}.png"/>'
+				}
+			}
 		},{
 			xtype	  : 'container',
 			layout	  : {

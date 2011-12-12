@@ -7,7 +7,7 @@ Ext.define('MainApp.view.Viewport', {
         //Ext.QuickTips.init();
         this.items = [{
 			region	: 'north',
-			html	: '<h1 class="x-panel-header">**SUP*AIR**</h1>',
+			/*html	: '<h1 class="x-panel-header">**SUP*AIR**</h1>',*/
 			height	: 30,
 			bodyStyle: "background-image:url(interface/images/banner_sky.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;",
 			autoHeight: true,
@@ -22,20 +22,22 @@ Ext.define('MainApp.view.Viewport', {
 				xtype		: 'combo',
 				id		: 'comboexercice',
 				fieldLabel	: 'Exercice',
+				hideLabel	: true,
 				store		: exercicestore,
 				displayField	: 'nom',
 				valueField	: 'id',
-				padding		: 10,
-				height		: 30,
-				width		: 100,
+				padding		: 4,
+				margins		: '0 10 0 0',
+				emptyText	: 'Exercice '+EXERCICE,
+				//height		: 30,
+				//labelWidth	: 100,
+				width		: 150,
 				listeners: {
 					select: {
 					    //element: 'el', //bind to the underlying body property on the panel
 					    fn: function(){ 
-						console.info();
 						EXERCICE_ID=Ext.getCmp('comboexercice').valueModels[0].data.id;
 					    	EXERCICE= Ext.getCmp('comboexercice').getRawValue();
-					    	Ext.getCmp('calendarpanel').setTitle('Exercice '+Ext.getCmp('comboexercice').getRawValue());
 					    }
 					}
 				}

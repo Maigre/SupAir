@@ -31,6 +31,7 @@ Ext.define('MainApp.view.ListWindow', {
 					id	: 'gridlist'+me.nom,
 					title	: me.gridtitle,
 					store	: me.store,
+					height	: 181,
 					columns	: [
 						{header: me.formfield1[0], dataIndex: me.formfield1[1], flex:1,
 							editor: {

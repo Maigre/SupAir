@@ -10,6 +10,9 @@ class Welcome extends CI_Controller {
 		
 		
 		$data['views'][]=$this->load->view('Application',null,true);
+		
+		$data['views'][]=$this->load->view('System',null,true);
+		
 		$data['views'][]=$this->load->view('menu',null,true);
 		$data['views'][]=$this->load->view('searchBar',null,true);
 		$data['views'][]=$this->load->view('adherentDisplay',null,true);

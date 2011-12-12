@@ -276,17 +276,6 @@ Ext.onReady(function(){
 		
 	});
 	
-	//Pour que le writer puisse envoyer en post
-	Ext.define('Ext.data.writer.SinglePost', {
-	    extend: 'Ext.data.writer.Writer',
-	    alternateClassName: 'Ext.data.SinglePostWriter',
-	    alias: 'writer.singlepost',
-
-	    writeRecords: function(request, data) {
-		request.params = data[0];
-		return request;
-	    }
-	});
 
 	
 	var eventStore = Ext.create('Extensible.calendar.data.MemoryEventStore', {
@@ -294,7 +283,6 @@ Ext.onReady(function(){
 		//url: BASE_URL+'exercice/calendrier/save',
 		// defined in ../data/Events.js
 		autoLoad: true,
-		
 		proxy: {
 			type: 'rest',
 			url: BASE_URL+'exercice/calendrier/save',
@@ -323,7 +311,6 @@ Ext.onReady(function(){
 				}
 			}
 		},
-
 		// It's easy to provide generic CRUD messaging without having to handle events on every individual view.
 		// Note that while the store provides individual add, update and remove events, those fire BEFORE the
 		// remote transaction returns from the server -- they only signify that records were added to the store,

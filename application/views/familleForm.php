@@ -27,7 +27,7 @@ villestore= new Ext.data.Store({
 			root: 'combobox'
 		},
 		writer: {
-			type: 'json',
+			type: 'singlepost',
 			//encode: 'false',
 			writeAllFields: true//,
 			//root: 'data'

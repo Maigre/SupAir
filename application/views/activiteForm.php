@@ -36,15 +36,15 @@ Ext.define('MainApp.view.ActiviteForm', {
 	},
 	defaultType  	: 'textfield',
 	items 		: [{
-			xtype	  	: 'combobox',
-			typeAhead	: true,  //allow typing text to select value.
+			xtype	  	: 'displayfield',
+			//typeAhead	: true,  //allow typing text to select value.
 			//hideTrigger	: true,
-			store	  	: exercicestore,
+			//store	  	: exercicestore,
 			fieldLabel	: 'Exercice',
 			hideLabel 	: false,		
-			name      	: 'exerciceExercice_id',
-			displayField	: 'nom',
-			valueField	: 'id'
+			name      	: 'exExercice',
+			//displayField	: 'nom',
+			value		: EXERCICE
 		},{
 			xtype		: 'textfield',
 			fieldLabel	: 'Nom',
