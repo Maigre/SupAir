@@ -46,42 +46,6 @@ Ext.define('MainApp.view.menu', {
 			}]			
 		},{
 			xtype	: 'panel',
-			id	: 'menuactivitepanel',
-			title	: 'Activites',
-			iconCls	: 'palette',
-			bodyStyle: "background-color:#B6D0DB;",
-			layout	: {
-				type	: 'vbox',
-				align	: 'center'
-			},				
-			items:[{
-				xtype	: 'button',
-				text 	: 'Nouvelle activit&eacute;',
-				width 	: 110,
-				iconCls	: 'add',
-				margin	: 2,
-				listeners: {
-					click: function() {
-						
-						nouvelleactivite_window= new Ext.window.Window({
-							id	: 'nouvelleactivite_window',
-							title	: 'Nouvelle Activit&eacute;',
-							iconCls	: 'palette',
-							modal	: true,
-							items	: [{
-								xtype	: 'activiteform',
-								height  : 220,
-								border	: false,
-								frame	: false
-							}]
-						});
-						nouvelleactivite_window.show();
-						
-					}		
-				}			
-			}]							
-		},{
-			xtype	: 'panel',
 			id	: 'menuoutilspanel',
 			title	: 'Outils',
 			iconCls	: 'outils',

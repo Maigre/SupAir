@@ -16,15 +16,14 @@ secteurstore= new Ext.data.Store({
 
 convert_nom_icon= function(v, record){
     
-    console.info(record);
-    console.info('<img border="0" src="interface/images/icons/'+record.data.file+'.png"/>');
-    
-    return '<img border="0" src=\"interface/images/icons/'+record.data.file+'.png\"/>';
+    img_name=record.data.nom.split('_')[1];
+    //console.info('<img border="0" src="interface/images/icons/'+record.data.file+'.png"/>');
+    return '<img border="0" src=\"style/iconsecteur/'+img_name+'.png\"/>';
 };
 
 iconsecteurstore= Ext.create('Ext.data.Store', {
 	storeId: 'iconsecteurstore',
-	fields: ['id', 'file', 'nom', {name: 'todisplay', convert: convert_nom_icon}],
+	fields: ['nom', {name: 'todisplay', convert: convert_nom_icon}],
 	autoLoad: true,
 	proxy: {
 		type: 'ajax',
@@ -73,7 +72,7 @@ Ext.define('MainApp.view.SecteurForm', {
 			//value	  	: 'Activites',
 			store		: 'iconsecteurstore',
 			displayField	: 'todisplay',
-			valueField	: 'id'
+			valueField	: 'nom'
 			
 			//typeAhead	: false,
 			//hideLabel	: true,
