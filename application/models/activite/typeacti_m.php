@@ -10,7 +10,7 @@ class Typeacti_m extends Entity_m {
 		parent::__construct($id);	
 		
 		//Table
-		$this->table('activiteTypeacti');
+		$this->table('actiTypeacti');
 		
 		//Declaration des champs
 		$this->field('nom')->required();

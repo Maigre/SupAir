@@ -20,8 +20,8 @@ class Img extends CI_Controller {
 		if ($img_list)
 		foreach ($img_list as $img)
 		{
-			$ext = strtolower(substr($img['name'],-3,3));
-			if (($ext == 'png') or ($ext == 'gif') or ($ext == 'jpg') or ($ext == 'jpeg'))
+			$ext = strtolower(substr(str_replace('jpeg','jpg',$img['name']),-3,3));
+			if (($ext == 'png') or ($ext == 'gif') or ($ext == 'jpg'))
 			{
 				list(,$path) = explode(APP.'/style/',$img['server_path']);
 				$class = str_replace('/','_',substr($path,0,-4));

@@ -10,11 +10,11 @@ class Session_m extends Entity_m {
 		parent::__construct($id);	
 		
 		//Table
-		$this->table('activiteSession');
+		$this->table('actiSession');
 		
 		//Declaration des champs
 		$this->field('nom')->required()->unique();
-		$this->field('activiteActivite')->related()->required();
+		$this->field('actiActivite')->related()->required();
 		$this->field('dates')->required();
 		
 		// Errors
