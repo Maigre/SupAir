@@ -6,12 +6,20 @@
 
 
 		<!-- Tools -->		
-		<script type="text/javascript" src="interface/tools/print.js"></script>
+	<script type="text/javascript" src="interface/tools/print.js"></script>
 		
-		<!-- ExtJS 4 -->
+		<!-- ExtJS Styles -->
         <link rel="stylesheet" type="text/css" href="interface/ext4/resources/css/ext-all.css" />
         <link rel="stylesheet" type="text/css" href="interface/ext4/plugins/calendar/resources/css/extensible-all.css" /> 
         
+        	<!--additional styles -->
+        <?php 
+	     	foreach ($styles as $style_view){
+	     		echo $style_view;
+	     	}
+	?>
+        
+        	<!-- ExtJS Framework -->
         <script type="text/javascript" src="interface/ext4/ext-all.js"></script>
         <script type="text/javascript" src="interface/ext4/locale/ext-lang-fr.js"></script>
         <script type="text/javascript">Ext.BLANK_IMAGE_URL = 'interface/ext4/resources/s.gif';</script>
@@ -20,8 +28,7 @@
      	<link rel="stylesheet" type="text/css" href="interface/css/viewport.css" />
      	<link rel="stylesheet" type="text/css" href="interface/css/icons.css" />
      		
-     		<!-- Calendar plugin -->
-     		
+     		<!-- Calendar plugin -->	
      	<script type="text/javascript" src="interface/ext4/plugins/calendar/extensible-all-debug.js"></script>
      	<script type="text/javascript" src="interface/ext4/plugins/calendar/examples/examples.js"></script>
 		
@@ -45,8 +52,8 @@
 	
 	
 	     	<?php 
-	     	foreach ($views as $view){
-	     		echo $view;
+	     	foreach ($extjs as $ex_view){
+	     		echo $ex_view;
 	     	}
 	     	?>
 	     	
@@ -66,6 +73,9 @@
 
     </head>
     <body>
+    	<?php
+    		
+    	?>
     	<div id="working-area"></div>
     </body>
 </html>

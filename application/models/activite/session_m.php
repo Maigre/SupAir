@@ -10,16 +10,12 @@ class Adherent_m extends Entity_m {
 		parent::__construct($id);	
 		
 		//Table
-		$this->table('activiteActivite');
+		$this->table('activiteSession');
 		
 		//Declaration des champs
 		$this->field('nom')->required()->unique();
-		$this->field('exExercice')->related()->required();
-		$this->field('activiteSecteur')->related()->required();
-		$this->field('activiteType')->related()->required();
-		$this->field('analytique');
-		$this->field('maj_ext')->type('bool');
-		$this->field('red_multi')->type('bool');
+		$this->field('activiteActivite')->related()->required();
+		$this->field('dates')->required();
 		
 		// Errors
 		$this->error['notfound'] = 'Activite introuvable';

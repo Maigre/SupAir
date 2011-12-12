@@ -64,7 +64,7 @@ $autoload['libraries'] = array('session','database','RedBean'); //auth37
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('form', 'url', 'date', 'sqlparser_helper','ajaxecho');
+$autoload['helper'] = array('form', 'url', 'date', 'sqlparser_helper','ajaxecho','file');
 
 
 /*

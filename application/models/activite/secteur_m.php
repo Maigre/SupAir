@@ -14,7 +14,7 @@ class Secteur_m extends Entity_m {
 		
 		//Declaration des champs
 		$this->field('nom')->required();
-		
+		$this->field('icon')->required();
 		
 		// Errors
 		$this->error['notfound'] = 'Secteur introuvable';
