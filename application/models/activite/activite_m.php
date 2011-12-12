@@ -20,7 +20,6 @@ class Adherent_m extends Entity_m {
 		$this->field('analytique');
 		$this->field('maj_ext')->type('bool');
 		$this->field('red_multi')->type('bool');
-		$this->field('cert_med')->type('bool');
 		
 		// Errors
 		$this->error['notfound'] = 'Activite introuvable';
