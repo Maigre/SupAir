@@ -48,7 +48,19 @@ class CrudControl extends CI_Controller {
 	{		
 		if($order) $this->db->order_by($order);
 		
-		$post = $this->input->post();		
+		$post = array();
+		
+		if ($posted = $this->input->post())
+		foreach ($posted as $id=>$val)
+		{
+			if (($id == 'where') and (is_array($val))) foreach ($val as $w=>$v) $post['where'][$w] = $v;
+			else
+			{
+				list(,$where_id) = explode('__',$id);
+				if ($where_id) $post['where'][$where_id] = $val;
+			}
+		}
+				
 		if (isset($post['where']) and (is_array($post['where'])))
 				foreach($post['where'] as $name=>$value) $this->db->where($name,$value);
 		
