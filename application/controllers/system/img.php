@@ -7,7 +7,7 @@ class Img extends CI_Controller {
 
 	}
 	
-	//list all img in a given directory
+	//list all img in a given sub directory (start from style)
 	public function listAll($dir=null)
 	{
 		if (!$dir) $dir = '';
