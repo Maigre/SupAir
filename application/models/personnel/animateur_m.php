@@ -17,11 +17,10 @@ class Animateur_m extends Entity_m {
 		$this->field('prenom')->required();
 		
 		// Errors
-		$this->error['notfound'] = 'Activite introuvable';
+		$this->error['notfound'] = 'Animateur introuvable';
 		
 		//load bean
 		$this->load($id);
-	} 
-	
-	
+	}
+		
 }

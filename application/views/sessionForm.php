@@ -153,7 +153,7 @@ Ext.define('MainApp.view.SessionForm', {
 					store	  	: 'animateurstore',
 					fieldLabel	: 'Animateur',
 					hideLabel 	: false,		
-					name      	: 'anim',
+					name      	: 'persAnimateur_id',
 					displayField	: 'todisplay',
 					valueField	: 'id'
 					//cls       : 'red'
@@ -215,7 +215,7 @@ Ext.define('MainApp.view.SessionForm', {
 				store	  	: 'niveaustore',
 				fieldLabel	: '',
 				hideLabel 	: true,		
-				name      	: 'niveau_id',
+				name      	: 'actiNiveau_id',
 				displayField	: 'nom',
 				valueField	: 'id'
 				//cls       : 'red'

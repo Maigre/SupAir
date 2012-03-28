@@ -1,6 +1,6 @@
 Ext.define('Session', {
 	extend: 'Ext.data.Model',
-	fields: ['id', 'nom', 'actiActivite_id','periode', 'dates', 'agemin', 'agemax', 'capacitemin', 'capacitemax', 'anim', 'actiNiveau_id', 'actiNiveau_nom', 'in', 'out']
+	fields: ['id', 'nom', 'actiActivite_id','periode', 'dates', 'agemin', 'agemax', 'capacitemin', 'capacitemax', 'persAnimateur_nom', 'actiNiveau_id', 'actiNiveau_nom', 'in', 'out']
 });
 
 
@@ -71,7 +71,7 @@ Ext.define('MainApp.view.SessionDisplay', {
 		},{
 			fieldLabel: 'Animateur',
 			//hideLabel : true,		
-			name      : 'anim',
+			name      : 'persAnimateur_nom',
 			value	  : '',
 			cls       : ''
 		},{

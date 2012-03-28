@@ -21,7 +21,7 @@ class Session_m extends Entity_m {
 		$this->field('agemax');
 		$this->field('capacitemin');
 		$this->field('capacitemax');
-		$this->field('anim');
+		$this->field('persAnimateur')->related()->required();
 		$this->field('actiNiveau')->related()->required();
 		$this->field('in');
 		$this->field('out');

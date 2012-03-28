@@ -14,6 +14,8 @@ class Famille extends CrudControl {
 	//renvoi l'id de la famille et celui de chaque adherent
 	function loadFamille($id_famille=false)
 	{
+		$this->load->model('activite/adherent_m');
+		$session_m = new Adherent_m();
 		
 		$adherents = $this->db->select('id, userStatut_id')
 								->where('userFamille_id',$this->Entity($id_famille)->get('id'))
@@ -23,9 +25,9 @@ class Famille extends CrudControl {
 		$out['famille'] = $id_famille;
 		foreach($adherents as $adh) 
 		{
-			if ($adh['userStatut_id'] == 1) 	$out['referent']  = $adh['id'];
+			if ($adh['userStatut_id'] == 1) $out['referent']  = $adh['id'];
 			elseif ($adh['userStatut_id'] == 2) $out['conjoint']  = $adh['id'];
-			else  								$out['enfants'][] = $adh['id'];
+			else $out['enfants'][] = $adh['id'];
 		}
 		
 		jse($out);
