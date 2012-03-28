@@ -14,9 +14,16 @@ secteurstore= new Ext.data.Store({
 	}          			
 });
 
+convert_nom_icon= function(v, record){
+    
+    img_name=record.data.nom.split('_')[1];
+    //console.info('<img border="0" src="interface/images/icons/'+record.data.file+'.png"/>');
+    return '<img border="0" src=\"style/iconsecteur/'+img_name+'.png\"/>';
+};
+
 iconsecteurstore= Ext.create('Ext.data.Store', {
 	storeId: 'iconsecteurstore',
-	fields: ['id', 'file', 'nom', {name: 'todisplay', mapping: '<img border="0" src="interface/images/icons/{nom}.png'+'obj.nom'+'.png"/>'}],
+	fields: ['nom', {name: 'todisplay', convert: convert_nom_icon}],
 	autoLoad: true,
 	proxy: {
 		type: 'ajax',
@@ -27,11 +34,7 @@ iconsecteurstore= Ext.create('Ext.data.Store', {
 			totalProperty: 'size',
 			root: 'combobox'
 		}
-	},
-	data : [
-		{id: 1,    file: 'palette',	nom: 'Palette'},
-		{id: 2,    file: 'music',	nom: ''}
-	]
+	}
 });
 
 
@@ -66,14 +69,15 @@ Ext.define('MainApp.view.SecteurForm', {
 			xtype		: 'combobox',
 			fieldLabel	: 'Icone',
 			name      	: 'icon',
-			value	  	: 'Activites',
+			//value	  	: 'Activites',
 			store		: 'iconsecteurstore',
 			displayField	: 'todisplay',
-			valueField	: 'id',
+			valueField	: 'nom'
 			
 			//typeAhead	: false,
 			//hideLabel	: true,
 			//hideTrigger	:true,
+			/*
 			anchor	: '50%',
 
 			listConfig: {
@@ -84,7 +88,7 @@ Ext.define('MainApp.view.SecteurForm', {
 				getInnerTpl: function() {
 				    return '<img border="0" src="interface/images/icons/{nom}.png"/>'
 				}
-			}
+			}*/
 		},{
 			xtype	  : 'container',
 			layout	  : {

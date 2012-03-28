@@ -15,11 +15,12 @@ class Activite_m extends Entity_m {
 		//Declaration des champs
 		$this->field('nom')->required()->unique();
 		$this->field('exExercice')->related()->required();
-		$this->field('activiteSecteur')->related()->required();
-		$this->field('activiteTypeacti')->related()->required();
+		$this->field('actiSecteur')->related()->required();
+		$this->field('actiTypeacti')->related()->required();
 		$this->field('analytique');
 		$this->field('maj_ext')->type('bool');
 		$this->field('red_multi')->type('bool');
+		$this->field('certificat')->type('bool');
 		
 		// Errors
 		$this->error['notfound'] = 'Activite introuvable';

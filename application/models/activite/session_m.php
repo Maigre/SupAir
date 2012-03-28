@@ -16,9 +16,19 @@ class Session_m extends Entity_m {
 		$this->field('nom')->required()->unique();
 		$this->field('actiActivite')->related()->required();
 		$this->field('dates')->required();
+		$this->field('periode');
+		$this->field('agemin');
+		$this->field('agemax');
+		$this->field('capacitemin');
+		$this->field('capacitemax');
+		$this->field('persAnimateur')->related()->required();
+		$this->field('actiNiveau')->related()->required();
+		$this->field('in');
+		$this->field('out');
+		
 		
 		// Errors
-		$this->error['notfound'] = 'Activite introuvable';
+		$this->error['notfound'] = 'Session introuvable';
 		
 		//load bean
 		$this->load($id);

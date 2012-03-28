@@ -126,7 +126,6 @@ Ext.define('MainApp.view.AdherentForm', {
 				xtype: 'checkboxfield',
 				fieldLabel: 'A. sortie',	
 				name      : 'autosortie',
-				value	  : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
 				anchor	  : '96%'
 			},{
 				xtype: 'checkboxfield',
@@ -181,48 +180,7 @@ Ext.define('MainApp.view.AdherentForm', {
 							},success: function(form, action) {
 								Ext.Msg.alert('Success', 'Adherent enregistr&eacute;');
 								Ext.getCmp('nouveladherent_window').close();
-								displayfamille();
-								/*
-								//GET FAMILLE_ID
-								famille_id=FAMILLE_ID;
-								
-								famillecontainer=Ext.getCmp('famillecontainer');
-								famillecontainer.removeAll();
-								//LOAD THE FAMILY
-								
-								var famillestore = Ext.data.StoreManager.lookup('famillestore');
-								famillestore.proxy.api.read=BASE_URL+'user/famille/show/'+famille_id;
-								famillestore.load();
-								famillestore.on('load', function(database){
-									var rec= database.getAt(0);
-									familledisplay=Ext.getCmp('familledisplay');
-									if(!familledisplay){
-										familledisplay=Ext.widget('familledisplay');
-									}
-									familledisplay.getForm().loadRecord(rec);
-									famillecontainer.add(familledisplay);
-									//LOAD ALL ITS ADHERENTS
-								
-									var adherentstore = Ext.data.StoreManager.lookup('adherentstore');
-									adherentstore.proxy.api.read=BASE_URL+'user/adherent/show/'+action.result.id;
-									adherentstore.load();
-									adherentstore.on('load', function(database){
-										
-										var rec= database.getAt(0);
-										adherentdisplay=Ext.getCmp('adherentdisplay');
-										if(!adherentdisplay){
-											adherentdisplay=Ext.widget('adherentdisplay');
-										}
-										adherentdisplay.getForm().loadRecord(rec);
-										if(rec.data.sexe==0){
-											adherentdisplay.iconCls='user';
-										}
-										else{
-											adherentdisplay.iconCls='user_female';
-										}
-										famillecontainer.add(adherentdisplay);				
-									});				
-								});*/
+								displayfamille();								
 							},
 							failure: function(form, action) {
 								Ext.Msg.alert('Failed', action.result.msg);

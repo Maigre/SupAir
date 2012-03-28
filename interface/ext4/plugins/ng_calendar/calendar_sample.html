@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NoGray JS Unit Test</title>
+<style>
+	* {font-family:Arial, Helvetica, sans-serif;
+		font-size:10pt;}
+</style>
+<link rel="stylesheet" type="text/css" href="../assets/css/ng_all.css">
+</head>
+
+<body>
+Calendar: <input type="text" id="date1" name="date1" />
+<br /><br />
+<strong>Code</strong>
+<pre style="font-family:'Courier New', Courier, monospace;">
+Calendar: &lt;input type="text" id="date1" name="date1" /&gt;
+&lt;script type="text/javascript"&gt;
+    var ng_config = {
+        assests_dir: 'assets/'	// the path to the assets directory
+    }
+&lt;/script&gt;
+&lt;script type="text/javascript" src="ng_all.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="components/calendar.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+var my_cal;
+ng.ready(function(){
+        // creating the calendar
+        my_cal = new ng.Calendar({
+            input: 'date1',            // the input field id
+            start_date: 'year - 1',    // the start date (default is today)
+            display_date: new Date()   // the display date (default is start_date)
+        });
+    });
+&lt;/script&gt;
+</pre>
+<script type="text/javascript">
+	var ng_config = {
+		assests_dir: 'assets/'	// the path to the assets directory
+	}
+</script>
+<script type="text/javascript" src="ng_all.js"></script>
+<script type="text/javascript" src="components/calendar.js"></script>
+<script type="text/javascript">
+var my_cal;
+ng.ready(function(){
+		// creating the calendar
+		my_cal = new ng.Calendar({
+			input: 'date1',	// the input field id
+			start_date: 'year - 1',	// the start date (default is today)
+			display_date: new Date()	// the display date (default is start_date)
+		});
+		
+	});
+</script>
+</body>
+</html>

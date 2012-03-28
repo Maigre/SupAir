@@ -1,0 +1,82 @@
+/*
+ * NoGray JavaScript Library v1.0
+ *
+ * Copyright (c), All right reserved
+ * Gazing Design - http://www.NoGray.com
+ * http://www.nogray.com/license.php
+ */
+
+.ng-button {display:inline-block;
+	margin:0px;
+	cursor:pointer;
+	border:solid 1px;
+	border-left:none;
+	border-right:none;
+	background:url(../images/buttons/bg_white.png) repeat-x top left;
+	vertical-align:text-bottom;}
+	
+.ng-button-icon-span img {vertical-align:bottom;}
+.ng-button-arrow-span img {vertical-align:bottom;}
+
+.ng-button-gloss {background-image:url(../images/buttons/bg_white_gloss.png);}
+.ng-button-down {background-image: url(../images/buttons/bg_black_down.png);}
+
+.ng-button-disabled {cursor:default;}
+		
+.ng-button-holder {
+	border:solid 1px;
+	border-top:none;
+	border-bottom:none;
+	margin:0px -1px;
+	background:url(../images/buttons/bg_black.png) repeat-x bottom left;
+}
+.ng-button-holder-down {background-image: url(../images/buttons/bg_white_down.png);}
+.ng-button-holder-gloss-down {background-image: url(../images/buttons/bg_white_gloss_down.png);}
+
+.ng-button-bevel {
+	border:solid 1px;
+	padding:1px 3px;
+}
+
+/* componenet style */
+.ng-comp-table {border-collapse:collapse;
+	text-align:left;}
+	
+.ng-comp-main-td {border:solid #b6bccc 1px;
+		background:#f2f5fa;}
+		
+.ng-comp-right-shadow, .ng-comp-left-shadow {background:url(../images/shadow/right.png) repeat-y top left;
+	font-size:1px;
+	width:4px;}
+.ng-comp-left-shadow {background:url(../images/shadow/left.png) repeat-y top left;}
+	
+.ng-comp-bottom-shadow {background:url(../images/shadow/bottom.png) repeat-x top left;
+	font-size:1px;
+	height:5px;}
+	
+.ng-comp-bottom-right-shadow, .ng-comp-bottom-left-shadow {background:url(../images/shadow/bottom_right_crn.png) no-repeat top left;
+	font-size:1px;
+	height:5px;
+	width:4px;}
+.ng-comp-bottom-left-shadow {background:url(../images/shadow/bottom_left_crn.png) no-repeat top left;}
+
+.ng-comp-hidden {display:none;
+	position:absolute;
+	top:auto; left:auto;
+	z-index:100000;}
+	
+.ng-comp-iframe-shim {z-index:10000;
+	position:absolute;
+	width:0px;
+	height:0px;
+	display:none;
+	border:none;}
+
+.ng-comp-visible .ng-comp-right-shadow, .ng-comp-visible .ng-comp-left-shadow, .ng-comp-visible .ng-comp-bottom-shadow, .ng-comp-visible .ng-comp-bottom-right-shadow, .ng-comp-visible .ng-comp-bottom-left-shadow {display:none;}
+
+.ng_input_button_table {border-collapse:collapse;
+	border-spacing:0px;
+	vertical-align:middle;
+	display:inline;}
+.ng_input_button_table input, .ng_input_button_table select {margin:0px;
+	outline:none;}

@@ -1,10 +1,3 @@
-/*Ext.require([
-    'Ext.Window',
-    'Extensible.calendar.data.MemoryEventStore',
-    'Extensible.calendar.CalendarPanel',
-    'Extensible.example.calendar.data.Events'
-]);*/
-
 Ext.onReady(function(){
 
 	periodestore= new Ext.data.Store({
@@ -21,8 +14,34 @@ Ext.onReady(function(){
 				root: 'combobox'
 			}
 		}          			
-	});	
-			
+	});
+	
+	Ext.override(Extensible.calendar.view.MultiWeek, { 	
+		extend: 'Extensible.calendar.view.Month',
+		alias: 'widget.extensible.multiweekview',
+
+		/**
+		* @cfg {Number} weekCount
+		* The number of weeks to display in the view (defaults to 2)
+		*/
+		weekCount: 8,
+
+		// inherited docs
+		moveNext : function(){
+		return this.moveWeeks(4, true);
+		},
+
+		// inherited docs
+		movePrev : function(){
+			return this.moveWeeks(-4, true);
+		}
+	});
+	
+	Ext.override(Extensible.calendar.view.Month, {
+		dayCount: 7,
+		moreText: '+{0} autre...'
+	});		
+	
 	Ext.override(Extensible.calendar.view.AbstractCalendar , { 
 		ddCreateEventText : 'Ajouter un &eacute;v&egrave;nement au {0}',
 		ddResizeEventText: 'Mettre à jour un &eacute;v&egrave;nement au {0}',
@@ -43,6 +62,18 @@ Ext.onReady(function(){
 		allDayText	: 'Journ&eacute;e',
 		toText		: 'au',
 		dateFormat	: 'j/n/Y',
+		getAllDayConfig: function() {
+			return {
+			    xtype	: 'checkbox',
+			    id		: this.id + '-allday',
+			    hidden	: true,//this.showTimes === false || this.showAllDay === false,
+			    //checked	: true,
+			    boxLabel	: this.allDayText,
+			    margins	: { top: 2, right: 5, bottom: 0, left: 0 },
+			    handler	: this.onAllDayChange,
+			    scope	: this
+			};
+	    	},
 		initComponent: function() {
 			var me = this;
 			/**
@@ -54,69 +85,29 @@ Ext.onReady(function(){
 			me.timeFormat = me.timeFormat || (Extensible.Date.use24HourTime ? 'G:i' : 'g:i A');
 		
 			me.items = me.getFieldConfigs();
+			
+			
+		        
+		        
 			me.addCls('ext-dt-range');
-			me.on('render', function() {
-				
-				Ext.getCmp(me.id + '-allday').setValue(true);
-			});
-			
+		
 			me.callParent(arguments);
-			
+		
 			me.initRefs();
-		},
-		getStartTimeConfig: function() {
-			return {
-			    xtype: 'timefield',
-			    id: this.id + '-start-time',
-			    hidden: true,
-			    labelWidth: 0,
-			    hideLabel: true,
-			    width: 90,
-			    //format: this.timeFormat,
-			    listeners: {
-				'select': {
-				    fn: function(){
-					this.onFieldChange('time', 'start');
-				    },
-				    scope: this
-				}
-			    }
-			};
-		},
-		getEndTimeConfig: function() {
-			return {
-			    xtype: 'timefield',
-			    id: this.id + '-end-time',
-			    hidden: true,//this.showTimes === false,
-			    labelWidth: 0,
-			    hideLabel: true,
-			    width: 90,
-			    //format: this.timeFormat,
-			    defaultValue: '',
-			    listeners: {
-				'select': {
-				    fn: function(){
-				        this.onFieldChange('time', 'end');
-				    },
-				    scope: this
-				}
-			    }
-			};
-		},
-		getAllDayConfig: function() {
-			return {
-			    xtype	: 'checkbox',
-			    //checked	: true,
-			    //defaultValue: true,
-			    id		: this.id + '-allday',
-			    //hidden	: true,//this.showTimes === false || this.showAllDay === false,
-			    boxLabel	: this.allDayText,
-			    margins	: { top: 2, right: 5, bottom: 0, left: 0 },
-			    handler	: this.onAllDayChange,
-			    scope	: this
-			};
-		},		
+			
+			this.startTime.setVisible(false);
+		        this.endTime.setVisible(false);
+		        
+	    	},
+	    	getValue: function(){
+			return [
+			    this.getDT('start'), 
+			    this.getDT('end'),
+			    true
+			];
+		},	
 	});
+	
 	Ext.override(Extensible.calendar.form.EventWindow, { 
 		id		: 'formeventwindow',
 		titleTextAdd	: 'Nouvel &eacute;v&egrave;nement',
@@ -130,8 +121,7 @@ Ext.onReady(function(){
 		deleteButtonText: 'Delete',
 		cancelButtonText: 'Cancel',
 		titleLabelText	: 'Nom',
-    		datesLabelText  : 'Du :',
-    		
+    		datesLabelText  : 'Du :',    		
     		
     		getFormItemConfigs: function() {
 			var items = [{
@@ -143,7 +133,7 @@ Ext.onReady(function(){
 						flex	  	: 5,
 						xtype	  	: 'combobox',
 						typeAhead	: true,  //allow typing text to select value.
-						//hideTrigger	: true,
+						allowBlank	: false,
 						labelWidth	: 30,
 						store	  	: 'periodestore',
 						itemId		: this.id + '-title',
@@ -156,10 +146,12 @@ Ext.onReady(function(){
 							select: function(a,b) {
 								
 							    	idperiode=a.valueModels[0].data.id;
-							    	console.info(idperiode);
+							    	//console.info(idperiode);
 							    	form=this.up('form');
-							    	var exPeriode_id = form.getForm().findField('exPeriode_id');
-								exPeriode_id.setValue(idperiode);
+							    	form.getForm().findField('exPeriode_id').setValue(idperiode);
+								//exPeriode_id.setValue(idperiode);
+								//console.info(form.getForm().findField('exPeriode_id'));
+								
 								
 								var exExercice_id = form.getForm().findField('exExercice_id');
 								exExercice_id.setValue(EXERCICE_ID);
@@ -169,7 +161,7 @@ Ext.onReady(function(){
 					},{
 						xtype		: 'textfield',
 						hidden		: true,
-						name		: 'exPeriode_id',
+						name		: 'exPeriode_id'
 					},{
 						flex	  	: 1,
 						margin		: '0 0 0 10',
@@ -218,22 +210,33 @@ Ext.onReady(function(){
 				store: this.calendarStore
 			    });
 			}
-		
+			
 			return items;
-	    	}		
+	    	},
+	    	onRender : function(ct, position){        
+			this.formPanel = Ext.create('Ext.FormPanel', Ext.applyIf({
+			    id: 'formevent',
+			    fieldDefaults: {
+				labelWidth: this.labelWidth
+			    },
+			    items: this.getFormItemConfigs()
+			}, this.formPanelConfig));
+		
+			this.add(this.formPanel);
+		
+			this.callParent(arguments);
+		}		
 	});
-
-	// For complete details on how to customize the EventMappings object to match your
-	// application data model see the header documentation for the EventMappings class.
-
+	
+	
 	Extensible.calendar.data.EventMappings = {
 		// These are the same fields as defined in the standard EventRecord object but the
 		// names and mappings have all been customized. Note that the name of each field
 		// definition object (e.g., 'EventId') should NOT be changed for the default fields
 		// as it is the key used to access the field data programmatically.
-		EventId		: {name: 'ID', mapping:'evt_id', type:'string'}, // int by default
-		CalendarId	: {name: 'CalID', mapping: 'type', type: 'string'}, // int by default
-		Title		: {name: 'EvtTitle', mapping: 'exPeriode', defaultValue:'Vacances de Noel'},
+		EventId		: {name: 'ID', mapping:'id', type:'string'}, // int by default
+		CalendarId	: {name: 'CalID', mapping: 'cal_id'}, // int by default
+		Title		: {name: 'EvtTitle', mapping: 'exPeriode_id'},
 		StartDate	: {name: 'StartDt', mapping: 'debut', type: 'date', /*convert: function(v,record){console.info(record)},*/ dateFormat: 'Y-m-d'},
 		EndDate		: {name: 'EndDt', mapping: 'fin', type: 'date', dateFormat: 'Y-m-d'},
 		RRule		: {name: 'RecurRule', mapping: 'recur_rule'},		
@@ -252,12 +255,10 @@ Ext.onReady(function(){
 	// Don't forget to reconfigure!
 	Extensible.calendar.data.EventModel.reconfigure();
 	
-	// One key thing to remember is that any record reconfiguration you want to perform
-	// must be done PRIOR to initializing your data store, otherwise the changes will
-	// not be reflected in the store's records.
-
-
-
+	
+	
+	
+	
 	Extensible.calendar.data.CalendarMappings = {
 		// Same basic concept for the CalendarMappings as above
 		CalendarId:   {name:'ID', mapping: 'cal_id', type: 'string'}, // int by default
@@ -273,37 +274,37 @@ Ext.onReady(function(){
 	var calendarStore = Ext.create('Extensible.calendar.data.MemoryCalendarStore', {
 		// defined in ../data/CalendarsCustom.js
 		data: Ext.create('Extensible.example.calendar.data.CalendarsCustom'),
-		
+		idProperty: 'cal_id'		
 	});
 	
-
-	
 	var eventStore = Ext.create('Extensible.calendar.data.MemoryEventStore', {
-		//data: Ext.create('Extensible.example.calendar.data.Events'),
-		//url: BASE_URL+'exercice/calendrier/save',
-		// defined in ../data/Events.js
 		autoLoad: true,
+		autoSync: true,
+		storeId: 'eventstore',
+		reloaded:true,
 		proxy: {
-			type: 'rest',
+			type: 'ajax',
 			url: BASE_URL+'exercice/calendrier/save',
-			noCache: false,
+			//noCache: false,
 			actionMethods : {read: 'POST', write: 'POST'},
 			api: {
-		    		read: BASE_URL+'exercice/calendrier/load',
-		    		update: BASE_URL+'exercice/calendrier/save'
+		    		read: BASE_URL+'exercice/calendrier/listAll',
+		    		create: BASE_URL+'exercice/calendrier/save',
+		    		update: BASE_URL+'exercice/calendrier/save',
+		    		destroy: BASE_URL+'exercice/calendrier/delete'
 		    	},
 			reader: {
 				type: 'json',
-				root: 'data'
+				root: 'data',
+				idProperty: 'id'/*,
+				fields: Extensible.calendar.EventRecord.prototype.fields.getRange()*/
 			},
 			writer: {
 				type: 'singlepost',
+				//encode: false,
 				nameProperty: 'mapping'
 			},
 			listeners: {
-				beforewrite: function() {
-				    	console.info('ok');
-				},
 				exception: function(proxy, response, operation, options){
 					var msg = response.message ? response.message : Ext.decode(response.responseText).message;
 					// ideally an app would provide a less intrusive message display
@@ -317,59 +318,78 @@ Ext.onReady(function(){
 		// NOT that your changes were actually persisted correctly in the back end. The 'write' event is the best
 		// option for generically messaging after CRUD persistence has succeeded.
 		listeners: {
-		    'write': function(store, operation){
-			var title = Ext.value(operation.records[0].data[Extensible.calendar.data.EventMappings.Title.name], '(No title)');
-			switch(operation.action){
-			    case 'create': 
-				//Extensible.example.msg('Add', 'Added "' + title + '"');
-				break;
-			    case 'update':
-				//Extensible.example.msg('Update', 'Updated "' + title + '"');
-				break;
-			    case 'destroy':
-				//Extensible.example.msg('Delete', 'Deleted "' + title + '"');
-				break;
+			'write': function(store, operation){
+				//console.info(operation);
+				//console.info(operation.records[0]);
+				var title = Ext.value(operation.records[0].data[Extensible.calendar.data.EventMappings.Title.name], '(No title)');
+				/*switch(operation.action){
+					case 'create': 
+						Extensible.example.msg('Add', 'Added "' + title + '"');
+						break;
+				    	case 'update':
+						Extensible.example.msg('Update', 'Updated "' + title + '"');
+						break;
+					case 'destroy':
+						Extensible.example.msg('Delete', 'Deleted "' + title + '"');
+						break;
+				}
+				if (Ext.getCmp('ext-cal-editwin')){
+					Ext.getCmp('ext-cal-editwin').close();
+				}*/
+				store.load();
+				
+			},
+			'beforeload': function(store, operation){
+				//console.info('ok');
+			},
+			'load': function(store, operation){
+				//store.proxy.baseParams = {where: 1};
+				//console.info(store.data.items);
+				
+				var compteur=0;
+				Ext.each(store.data.items, function(event){
+					compteur=compteur+1;
+					//console.info(event);					
+					//event.data.ID=compteur;
+					
+					switch(event.data.EvtTitle){
+						case '3':
+							//console.info('ok3');
+							event.data.EvtTitle= 'Vacances de Noel';
+							break;
+							//store.load();
+						case '4':
+							//console.info('ok4');
+							event.data.EvtTitle= 'Jour de l\'an';
+							break;
+							//store.load();
+						case '5':
+							//console.info('ok5');
+							event.data.EvtTitle= 'Vacances de Toussaint';
+							break;
+							//store.load();
+						case '6':
+							//console.info('ok6');
+							event.data.EvtTitle= 'Vacances d\'ete';
+							break;
+							//store.load();
+						case '7':
+							//console.info('ok7');
+							event.data.EvtTitle= 'Fete du travail';
+							break;	
+							//store.load();	
+						case '8':
+							//console.info('ok8');
+							event.data.EvtTitle= 'Vacances de Paques';
+							break;	
+							//store.load();								
+					}
+				});
+				//console.info(store.data.items);				
 			}
-		    }
 		}
-
 	});
 	
-	
-	//Change the event form 
-	/*Ext.override('Extensible.calendar.form.EventWindow', {
-		getFormItemConfigs: function() {
-			var items = [{
-			    xtype: 'textfield',
-			    itemId: this.id + '-title',
-			    name: Extensible.calendar.data.EventMappings.Title.name,
-			    fieldLabel: 'YA',
-			    anchor: '100%'
-			},{
-			    xtype: 'extensible.daterangefield',
-			    itemId: this.id + '-dates',
-			    name: 'dates',
-			    anchor: '95%',
-			    singleLine: true,
-			    fieldLabel: this.datesLabelText
-			}];
-		
-			if(this.calendarStore){
-			    items.push({
-				xtype: 'extensible.calendarcombo',
-				itemId: this.id + '-calendar',
-				name: Extensible.calendar.data.EventMappings.CalendarId.name,
-				anchor: '100%',
-				fieldLabel: this.calendarLabelText,
-				store: this.calendarStore
-			    });
-			}
-		
-			return items;
-	    	}
-	});*/
-
-	//
 	// Now just create a standard calendar using our custom data
 	//
 	Ext.define('MainApp.view.calendriertabpanel', {
@@ -475,7 +495,7 @@ Ext.onReady(function(){
 
 												    	for (var key in error){
 												    		if (error[key][0]=='alreadyexist'){
-												    			Ext.Msg.alert('Failed', 'Cet exercice a d&eacutej&agrave &eacutet&eacute cr&eacute&eacute. Veuillez choisir un autre nom.');												    			
+												    			Ext.Msg.alert('Failed', 'Cet exercice a d&eacutej&agrave &eacutet&eacute cr&eacute&eacute. Veuillez choisir un autre nom.');
 												    		}
 												    	}
 												    	Ext.each(error, function(field, value, c, d) {
@@ -492,6 +512,7 @@ Ext.onReady(function(){
 				}]
 			}]
 		},{
+		//DEBUT DE LA DEFINITION DU CALENDRIER
 			xtype		: 'extensible.calendarpanel',
 			id		: 'calendarpanel',
 		        title		: 'Calendrier',
@@ -500,57 +521,40 @@ Ext.onReady(function(){
 		                data: Ext.create('Extensible.example.calendar.data.Events')
 			}),*/
 			calendarStore	: calendarStore,
-			todayText 	: 'Aujourd\'hui',
+			/*todayText 	: 'Aujourd\'hui',
 			jumpToText	: 'Aller au',
 			weekText	: 'Semaine', 
 			dayText		: 'Jour',
 			monthText	: 'Mois',
-			multiWeekText	: '{0} Semaines',
+			multiWeekText	: '26 Semaines',
 			goText		: 'OK',
 			enableEditDetails : false,
 			showDayView	: false,
 			showWeekView	: false,
-			showMultiWeekView : false,
+			showMultiWeekView : true,*/
 			listeners:{
 				activate : function(panel){
-					datedebut=Ext.getCmp('exerciceform').getForm().findField('debut').value;
-					eventStore.load();
-					Ext.getCmp('calendarpanel').setStartDate(datedebut);
-					
-					
+					//datedebut=Ext.getCmp('exerciceform').getForm().findField('debut').value;
+					//eventStore.load();
+					//Ext.getCmp('calendarpanel').setStartDate(datedebut);
 				}
 			}
 		}]
 	});
 	
-		
-	/*exercicestore= new Ext.data.Store({
-		storeId: 'exercicestore',
-		fields: ['id', 'nom','debut', 'fin'],
-		autoLoad: true,
-		proxy: {
-			type: 'ajax',
-			url: BASE_URL+'exercice/exercice/listAll/debut',  // url that will load data
-			actionMethods : {read: 'POST'},
-			reader : {
-				type : 'json',
-				totalProperty: 'size',
-				root: 'combobox'
-			}
-		}          			
-	});*/
-	
 	Ext.define('MainApp.view.calendrierWindow', {
 		extend	: 'Ext.window.Window',
 		layout	: 'fit',
 		alias	: 'widget.calendrier_window',
-		id 	: 'calendrierwindow',
+		id 	: 'calendrier_window',
 		title	: 'Calendrier',
 		modal	: true,
 		closeAction: 'hide',
 		items: [{
 			xtype	: 'calendriertabpanel'
 		}]
-	});
+	});	
+	
+	
+	
 });
-

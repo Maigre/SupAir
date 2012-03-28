@@ -6,7 +6,7 @@ Ext.define('Ext.data.writer.SinglePost', {
     alias: 'writer.singlepost',
 
     writeRecords: function(request, data) {
-	request.params = data[0];
+	request.params = data[data.length-1];
 	return request;
     }
 });

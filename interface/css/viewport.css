@@ -1,6 +1,11 @@
 .bigtext{
 	font-size:30px;
 }
+
+.strong{
+	font: bold 12px tahoma,arial,verdana,sans-serif !important;
+}
+
 .tableau_membre {
 	font-size:11px;
 	width: 100%;

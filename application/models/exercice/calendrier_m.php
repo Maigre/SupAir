@@ -15,6 +15,7 @@ class Calendrier_m extends Entity_m {
 		//Declaration des champs
 		$this->field('exExercice')->required()->related();
 		$this->field('exPeriode')->required()->related();
+		$this->field('cal_id')->required();
 		$this->field('debut')->required()->type('date');
 		$this->field('fin')->required()->type('date')->later('debut');
 		
