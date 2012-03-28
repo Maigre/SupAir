@@ -187,19 +187,18 @@ Ext.define('MainApp.view.menu', {
 								}		
 							}			
 						},{
-							xtype: 'grid',
-							title: op.nom,
-							hideHeaders : true,
-							id:	nomsecteur+'grid',
-							store: Ext.getStore(nomsecteur+'Store'),
-							//layout: 'fit',
+							xtype: 		'grid',
+							title: 		op.nom,
+							hideHeaders : 	true,
+							id:		nomsecteur+'grid',
+							store: 		Ext.getStore(nomsecteur+'Store'),
 							columns: [
 								{ header: 'Nom',  dataIndex: 'nom', width:200},
 								{ header: 'id', dataIndex: 'id', hidden: true}
 							],
-							height: 200,
-							width: '80%',
-							scroll: 'vertical',
+							height: 	200,
+							width: 		'80%',
+							scroll: 	'vertical',
 							listeners: {
 								itemclick: {
 									//element: 'el', //bind to the underlying el property on the panel

@@ -30,6 +30,39 @@ typestore= new Ext.data.Store({
 	}          			
 });
 
+modifier_activite = function(){
+	activite_window= new Ext.window.Window({
+		id	: 'nouvelleactivite_window',
+		title	: 'Nouvelle Activit&eacute;',
+		iconCls	: 'palette',
+		modal	: true,
+		items	: [{
+			xtype	: 'activiteform',
+			id	: 'activiteform',
+			height  : 220,
+			border	: false,
+			frame	: false
+		}]
+	});
+	activite_window.show();
+	
+	var activiteform = Ext.getCmp('activiteform');
+	if (!activiteform){
+		var activiteform = Ext.widget('activiteform');
+	}
+		
+	//Ext.getCmp('adherent_container').removeAll(false);
+	var activitestore = Ext.getStore('activitestore');
+	activitestore.proxy.api.read = BASE_URL+'activite/activite/show/'+ACTIVITE_ID; 			
+	activitestore.load();
+	activitestore.on('load', function(database){
+		var rec= database.getAt(0);
+		activiteform.getForm().loadRecord(rec);
+		console.info(activiteform.getForm().findField('id'));
+		activiteform.getForm().findField('id').setValue(ACTIVITE_ID);
+	});
+}
+
 
 Ext.define('MainApp.view.ActiviteForm', {
 	extend		: 'Ext.form.Panel',
@@ -53,11 +86,20 @@ Ext.define('MainApp.view.ActiviteForm', {
 	},
 	defaultType  	: 'textfield',
 	items 		: [{
+			xtype	  	: 'textfield',
+			fieldLabel	: 'id',
+			hidden		: true,
+			hideLabel 	: false,		
+			name      	: 'id',
+			allowBlank	: true
+		},{
 			xtype	  	: 'displayfield',
 			fieldLabel	: 'Exercice',
+			//hidden		: true,
 			hideLabel 	: false,		
 			name      	: 'exExercice',
-			value		: EXERCICE
+			value		: EXERCICE,
+			allowBlank	: false
 		},{
 			xtype	  	: 'textfield',
 			hidden		: true,
@@ -90,7 +132,7 @@ Ext.define('MainApp.view.ActiviteForm', {
 			xtype		: 'checkboxfield',
 			fieldLabel	: 'R&eacute;duction Multi',
 			//hideLabel 	: true,		
-			name      	: 'redmulti',
+			name      	: 'red_multi',
 			value	  	: true,
 			anchor	  	: '96%',
 			labelWidth	: 120
@@ -98,7 +140,7 @@ Ext.define('MainApp.view.ActiviteForm', {
 			xtype		: 'checkboxfield',
 			fieldLabel	: 'Majoration Ext&eacute;rieure',
 			//hideLabel 	: true,		
-			name      	: 'majext',
+			name      	: 'maj_ext',
 			value	  	: true,
 			anchor	  	: '96%',
 			labelWidth	: 120
@@ -131,18 +173,23 @@ Ext.define('MainApp.view.ActiviteForm', {
 				xtype : 'button',
 				text: 'OK',
 				formBind: true, //only enabled once the form is valid
-				disabled: true,
+				//disabled: true,
 				handler: function() {
+					console.info('ok');
 					var form = this.up('form').getForm();
 					form.url = BASE_URL+'activite/activite/save';
 					form.findField('actiSecteur_id').setValue(SECTEUR);
 					form.findField('exExercice_id').setValue(EXERCICE_ID);
+					console.info(form.isValid());
 					if (form.isValid()) {
 						form.submit({
 							success: function(form, action) {
+								//console.info(form);
+								//console.info(action);
 								Ext.Msg.alert('Success', 'Activit&eacute; enregistr&eacute;e');
 								Ext.getCmp('nouvelleactivite_window').close();
-								//displayactivite();
+								//displayactivite(ACTIVITE_ID);
+								
 							}
 						});
 					}

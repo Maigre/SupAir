@@ -4,7 +4,11 @@
 
 .cancel{  
     background: url(../images/icons/cancel.png) no-repeat !important;  
-} 
+}
+
+.edit{  
+    background: url(../images/icons/pencil.png) no-repeat !important;  
+}  
 
 .user{  
     background: url(../images/icons/user.png) no-repeat !important;  

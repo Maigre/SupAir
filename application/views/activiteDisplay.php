@@ -79,7 +79,8 @@ show_session= function(idsession,idpanel){
 		//if (idpanel=='referentdisplay'){
 			sessiondisplay.title=rec.data.nom;
 			//adherentdisplay.statut='referent';
-			Ext.getCmp('adherent_container').insert(0,sessiondisplay);
+			session_number=Ext.getCmp('adherent_container').items.items.length;
+			Ext.getCmp('adherent_container').insert(session_number, sessiondisplay);
 		//}
 	});	
 }
@@ -89,7 +90,25 @@ Ext.define('Activite', {
 	fields: ['id', 'nom','actiTypeacti_id','actiSecteur_id', 'analytique','redmulti','majext','certificat']
 });
 
-
+activitestore= new Ext.data.Store({
+	storeId: 'activitestore',
+	model: 'Activite',
+	//requires: 'MainApp.model.PlModel',
+	//model: 'MainApp.model.PlModel',
+	proxy: {
+		type: 'ajax',
+		api: {
+			read: BASE_URL+'activite/activite/show/1'    		
+		},
+		actionMethods : {read: 'POST'},   	
+		reader: {
+			type: 'json',
+			root: 'data',
+			totalProperty: 'size',
+			successProperty: 'success'
+		}
+	}
+});
 
 Ext.define('MainApp.view.ActiviteDisplay', {
 	extend		 : 'Ext.form.Panel',
@@ -135,6 +154,12 @@ Ext.define('MainApp.view.ActiviteDisplay', {
 					}]
 				});
 				nouvellesession_window.show();
+                	}
+                },{
+                	text: 'Modifier l\'activit&eacute;',
+                	iconCls: 'edit',
+                	handler: function() {
+                		modifier_activite();                		
                 	}
                 }]
         }],
@@ -235,25 +260,7 @@ Ext.define('MainApp.view.ActiviteDisplay', {
 		
 		this.callParent(arguments);
 		
-		this.store= activitestore= new Ext.data.Store({
-			storeId: 'activitestore',
-			model: 'Activite',
-			//requires: 'MainApp.model.PlModel',
-			//model: 'MainApp.model.PlModel',
-			proxy: {
-				type: 'ajax',
-				api: {
-					read: BASE_URL+'activite/activite/show/1'    		
-				},
-				actionMethods : {read: 'POST'},   	
-				reader: {
-					type: 'json',
-					root: 'data',
-					totalProperty: 'size',
-					successProperty: 'success'
-				}
-			}
-		});
+		this.store= Ext.getStore('activitestore');
 		
 	}
 });

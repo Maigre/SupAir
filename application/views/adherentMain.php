@@ -113,8 +113,12 @@ show_adherent= function(idadherent,idpanel){
 		else{
 			adherentdisplay.title=rec.data.prenom+' '+rec.data.nom+' - Enfant';
 			adherentdisplay.statut='enfant';
-			Ext.getCmp('adherent_container').insert(2,adherentdisplay);						
+			Ext.getCmp('adherent_container').insert(2,adherentdisplay);
+									
 		}
+		adherentdisplay.on('expand', function(panel){
+			console.info(panel.form._record.data.id);
+		})
 	});	
 }
 

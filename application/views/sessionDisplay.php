@@ -1,6 +1,6 @@
 Ext.define('Session', {
 	extend: 'Ext.data.Model',
-	fields: ['id', 'nom', 'actiActivite_id','periode', 'dates', 'agemin', 'agemax', 'capacitemin', 'capacitemax', 'anim', 'niveau', 'horairein', 'horaireout']
+	fields: ['id', 'nom', 'actiActivite_id','periode', 'dates', 'agemin', 'agemax', 'capacitemin', 'capacitemax', 'anim', 'actiNiveau_id', 'actiNiveau_nom', 'in', 'out']
 });
 
 
@@ -33,18 +33,17 @@ Ext.define('MainApp.view.SessionDisplay', {
 		margin: '0px 5px'
 	},
 	items	: [{
-			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+			fieldLabel: 'Periode',
 			//hideLabel : true,		
 			name      : 'periode',
-			value	  : '04-12-73',
+			value	  : '',
 			cls       : ''
 		},{
-			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+			fieldLabel: 'Dates',
 			//hideLabel : true,		
 			name      : 'dates',
-			value	  : 'junior.byles@supair.fr',
-			cls       : '',
-			labelWidth: 25
+			value	  : '',
+			cls       : ''
 		},{
 			fieldLabel: 'Age min.',
 			//hideLabel : false,		
@@ -78,19 +77,19 @@ Ext.define('MainApp.view.SessionDisplay', {
 		},{
 			fieldLabel: 'Niveau',
 			//hideLabel : true,		
-			name      : 'niveau',
+			name      : 'actiNiveau_nom',
 			value	  : '',
 			cls       : ''
 		},{
-			fieldLabel: 'Horaires',
+			fieldLabel: 'Horaires: de',
 			//hideLabel : true,		
-			name      : 'horairein',
+			name      : 'in',
 			value	  : '',
 			cls       : ''
 		},{
-			fieldLabel: 'Horaires',
+			fieldLabel: '&agrave;',
 			//hideLabel : true,		
-			name      : 'horairemax',
+			name      : 'out',
 			value	  : '',
 			cls       : ''
 		}

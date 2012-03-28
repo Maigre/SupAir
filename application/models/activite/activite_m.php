@@ -18,8 +18,9 @@ class Activite_m extends Entity_m {
 		$this->field('actiSecteur')->related()->required();
 		$this->field('actiTypeacti')->related()->required();
 		$this->field('analytique');
-		$this->field('majext')->type('bool');
-		$this->field('redmulti')->type('bool');
+		$this->field('maj_ext')->type('bool');
+		$this->field('red_multi')->type('bool');
+		$this->field('certificat')->type('bool');
 		
 		// Errors
 		$this->error['notfound'] = 'Activite introuvable';
