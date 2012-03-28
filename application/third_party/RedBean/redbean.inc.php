@@ -89,6 +89,9 @@ require($dir.'SQLHelper.php');
 
 require($dir.'DependencyInjector.php');
 
+//Plugins
+require($dir."Plugin/BeanExport.php");
+
 class R extends RedBean_Facade{}
 
 
