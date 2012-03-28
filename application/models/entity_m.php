@@ -36,7 +36,14 @@ class Entity_m extends CI_Model {
 	{
 		if ($this->bean->id)
 		{
-			$array = $this->bean->exportLimited($this->bean,true,2);
+
+			$beans[] = $this->bean;
+						
+			//new export allow
+			$e = new RedBean_Plugin_BeanExport(R::$toolbox);
+    			$e->loadSchema();
+    			$array = $e->exportLimited($beans,false,2,false,false);
+									
 			$out['data'] = $this->flatten_array(current($array));
 			$out['succes'] = true;
 		}
@@ -288,29 +295,24 @@ class Entity_m extends CI_Model {
 		}
 	}
 	
-	protected function flatten_array($array, $preserve_keys = 1, &$out = array(), &$last_subarray_found="") 
+	
+	
+	protected function flatten_array($Array,$Separator="_",$FlattenedKey='') 
 	{
-		    foreach($array as $key => $child)
-		    {
-		        if(is_array($child))
-		        {
-		            if($preserve_keys + is_string($key) > 1) 
-		            {
-		             	if($last_subarray_found) $last_subarray_found .= '_'.$key;
-		             	else $last_subarray_found = $key;
-		            }
-		            $out = $this->flatten_array($child, $preserve_keys, $out, $last_subarray_found);
-		        }
-		        elseif($preserve_keys + is_string($key) > 1)
-		        {
-		            if ($last_subarray_found) $sfinal_key_value = $last_subarray_found . "_" . $key;
-		            else  $sfinal_key_value = $key;
-		            $out[$sfinal_key_value] = $child;
-		        }
-		        else $out[] = $child;
-		    }
-
-		    return $out;
+		$FlattenedArray=Array();
+		foreach($Array as $Key => $Value) {
+			
+			if (is_string($Key)) {
+				if (strlen($FlattenedKey) > 0) $next_key = $FlattenedKey.$Separator.$Key;
+				else $next_key = $Key;
+			}
+			else $next_key = $FlattenedKey; 
+	
+			
+			if(is_Array($Value)) $FlattenedArray=Array_merge($FlattenedArray,$this->flatten_array($Value,$Separator,$next_key));
+			else $FlattenedArray[$next_key]=$Value;
+		}
+		return $FlattenedArray;
 	}
 
 }

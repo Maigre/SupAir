@@ -48,6 +48,18 @@ class RedBean_Plugin_BeanExport {
 	 * Maximum level of recursions allowed by user
 	 */
 	protected $maxDepth = false;
+	
+	/**
+	 * @var boolean
+	 * Export owned property in recursive mode
+	 */
+	protected $ownExport = true;
+	
+	/**
+	 * @var boolean
+	 * Export shared property in recursive mode
+	 */
+	protected $shared = true;
 
 	/**
 	 * Constructor
@@ -155,13 +167,20 @@ class RedBean_Plugin_BeanExport {
 	 * @param boolean 		  $typeShield whether to use a type recursion shield
 	 * @param boolean|integer $depth      maximum number of iterations allowed (boolean FALSE to turn off)
 	 */
-	public function exportLimited($beans, $typeShield = true, $depth = false) {
+	public function exportLimited($beans, $typeShield = true, $depth = false, $own = false, $shared = false) {
 		$this->depth = 0;
 		$this->maxDepth = $depth;
 		$this->typeShield = $typeShield;
+		$this->ownExport = $own;
+		$this->sharedExport = $shared;
+		
 		$export = $this->export($beans);
+		
 		$this->typeShield = false;
 		$this->maxDepth = false;
+		$this->ownExport = true;
+		$this->sharedExport = true;
+		
 		return $export;
 	}
 	
@@ -189,7 +208,9 @@ class RedBean_Plugin_BeanExport {
 		}
 		$type = $bean->getMeta('type');
 		$linkField = $type . '_id';
+		
 		//get all ownProperties
+		if ($this->ownExport)
 		foreach($this->tables as $table=>$cols) {
 			if (strpos($table,'_')===false) {
 				if (in_array($linkField,array_keys($cols))) {
@@ -198,7 +219,9 @@ class RedBean_Plugin_BeanExport {
 				}
 			}
 		}
+		
 		//get all sharedProperties
+		if ($this->sharedExport)
 		foreach($this->tables as $table=>$cols) {
 			if (strpos($table,'_')!==false) {
 				$parts = explode('_', $table);
@@ -210,6 +233,7 @@ class RedBean_Plugin_BeanExport {
 				}
 			}
 		}
+		
 		return $export;
 	}
 }
