@@ -36,8 +36,7 @@ class Entity_m extends CI_Model {
 	{
 		if ($this->bean->id)
 		{
-			$beans[] = $this->bean;
-			$array = R::exportLimited($beans,true,2);
+			$array = $this->bean->exportLimited($this->bean,true,2);
 			$out['data'] = $this->flatten_array(current($array));
 			$out['succes'] = true;
 		}

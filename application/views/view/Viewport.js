@@ -44,6 +44,7 @@ Ext.define('MainApp.view.Viewport', {
 			}
 		}, {
 			region	: 'west',
+			id	: 'westregion',
 			//collapsible: true,
 			//title	: 'Navigation',
 			width	: 150,

@@ -313,9 +313,15 @@ Ext.define('MainApp.view.SessionForm', {
 					if (form.isValid()) {
 						form.submit({
 							success: function(form, action) {
-								Ext.Msg.alert('Success', 'Session enregistr&eacute;e');
-								Ext.getCmp('nouvellesession_window').close();
+								Ext.Msg.alert('Success', 'Session enregistr&eacute;e', function(){
+									Ext.getCmp('nouvellesession_window').close();
+									displayactivite(ACTIVITE_ID);
+								});
+								
 								//displayactivite();
+							},
+							failure: function(form, action){
+								Ext.Msg.alert('Failed', action.result.error.nom[0]);
 							}
 						});
 					}

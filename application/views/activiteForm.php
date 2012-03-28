@@ -190,6 +190,9 @@ Ext.define('MainApp.view.ActiviteForm', {
 								Ext.getCmp('nouvelleactivite_window').close();
 								//displayactivite(ACTIVITE_ID);
 								
+							},
+							failure: function(form, action){
+								Ext.Msg.alert('Failed', action.result.error.nom[0]);
 							}
 						});
 					}

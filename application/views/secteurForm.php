@@ -109,8 +109,16 @@ Ext.define('MainApp.view.SecteurForm', {
 							params:{
 							
 							},success: function(form, action) {
-								Ext.Msg.alert('Success', 'Secteur enregistr&eacute;');
-								Ext.getCmp('nouveausecteur_window').close();
+								Ext.Msg.alert('Success', 'Secteur enregistr&eacute;', function(){
+									Ext.getCmp('nouveausecteur_window').close();
+									Ext.getCmp('menupanel').removeAll(true);
+									build_menu(); //defini dans menu.php
+									menupanel=Ext.widget('menupanel');
+									Ext.getCmp('westregion').add(menupanel);
+								});
+								
+								
+								
 								//displayactivite();
 							}
 						});
