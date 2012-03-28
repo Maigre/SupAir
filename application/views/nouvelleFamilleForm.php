@@ -40,7 +40,10 @@ save_adherents= function(indiceform){
 	idform=formtosubmit[indiceform];
 	form = Ext.getCmp(idform);
 	//Sauvegarde des formulaires non masqués
-	if (form.masked==false){
+	console.info(form.getEl().isMasked());
+	console.info(form.masked);
+	
+	if (form.getEl().isMasked()==false){
 		if (form.getForm().isValid()==false){
 			allvalid=false;
 		}

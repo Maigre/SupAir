@@ -53,16 +53,22 @@ class CrudControl extends CI_Controller {
 		if ($posted = $this->input->post())
 		foreach ($posted as $id=>$val)
 		{
+			//echo $id;
 			if (($id == 'where') and (is_array($val))) foreach ($val as $w=>$v) $post['where'][$w] = $v;
 			else
 			{
 				$where_id = explode('__',$id);
-				if ($where_id[1]) $post['where'][$where_id[1]] = $val;
+				if (isset($where_id[1]) and ($where_id[1])) $post['where'][$where_id[1]] = $val;
 			}
 		}
 				
-		if (isset($post['where']) and (is_array($post['where'])))
-				foreach($post['where'] as $name=>$value) $this->db->where($name,$value);
+		if (isset($post['where']) and (is_array($post['where']))){
+			//echo $post['where'];
+			//echo  json_decode($post['where']);
+			foreach($post['where'] as $name=>$value) $this->db->where($name,$value);
+		}
+				
+			
 		
 		$this->db->select('id');
 		$all = $this->db->get($this->Entity()->table)->result_array();

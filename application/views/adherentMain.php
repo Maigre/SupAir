@@ -8,11 +8,12 @@ displayfamille= function(){
 			var response = Ext.JSON.decode(response.responseText);
 			
 			//FAMILLE
+			Ext.getCmp('infofamille_container').removeAll(true);
 			var familledisplay = Ext.getCmp('familledisplay');
 			if (!familledisplay){
 				var familledisplay = Ext.widget('familledisplay');
 			}	
-			Ext.getCmp('infofamille_container').removeAll(false);
+			
 			Ext.getCmp('infofamille_container').add(familledisplay);
 			var famillestore = Ext.getStore('famillestore');
 			famillestore.proxy.api.read = BASE_URL+'user/famille/show/'+ID_FAMILLE; 
@@ -130,25 +131,25 @@ seticonfield = function(data,field){
 
 Ext.define('MainApp.view.AdherentMain', {
 	extend: 'Ext.panel.Panel',
-    layout:{
+	layout:{
 		type:'vbox',
 		align:'stretch'
 	},
-    defaults: {
-        // applied to each contained panel
-        defaults:{height:100},
-        bodyStyle: 'margin:5px',
+	defaults: {
+	// applied to each contained panel
+	defaults:{height:100},
+	bodyStyle: 'margin:5px',
 		layout:{
 			type:'hbox',
 			align:'stretch'
 		},
 		xtype: 'container'
-    },
-    //width: 300,
-    //padding: 5,
-    opacity:0,
-    //height: 300,
-    border:0,
+	},
+	//width: 300,
+	//padding: 5,
+	opacity:0,
+	//height: 300,
+	border:0,
 	alias : 'widget.adherentmain',
 	id    : 'adherentmain',
 	items: [{ //NORTH -> info famille + info inscription famille

@@ -42,7 +42,23 @@ Ext.define('MainApp.view.menu', {
 					}		
 				}			
 			},{
-				xtype:'searchbar'
+				xtype: 'container',
+				width: 130,
+				height: 30,
+				layout:{
+					type:'hbox',
+					align: 'center',
+					pack: 'start'
+				},
+				items:[{
+					xtype:'searchbar',
+					flex:1,					
+					margin: '0 0 0 5'
+				},{
+					xtype:'searchbaricon',
+					width:17,
+					margin: '1 0 0 1'
+				}]
 			}]			
 		},{
 			xtype	: 'panel',
@@ -98,8 +114,46 @@ Ext.define('MainApp.view.menu', {
 			success	: function(response){
 				
 				var options = Ext.decode(response.responseText);
+				console.info('okallsecteur');
+				
 				
 				Ext.each(options, function(op) {
+					console.info(op);
+					console.info(op.nom);
+					// Ecriture des motifs à rempalcer
+					var regAccentA = new RegExp('[àâä]', 'gi');
+					var regAccentE = new RegExp('[éèêë]', 'gi');
+					var regEspace = new RegExp('[ ]', 'gi');
+					// Application de la fonction replace() au nom
+
+					nomsecteur = op.nom.replace(regAccentA, 'a');
+					nomsecteur = nomsecteur.replace(regAccentE, 'e');
+					nomsecteur = nomsecteur.replace(regEspace, '');   
+					//Dynamically create the store
+					
+					
+					activitestore=Ext.create('Ext.data.Store', {
+						storeId: nomsecteur+'Store',
+						fields:['id', 'nom'],
+						autoLoad: false,
+						proxy: {
+							type: 'ajax',
+							url: BASE_URL+'activite/activite/listAll/nom',  // url that will load data
+							actionMethods : {read: 'POST'},
+							reader : {
+								type : 'json',
+								totalProperty: 'size',
+								root: 'combobox'
+							}
+						}
+					});
+					
+					//console.info(where_array);
+					activitestore.load({ params: {"where[actiSecteur_id]": op.id}});
+					
+					//console.info('store');
+					//console.info(Ext.getStore(op.nom+'Store'));
+					
 					secteurpanel= new Ext.Panel({
 						title: op.nom,
 						iconCls: op.icon,
@@ -115,7 +169,7 @@ Ext.define('MainApp.view.menu', {
 							margin	: 2,
 							listeners: {
 								click: function() {
-							
+									SECTEUR=op.id;
 									nouvelleactivite_window= new Ext.window.Window({
 										id	: 'nouvelleactivite_window',
 										title	: 'Nouvelle Activit&eacute;',
@@ -132,11 +186,59 @@ Ext.define('MainApp.view.menu', {
 							
 								}		
 							}			
-						}]
-						
+						},{
+							xtype: 'grid',
+							title: op.nom,
+							hideHeaders : true,
+							id:	nomsecteur+'grid',
+							store: Ext.getStore(nomsecteur+'Store'),
+							//layout: 'fit',
+							columns: [
+								{ header: 'Nom',  dataIndex: 'nom', width:200},
+								{ header: 'id', dataIndex: 'id', hidden: true}
+							],
+							height: 200,
+							width: '80%',
+							scroll: 'vertical',
+							listeners: {
+								itemclick: {
+									//element: 'el', //bind to the underlying el property on the panel
+									fn: function(a,b,c){ 
+										console.info(b.data.id);
+										ACTIVITE_ID = b.data.id;
+										displayactivite(b.data.id);
+									}
+								}
+							}
+						}/*,{
+							xtype	: 'button',
+							text 	: 'New session*',
+							width 	: 110,
+							iconCls	: 'add',
+							margin	: 2,
+							listeners: {
+								click: function() {
+									SECTEUR=op.id;
+									nouvellesession_window= new Ext.window.Window({
+										id	: 'nouvellesession_window',
+										title	: 'Nouvelle Session',
+										iconCls	: 'palette',
+										modal	: true,
+										items	: [{
+											xtype	: 'sessionform',
+											height  : 220,
+											border	: false,
+											frame	: false
+										}]
+									});
+									nouvellesession_window.show();							
+								}		
+							}			
+						}*/]
 					});
 					me.items.insert(1,secteurpanel);
 					me.doLayout();
+					console.info(Ext.getCmp(nomsecteur+'grid'));
 				})
 			}
 		});

@@ -14,6 +14,23 @@ exercicestore= new Ext.data.Store({
 	}          			
 });
 
+typestore= new Ext.data.Store({
+	storeId: 'typestore',
+	fields: ['id', 'nom'],
+	autoLoad: true,
+	proxy: {
+		type: 'ajax',
+		url: BASE_URL+'activite/typeacti/listAll/nom',  // url that will load data
+		actionMethods : {read: 'POST'},
+		reader : {
+			type : 'json',
+			totalProperty: 'size',
+			root: 'combobox'
+		}
+	}          			
+});
+
+
 Ext.define('MainApp.view.ActiviteForm', {
 	extend		: 'Ext.form.Panel',
 	alias 		: 'widget.activiteform',
@@ -37,35 +54,51 @@ Ext.define('MainApp.view.ActiviteForm', {
 	defaultType  	: 'textfield',
 	items 		: [{
 			xtype	  	: 'displayfield',
-			//typeAhead	: true,  //allow typing text to select value.
-			//hideTrigger	: true,
-			//store	  	: exercicestore,
 			fieldLabel	: 'Exercice',
 			hideLabel 	: false,		
 			name      	: 'exExercice',
-			//displayField	: 'nom',
 			value		: EXERCICE
+		},{
+			xtype	  	: 'textfield',
+			hidden		: true,
+			name      	: 'exExercice_id',
+			value		: EXERCICE_ID
 		},{
 			xtype		: 'textfield',
 			fieldLabel	: 'Nom',
 			name      	: 'nom',
 			value	  	: 'Chant'
 		},{
+			xtype		: 'combobox',
+			fieldLabel	: 'Type',
+			name      	: 'actiTypeacti_id',
+			store		: 'typestore',
+			displayField	: 'nom',
+			valueField	: 'id'
+		},{
 			xtype		: 'textfield',
 			hidden		: true,
 			fieldLabel	: 'Nom',
-			name      	: 'secteur_id',
+			name      	: 'actiSecteur_id',
 			value	  	: 1
 		},{
 			xtype		: 'textfield',
 			fieldLabel	: 'Code Analytique',
-			name      	: 'codeanalytique',
+			name      	: 'analytique',
 			value	  	: '350'
 		},{
 			xtype		: 'checkboxfield',
 			fieldLabel	: 'R&eacute;duction Multi',
 			//hideLabel 	: true,		
-			name      	: 'reducmulti',
+			name      	: 'redmulti',
+			value	  	: true,
+			anchor	  	: '96%',
+			labelWidth	: 120
+		},{
+			xtype		: 'checkboxfield',
+			fieldLabel	: 'Majoration Ext&eacute;rieure',
+			//hideLabel 	: true,		
+			name      	: 'majext',
 			value	  	: true,
 			anchor	  	: '96%',
 			labelWidth	: 120
@@ -102,12 +135,12 @@ Ext.define('MainApp.view.ActiviteForm', {
 				handler: function() {
 					var form = this.up('form').getForm();
 					form.url = BASE_URL+'activite/activite/save';
+					form.findField('actiSecteur_id').setValue(SECTEUR);
+					form.findField('exExercice_id').setValue(EXERCICE_ID);
 					if (form.isValid()) {
 						form.submit({
-							params:{
-							
-							},success: function(form, action) {
-								Ext.Msg.alert('Success', 'Activit&eacute; enregistr&eacute;');
+							success: function(form, action) {
+								Ext.Msg.alert('Success', 'Activit&eacute; enregistr&eacute;e');
 								Ext.getCmp('nouvelleactivite_window').close();
 								//displayactivite();
 							}

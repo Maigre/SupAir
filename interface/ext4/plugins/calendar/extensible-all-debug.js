@@ -2274,7 +2274,7 @@ Ext.define('Extensible.calendar.data.MemoryEventStore', {
         
         if(Extensible.example.msg) {
             var success = operation.wasSuccessful(),
-                rec = operation.getRecords()[0],
+                rec = operation.records[0],
                 title = rec.data[Extensible.calendar.data.EventMappings.Title.name];
     
             switch (operation.action) {
@@ -6887,7 +6887,15 @@ alert('End: '+bounds.end);
      */
     dismissEventEditor : function(dismissMethod, /*private*/ animTarget){
         if(this.newRecord && this.newRecord.phantom){
-            this.store.remove(this.newRecord);
+        
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TWEAK HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if (this.newRecord.data.ID==''){
+            	this.newRecord.data.ID = Ext.getStore('eventstore').count();
+            }            
+            this.newRecord.data.phantom=false;
+           
+            //this.store.remove(this.newRecord);
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!END OF TWEAK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         delete this.newRecord;
         

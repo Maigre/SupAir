@@ -19,28 +19,37 @@ class Welcome extends CI_Controller {
 		$data['extjs'][]=$this->load->view('menu',null,true);
 		$data['extjs'][]=$this->load->view('searchBar',null,true);
 		
+		//CALENDAR
+		$data['extjs'][]=$this->load->view('calendrierWindow',null,true);
+		
 		//users
 		$data['extjs'][]=$this->load->view('adherentDisplay',null,true);
 		$data['extjs'][]=$this->load->view('adherentForm',null,true);
 		$data['extjs'][]=$this->load->view('enfantForm',null,true);
+		
 		$data['extjs'][]=$this->load->view('familleDisplay',null,true);
 		$data['extjs'][]=$this->load->view('familleForm',null,true);
 		$data['extjs'][]=$this->load->view('nouvelleFamilleForm',null,true);
+		
 		$data['extjs'][]=$this->load->view('adherentMain',null,true);
-	
+		
+		$data['extjs'][]=$this->load->view('activiteForm',null,true);
+		$data['extjs'][]=$this->load->view('activiteDisplay',null,true);
+		$data['extjs'][]=$this->load->view('secteurForm',null,true);
+		
+		
+		//Activite
+		
+		$data['extjs'][]=$this->load->view('sessionForm',null,true);
+		$data['extjs'][]=$this->load->view('sessionDisplay',null,true);
 
 	//***TOOLS
 		$data['extjs'][]=$this->load->view('tools/ListWindow',null,true);	
-		
+		$data['extjs'][]=$this->load->view('view/Searchbaricon',null,true);
 
-	//***CALENDAR
-		
 
 		
-		$data['extjs'][]=$this->load->view('calendrierWindow',null,true);
 		
-		$data['extjs'][]=$this->load->view('activiteForm',null,true);
-		$data['extjs'][]=$this->load->view('secteurForm',null,true);
 		
 		
 		$this->load->view('mainview',$data);

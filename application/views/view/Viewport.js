@@ -9,7 +9,7 @@ Ext.define('MainApp.view.Viewport', {
 			region	: 'north',
 			/*html	: '<h1 class="x-panel-header">**SUP*AIR**</h1>',*/
 			height	: 30,
-			bodyStyle: "background-image:url(interface/images/banner_sky.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;",
+			bodyStyle: "background-image:url(interface/images/NASA1.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;",
 			autoHeight: true,
 			border	: false,
 			margins	: '0 0 5 0',
@@ -56,6 +56,7 @@ Ext.define('MainApp.view.Viewport', {
 			region	: 'south',
 			title	: 'South Panel',
 			collapsible: true,
+			collapsed : true,
 			html	: '',
 			split	: true,
 			height	: 50,
@@ -64,14 +65,19 @@ Ext.define('MainApp.view.Viewport', {
 			region	: 'east',
 			title	: 'East Panel',
 			collapsible: true,
+			collapsed : true,
 			split	: true,
 			width	: 150
 		}, {
 			region	: 'center',
+			id	: 'centerregion',
 			xtype	: 'container',
 			layout	: 'fit',
+			//bodyStyle: "background-image:url(interface/images/NASA1.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;",
+			//opacity : 0,
 			items	: [{
-				xtype: 'adherentmain'
+				xtype: 'adherentmain',
+				bodyStyle: "background-image:url(interface/images/NASA1.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;",
 			}]
     	}];
 

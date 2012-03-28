@@ -32,8 +32,11 @@
      	<script type="text/javascript" src="interface/ext4/plugins/calendar/extensible-all-debug.js"></script>
      	<script type="text/javascript" src="interface/ext4/plugins/calendar/examples/examples.js"></script>
 		
+		
+	
 		<!-- Global variables -->
      	<script type="text/javascript">ID_FAMILLE = 1;</script>
+     	<script type="text/javascript">SECTEUR = 1;</script>
      	<script type="text/javascript">EXERCICE = '2011-2012';</script>
      	<script type="text/javascript">EXERCICE_ID = 1;</script>
      	
