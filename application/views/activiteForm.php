@@ -55,10 +55,11 @@ modifier_activite = function(){
 	var activitestore = Ext.getStore('activitestore');
 	activitestore.proxy.api.read = BASE_URL+'activite/activite/show/'+ACTIVITE_ID; 			
 	activitestore.load();
+	activitestore.un('load', function(){});
 	activitestore.on('load', function(database){
 		var rec= database.getAt(0);
 		activiteform.getForm().loadRecord(rec);
-		console.info(activiteform.getForm().findField('id'));
+		//console.info(activiteform.getForm().findField('id'));
 		activiteform.getForm().findField('id').setValue(ACTIVITE_ID);
 	});
 }
@@ -135,7 +136,8 @@ Ext.define('MainApp.view.ActiviteForm', {
 			name      	: 'red_multi',
 			value	  	: true,
 			anchor	  	: '96%',
-			labelWidth	: 120
+			labelWidth	: 120,
+			inputValue	: '1'
 		},{
 			xtype		: 'checkboxfield',
 			fieldLabel	: 'Majoration Ext&eacute;rieure',
@@ -143,7 +145,8 @@ Ext.define('MainApp.view.ActiviteForm', {
 			name      	: 'maj_ext',
 			value	  	: true,
 			anchor	  	: '96%',
-			labelWidth	: 120
+			labelWidth	: 120,
+			inputValue	: '1'
 		},/*{
 			xtype		: 'checkboxfield',
 			fieldLabel	: 'Pack (si dispo)',
@@ -161,7 +164,8 @@ Ext.define('MainApp.view.ActiviteForm', {
 			value	  	: true,
 			//cls       	: 'yes',
 			anchor	  	: '96%',
-			labelWidth	: 120
+			labelWidth	: 120,
+			inputValue	: '1'
 		},{
 			xtype	  : 'container',
 			layout	  : {
@@ -175,12 +179,12 @@ Ext.define('MainApp.view.ActiviteForm', {
 				formBind: true, //only enabled once the form is valid
 				//disabled: true,
 				handler: function() {
-					console.info('ok');
+					//console.info('ok');
 					var form = this.up('form').getForm();
 					form.url = BASE_URL+'activite/activite/save';
 					form.findField('actiSecteur_id').setValue(SECTEUR);
 					form.findField('exExercice_id').setValue(EXERCICE_ID);
-					console.info(form.isValid());
+					//console.info(form.isValid());
 					if (form.isValid()) {
 						form.submit({
 							success: function(form, action) {

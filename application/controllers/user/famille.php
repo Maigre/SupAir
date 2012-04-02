@@ -14,13 +14,13 @@ class Famille extends CrudControl {
 	//renvoi l'id de la famille et celui de chaque adherent
 	function loadFamille($id_famille=false)
 	{
-		$this->load->model('activite/adherent_m');
+		$this->load->model('user/adherent_m');
 		$session_m = new Adherent_m();
 		
 		$adherents = $this->db->select('id, userStatut_id')
-								->where('userFamille_id',$this->Entity($id_famille)->get('id'))
-								->get('userAdherent')
-								->result_array();
+			->where('userFamille_id',$this->Entity($id_famille)->get('id'))
+			->get('userAdherent')
+			->result_array();
 			
 		$out['famille'] = $id_famille;
 		foreach($adherents as $adh) 

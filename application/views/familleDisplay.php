@@ -104,7 +104,7 @@ Ext.define('MainApp.view.FamilleDisplay', {
 		
 		Ext.define('Famille', {
 			extend: 'Ext.data.Model',
-			fields: ['id', 'adresse1','adresse2','ext','qf','bonv','ccas','userVille_nom','userVille_cp',{name:'villedisplay', mapping: 'userVille_nom + " " + obj.userVille_cp'},]
+			fields: ['id', 'adresse1','adresse2','ext','qf','bonv','ccas','userVille_nom','userVille_cp',{name:'villedisplay', mapping: 'userVille_nom + " " + obj.userVille_cp'}]
 		});
 		
 		this.famillestore= new Ext.data.Store({

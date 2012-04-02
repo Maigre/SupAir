@@ -35,6 +35,9 @@ class Welcome extends CI_Controller {
 		
 		$data['extjs'][]=$this->load->view('activiteForm',null,true);
 		$data['extjs'][]=$this->load->view('activiteDisplay',null,true);
+		$data['extjs'][]=$this->load->view('activiteSelectionWindow',null,true);
+		
+		
 		$data['extjs'][]=$this->load->view('secteurForm',null,true);
 		
 		
@@ -42,6 +45,9 @@ class Welcome extends CI_Controller {
 		
 		$data['extjs'][]=$this->load->view('sessionForm',null,true);
 		$data['extjs'][]=$this->load->view('sessionDisplay',null,true);
+		
+		$data['extjs'][]=$this->load->view('sessionCalendrierWindow',null,true);
+		$data['extjs'][]=$this->load->view('inscriptionPanel',null,true);
 
 	//***TOOLS
 		$data['extjs'][]=$this->load->view('tools/ListWindow',null,true);	

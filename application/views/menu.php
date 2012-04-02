@@ -162,6 +162,20 @@ build_menu = function(){
 					align	: 'center'
 				},				
 				items:[{
+					xtype : 'button',
+					text: 'Calendrier',
+					//formBind: true, //only enabled once the form is valid
+					//disabled: true,
+					handler: function() {
+						sessioncalendrierwindow=Ext.getCmp('sessioncalendrierwindow');
+						if(!sessioncalendrierwindow){
+							sessioncalendrierwindow=Ext.widget('sessioncalendrierwindow');
+						}
+						sessioncalendrierwindow.show();
+					},
+					width	: 80,
+					margins: '0 0 5 0'
+				},{
 					xtype	: 'button',
 					text 	: 'Nouvelle famille',
 					width 	: 110,
