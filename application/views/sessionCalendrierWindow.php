@@ -130,10 +130,12 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 		SELECTED_DATES=[];
 		me.first_year=EXERCICE.split('-')[0];
 		
+		
+		
 		this.on('afterrender', function(){
 			
-			//
 			Ext.getCmp('sessioncalendrierwindow').getEl().mask('Loading...');
+			
 			
 			var disabledDates = ['12/26/2011', '12/27/2011', '12/28/2011', '12/29/2011', '12/30/2011', '12/31/2011'];
 			
@@ -225,7 +227,8 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 								value	: new Date(year+","+month+",01"),
 								minDate	: minDate,
 								maxDate	: maxDate,
-								disabledDates: ["03/../2012"], //['03/08', '09/16'],//disabledDates,
+								showToday: false,
+								disabledDates: ["15/03/12"], //['03/08', '09/16'],//disabledDates,
 								disabledDays : [0],
 								//disableAnim: true,
 								handler	: function(picker, date) {

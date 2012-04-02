@@ -43,6 +43,7 @@ Ext.override(Ext.picker.Date, {
 		    }
 		}
     	],*/
+    	numDays: 37,
     	handleDateClick : function(e, t){
 		console.info('ok');
 		var me = this,
@@ -118,6 +119,130 @@ Ext.override(Ext.picker.Date, {
     	handleMouseWheel : function(e){
 
     	},
+    	fullUpdate: function(date, active){
+        var me = this,
+            cells = me.cells.elements,
+            textNodes = me.textNodes,
+            disabledCls = me.disabledCellCls,
+            eDate = Ext.Date,
+            i = 0,
+            extraDays = 0,
+            visible = me.isVisible(),
+            sel = +eDate.clearTime(date, true),
+            today = +eDate.clearTime(new Date()),
+            min = me.minDate ? eDate.clearTime(me.minDate, true) : Number.NEGATIVE_INFINITY,
+            max = me.maxDate ? eDate.clearTime(me.maxDate, true) : Number.POSITIVE_INFINITY,
+            ddMatch = me.disabledDatesRE,
+            ddText = me.disabledDatesText,
+            ddays = me.disabledDays ? me.disabledDays.join('') : false,
+            ddaysText = me.disabledDaysText,
+            format = me.format,
+            days = eDate.getDaysInMonth(date),
+            firstOfMonth = eDate.getFirstDateOfMonth(date),
+            startingPos = firstOfMonth.getDay() - me.startDay,
+            previousMonth = eDate.add(date, eDate.MONTH, -1),
+            longDayFormat = me.longDayFormat,
+            prevStart,
+            current,
+            disableToday,
+            tempDate,
+            setCellClass,
+            html,
+            cls,
+            formatValue,
+            value;
+
+        if (startingPos < 0) {
+            startingPos += 7;
+        }
+
+        days += startingPos;
+        prevStart = eDate.getDaysInMonth(previousMonth) - startingPos;
+        current = new Date(previousMonth.getFullYear(), previousMonth.getMonth(), prevStart, me.initHour);
+
+        if (me.showToday) {
+            tempDate = eDate.clearTime(new Date());
+            disableToday = (tempDate < min || tempDate > max ||
+                (ddMatch && format && ddMatch.test(eDate.dateFormat(tempDate, format))) ||
+                (ddays && ddays.indexOf(tempDate.getDay()) != -1));
+
+            if (!me.disabled) {
+                me.todayBtn.setDisabled(disableToday);
+                me.todayKeyListener.setDisabled(disableToday);
+            }
+        }
+
+        setCellClass = function(cell){
+            
+            value = +eDate.clearTime(current, true);
+            cell.title = eDate.format(current, longDayFormat);
+            // store dateValue number as an expando
+            cell.firstChild.dateValue = value;
+            if(value == today){
+                cell.className += ' ' + me.todayCls;
+                cell.title = me.todayText;
+            }
+            if(value == sel){
+                cell.className += ' ' + me.selectedCls;
+                me.el.dom.setAttribute('aria-activedescendant', cell.id);
+                if (visible && me.floating) {
+                    Ext.fly(cell.firstChild).focus(50);
+                }
+            }
+            // disabling
+            if(value < min) {
+                cell.className = disabledCls;
+                cell.title = me.minText;
+                return;
+            }
+            if(value > max) {
+                cell.className = disabledCls;
+                cell.title = me.maxText;
+                return;
+            }
+            //console.info(ddMatch);
+            //console.info(me.disabledDays);
+            //console.info(ddays);
+            if(ddays){
+                
+                if(ddays.indexOf(current.getDay()) != -1){
+                    cell.title = ddaysText;
+                    cell.className = disabledCls;
+                }
+            }
+            //console.info(format)
+            if(ddMatch && format){
+                
+                formatValue = eDate.dateFormat(current, format);
+                console.info(formatValue);
+                console.info(ddMatch);
+                if(ddMatch.test(formatValue)){
+                    console.info('ddMatch.test(formatValue)');
+                    cell.title = ddText.replace('%0', formatValue);
+                    cell.className = disabledCls;
+                }
+            }
+        };
+
+        for(; i < me.numDays; ++i) {
+            if (i < startingPos) {
+                html = (++prevStart);
+                cls = me.prevCls;
+            } else if (i >= days) {
+                html = (++extraDays);
+                cls = me.nextCls;
+            } else {
+                html = i - startingPos + 1;
+                cls = me.activeCls;
+            }
+            textNodes[i].innerHTML = html;
+            cells[i].className = cls;
+            current.setDate(current.getDate() + 1);
+            setCellClass(cells[i]);
+        }
+
+        me.monthBtn.setText(me.monthNames[date.getMonth()] + ' ' + date.getFullYear());
+    },
 	
 });
 

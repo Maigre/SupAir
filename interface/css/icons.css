@@ -109,3 +109,7 @@
 .select{
 	background: url(../images/icons/selection_select.png) no-repeat !important;
 }
+
+.load{
+	background: url(../images/ajax-loader.gif) no-repeat !important;
+}
