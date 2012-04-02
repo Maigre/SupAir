@@ -252,6 +252,20 @@ class Entity_m extends CI_Model {
 		
 		return $out;
 	}
+	
+	function delete()
+	{
+		if (!isset($this->bean->id)) 
+		{
+			$out['error'] = 'Supression Impossible: ID introuvable';
+			$out['success'] = false;
+		}
+		else 
+		{
+			R::trash($this->bean);
+			$out['success'] = true;
+		}	
+	}
 		
 	function getBean()
 	{

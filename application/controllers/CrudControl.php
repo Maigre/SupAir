@@ -50,6 +50,18 @@ class CrudControl extends CI_Controller {
 		jse($this->Entity($id)->set($results)->save());
 	}
 	
+	function delete($id=false)
+	{
+		//posted result array
+		$results = $this->input->post(); 
+		
+		//if id posted or passed to the controller, use it (switch to edit mode)
+		if ((!$id) && ($results['id'] > 0)) $id = $results['id'];
+		
+		//delete!	
+		jse($this->Entity($id)->delete());
+	}
+	
 	function listAll($order=false)
 	{		
 		if($order) $this->db->order_by($order);
