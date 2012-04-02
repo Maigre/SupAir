@@ -14,18 +14,13 @@ class Activite extends CrudControl {
 	//renvoi l'id de l'activite' et celui de chaque session
 	function loadActivite($id_activite=false)
 	{
-		$this->load->model('activite/session_m');
-		$session_m = new Session_m();
-		
-		$sessions = $this->db->select('id')
-			->where('actiActivite_id',$this->Entity($id_activite)->get('id'))
-			->get('actiSession')
-			->result_array();
-			
 		$out['activite'] = $id_activite;
+		
+		$sessions = $this->Entity($id_activite)->getBean()->ownActiSession;
+		
 		foreach($sessions as $sess) 
 		{
-			$out['session'][] = $sess['id'];
+			$out['session'][] = $sess->id;
 		}
 		
 		jse($out);
