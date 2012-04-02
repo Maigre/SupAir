@@ -55,7 +55,11 @@ Ext.define('MainApp.view.AdherentDisplay', {
 				    items: [{
 				        text: 'Inscrire &agrave; une activit&eacute;',
 				        iconCls: 'palette',
-				        width: 'auto'
+				        width: 'auto',
+					handler: function() {
+						activiteselectionwindow = Ext.widget('activiteselectionwindow');              		
+						activiteselectionwindow.show();
+					}
 				    },{
 				        iconCls: 'money',
 				        colspan: 2,

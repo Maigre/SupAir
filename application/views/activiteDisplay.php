@@ -10,6 +10,7 @@ displayactivite= function(idactivite){
 			//ACTIVITE
 			Ext.getCmp('infofamille_container').removeAll(true);
 			Ext.getCmp('adherent_container').removeAll(true);
+			
 			var activitedisplay = Ext.getCmp('activitedisplay');
 			if (!activitedisplay){
 				var activitedisplay = Ext.widget('activitedisplay');
@@ -23,20 +24,24 @@ displayactivite= function(idactivite){
 			activitestore.on('load', function(database){
 				var rec= database.getAt(0);
 				//Set le titre du panel avec le nom de l'activitedisplay
-				console.info(rec.data.nom);
-				console.info(activitedisplay.title);
 				activitedisplay.title=rec.data.nom;
-				console.info(activitedisplay);
 				
 				//Remplace les champs booleens par des icones yes no
-				fields=['redmulti','majext','certificat'];
+				fields=['red_multi','maj_ext','certificat'];
+				activitedisplay.getForm().loadRecord(rec);
 				Ext.each(fields, function(field){
-					rec.data=seticonfield(rec.data,field);
+					//rec.data=seticonfield(rec.data,field);
+					if (rec.data[field]==0){
+						activitedisplay.getForm().findField(field).setValue('<img src="interface/images/icons/cross.png">');
+					}
+					else{
+						activitedisplay.getForm().findField(field).setValue('<img src="interface/images/icons/accept.png">');
+					}
 				})
-				activitedisplay.getForm().loadRecord(rec);				
+								
 			});
 			
-			//ENFANTS
+			//SESSIONS
 			if (response.session){
 				no_session=0;
 				Ext.each(response.session,function(session){
@@ -60,6 +65,8 @@ show_session= function(idsession,idpanel){
 	var sessionstore = sessiondisplay.store;
 	sessionstore.proxy.api.read = BASE_URL+'activite/session/show/'+idsession; 			
 	sessionstore.load();
+	
+	
 	sessionstore.on('load', function(database){
 		var rec= database.getAt(0);
 		//Remplace les champs booleens par des icones yes no
@@ -87,7 +94,7 @@ show_session= function(idsession,idpanel){
 
 Ext.define('Activite', {
 	extend: 'Ext.data.Model',
-	fields: ['id', 'nom','actiTypeacti_id','actiSecteur_id', 'analytique','redmulti','majext','certificat']
+	fields: ['id', 'nom','actiTypeacti_id', 'actiTypeacti_nom', 'actiSecteur_id', 'actiSecteur_nom', 'analytique','red_multi','maj_ext','certificat']
 });
 
 activitestore= new Ext.data.Store({
@@ -185,15 +192,17 @@ Ext.define('MainApp.view.ActiviteDisplay', {
 					fieldCls  : 'strong'					
 			
 				},{
-					fieldLabel: '',
+					fieldLabel: 'Activit&eacute;',
+					labelSeparator: ' ',
+					labelWidth: 40,
 					//hideLabel : true,		
-					name      : 'actiTypeacti_id',
+					name      : 'actiTypeacti_nom',
 					value	  : '',
 					cls       : ''
 				},{
 					fieldLabel: '',
 					//hideLabel : false,		
-					name      : 'actiSecteur_id',
+					name      : 'actiSecteur_nom',
 					value	  : '',
 					cls       : ''
 				},{
@@ -214,28 +223,28 @@ Ext.define('MainApp.view.ActiviteDisplay', {
 				[{
 					fieldLabel: 'Reduction multi',
 					//hideLabel : true,		
-					name      : 'redmulti',
+					name      : 'red_multi',
 					value	  : '',
 					cls       : '',
 					tpl : [
-						'<tpl if={redmulti}" == 0;">',
+						'<tpl if={red_multi}" == 0;">',
 						'<img src="interface/images/icons/cross.png">',
 						'</tpl>',
-						'<tpl if={redmulti}" == 1;">',
+						'<tpl if={red_multi}" == 1;">',
 						'<img src="interface/images/icons/accept.png">',
 						'</tpl>'
 					]
 				},{
 					fieldLabel: 'Majoration Ext&eacute;rieure',
 					//hideLabel : true,		
-					name      : 'majext',
+					name      : 'maj_ext',
 					value	  : '',
 					cls       : '',
 					tpl : [
-						'<tpl if={majext}" == 0;">',
+						'<tpl if={maj_ext}" == 0;">',
 						'<img src="interface/images/icons/cross.png">',
 						'</tpl>',
-						'<tpl if={majext}" == 1;">',
+						'<tpl if={maj_ext}" == 1;">',
 						'<img src="interface/images/icons/accept.png">',
 						'</tpl>'
 					]

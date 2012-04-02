@@ -1,6 +1,6 @@
 Ext.define('Session', {
 	extend: 'Ext.data.Model',
-	fields: ['id', 'nom', 'actiActivite_id','periode', 'dates', 'agemin', 'agemax', 'capacitemin', 'capacitemax', 'persAnimateur_nom', 'actiNiveau_id', 'actiNiveau_nom', 'in', 'out']
+	fields: ['id', 'nom', 'actiActivite_id','periode', 'dates', 'agemin', 'agemax', 'capacitemin', 'capacitemax', {name:'animdisplay', mapping: 'persAnimateur_prenom + " " + obj.persAnimateur_nom'},'persAnimateur_nom', 'actiNiveau_id', 'actiNiveau_nom', 'in', 'out']
 });
 
 
@@ -15,6 +15,7 @@ Ext.define('MainApp.view.SessionDisplay', {
 	width 		 : 200,
 	x     		 : 0,
 	y     		 : 0,
+	//store		 : 'sessionstore',
 	//url   		 : BASE_URL+'data/plcontrol/save',
 	frame 		 : false,
 	title 		 : 'Mardi - Jazz',
@@ -71,7 +72,7 @@ Ext.define('MainApp.view.SessionDisplay', {
 		},{
 			fieldLabel: 'Animateur',
 			//hideLabel : true,		
-			name      : 'persAnimateur_nom',
+			name      : 'animdisplay',
 			value	  : '',
 			cls       : ''
 		},{
@@ -81,13 +82,13 @@ Ext.define('MainApp.view.SessionDisplay', {
 			value	  : '',
 			cls       : ''
 		},{
-			fieldLabel: 'Horaires: de',
+			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de',
 			//hideLabel : true,		
 			name      : 'in',
 			value	  : '',
-			cls       : ''
+			cls       : 'clock'
 		},{
-			fieldLabel: '&agrave;',
+			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &agrave;',
 			//hideLabel : true,		
 			name      : 'out',
 			value	  : '',
@@ -107,9 +108,8 @@ Ext.define('MainApp.view.SessionDisplay', {
 			}			
 		});*/
 		
-		this.callParent(arguments);
-		this.store= sessionstore= new Ext.data.Store({
-			storeId: 'sessionstore',
+		this.store = new Ext.data.Store({
+			//storeId: 'sessionstore',
 			model: 'Session',
 			//requires: 'MainApp.model.PlModel',
 			//model: 'MainApp.model.PlModel',
@@ -127,6 +127,8 @@ Ext.define('MainApp.view.SessionDisplay', {
 				}
 			}
 		});
+		
+		this.callParent(arguments);
 		
 	}
 });

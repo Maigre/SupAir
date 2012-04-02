@@ -182,8 +182,8 @@ Ext.define('MainApp.view.AdherentForm', {
 								Ext.getCmp('nouveladherent_window').close();
 								displayfamille();								
 							},
-							failure: function(form, action) {
-								Ext.Msg.alert('Failed', action.result.msg);
+							failure: function(form, action){
+								Ext.Msg.alert('Failed', action.result.error.nom[0]);
 							}
 						});
 					}

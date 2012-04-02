@@ -21,6 +21,7 @@
         
         	<!-- ExtJS Framework -->
         <script type="text/javascript" src="interface/ext4/ext-all.js"></script>
+        <script type="text/javascript" src="interface/ext4/datepickerOverride.js"></script>
         <script type="text/javascript" src="interface/ext4/locale/ext-lang-fr.js"></script>
         <script type="text/javascript">Ext.BLANK_IMAGE_URL = 'interface/ext4/resources/s.gif';</script>
      	<script type="text/javascript">BASE_URL = '<?=base_url()?>index.php/';</script>
@@ -62,13 +63,17 @@
 	     	
 	     	Ext.ns('MainApp');     	
 	     	    	
-	     	
+	     
 	     	     	
 	     	Ext.onReady(function(){
 			
 			//load viewport
 			Main.Launch.init();
-
+			
+			setTimeout(function(){
+				Ext.get('loading').remove();
+				Ext.get('loading-mask').fadeOut({remove:true});
+			}, 1000);
 			//check if already logged in and display welcome message or login window
 			//MainApp.Login.ask();				  			
 		});
@@ -76,6 +81,13 @@
 
     </head>
     <body>
+    	<div id="loading-mask"></div>
+	<div id="loading">
+		<div class="loading-indicator">
+			
+		</div>
+	</div>
+
     	<?php
     		
     	?>

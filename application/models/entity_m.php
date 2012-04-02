@@ -36,8 +36,9 @@ class Entity_m extends CI_Model {
 	{
 		if ($this->bean->id)
 		{
+
 			$beans[] = $this->bean;
-			
+
 			//new export allow
 			$e = new RedBean_Plugin_BeanExport(R::$toolbox);
     			$e->loadSchema();
@@ -294,6 +295,11 @@ class Entity_m extends CI_Model {
 		}
 	}
 	
+<<<<<<< HEAD
+=======
+	
+	
+>>>>>>> a40adaf369b460eecb9f140cfae61c6a563f6125
 	protected function flatten_array($Array,$Separator="_",$FlattenedKey='') 
 	{
 		$FlattenedArray=Array();

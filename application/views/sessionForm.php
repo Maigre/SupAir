@@ -94,11 +94,34 @@ Ext.define('MainApp.view.SessionForm', {
 				valueField	: 'id'
 			}]
 		},{
-			//xtype	  	: 'displayfield',
-			fieldLabel	: 'Dates',
-			//hideLabel 	: false,		
-			name      	: 'dates',
-			value		: '02/10/2012'
+			xtype	: 'container',
+			anchor	: '96%',
+			layout	: {
+				type: 'hbox'
+			},
+			items	: [{
+				xtype	  	: 'displayfield',
+				fieldLabel	: 'Dates',
+				//hideLabel 	: false,		
+				name      	: 'dates',
+				value		: '02/10/2012',
+				labelWidth	: 80,
+				width		: 90
+			},{
+				xtype : 'button',
+				text: 'Calendrier',
+				//formBind: true, //only enabled once the form is valid
+				//disabled: true,
+				handler: function() {
+					sessioncalendrierwindow=Ext.getCmp('sessioncalendrierwindow');
+					if(!sessioncalendrierwindow){
+						sessioncalendrierwindow=Ext.widget('sessioncalendrierwindow');
+					}
+					sessioncalendrierwindow.show();
+				},
+				width	: 80,
+				margins: '0 0 5 0'
+			}]
 		},{
 			xtype		: 'container',
 			anchor		: '96%',
@@ -313,9 +336,15 @@ Ext.define('MainApp.view.SessionForm', {
 					if (form.isValid()) {
 						form.submit({
 							success: function(form, action) {
-								Ext.Msg.alert('Success', 'Session enregistr&eacute;e');
-								Ext.getCmp('nouvellesession_window').close();
+								Ext.Msg.alert('Success', 'Session enregistr&eacute;e', function(){
+									Ext.getCmp('nouvellesession_window').close();
+									displayactivite(ACTIVITE_ID);
+								});
+								
 								//displayactivite();
+							},
+							failure: function(form, action){
+								Ext.Msg.alert('Failed', action.result.error.nom[0]);
 							}
 						});
 					}
