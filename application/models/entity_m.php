@@ -257,7 +257,7 @@ class Entity_m extends CI_Model {
 	{
 		if (!isset($this->bean->id)) 
 		{
-			$out['error'] = 'Supression Impossible: ID introuvable';
+			$out['error'] = 'idmissing';
 			$out['success'] = false;
 		}
 		else 
