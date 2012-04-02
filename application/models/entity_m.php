@@ -252,6 +252,20 @@ class Entity_m extends CI_Model {
 		
 		return $out;
 	}
+	
+	function delete()
+	{
+		if (!isset($this->bean->id)) 
+		{
+			$out['error'] = 'Supression Impossible: ID introuvable';
+			$out['success'] = false;
+		}
+		else 
+		{
+			R::trash($this->bean);
+			$out['success'] = true;
+		}	
+	}
 		
 	function getBean()
 	{
@@ -295,11 +309,7 @@ class Entity_m extends CI_Model {
 		}
 	}
 	
-<<<<<<< HEAD
-=======
-	
-	
->>>>>>> a40adaf369b460eecb9f140cfae61c6a563f6125
+
 	protected function flatten_array($Array,$Separator="_",$FlattenedKey='') 
 	{
 		$FlattenedArray=Array();
