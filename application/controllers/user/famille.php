@@ -17,7 +17,7 @@ class Famille extends CrudControl {
 		//red bean fashion
 		//$adherents = $this->Entity($id_famille)->sharedUserAdherent;
 
-		jse ($this->Entity($id_famille)->export());
+		jse (R::exportAll($this->Entity($id_famille)->getBean()));
 
 		foreach($adherents as $adh) 
 		{
