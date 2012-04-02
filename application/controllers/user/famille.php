@@ -15,7 +15,8 @@ class Famille extends CrudControl {
 	function loadFamille($id_famille=false)
 	{
 		//red bean fashion
-		$adherent = $this->Entity($id_famille)->sharedUserAdherent;
+		$adherents = $this->Entity($id_famille)->sharedUserAdherent;
+print_r($this->Entity($id_famille));
 		foreach($adherents as $adh) 
 		{
 			if ($adh->userStatut->id == 1) $out['referent']  = $adh['id'];
