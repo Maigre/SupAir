@@ -38,9 +38,6 @@ class Entity_m extends CI_Model {
 		{
 			$beans[] = $this->bean;
 			
-			//old export
-			//$array = R::exportAll($beans,true);
-			
 			//new export allow
 			$e = new RedBean_Plugin_BeanExport(R::$toolbox);
     			$e->loadSchema();
@@ -295,33 +292,6 @@ class Entity_m extends CI_Model {
 			if ($fi->relatedTo) $this->bean->{$n.'_id'} = $fi->value;
 			else $this->bean->{$n} = $fi->value;
 		}
-	}
-	
-	//deprecated
-	protected function flatten_array_old($array, $preserve_keys = 1, $out = array(), $last_subarray_found="") 
-	{
-		    foreach($array as $key => $child)
-		    {
-		        if(is_array($child))
-		        {
-		            if($preserve_keys + is_string($key) > 1) 
-		            {
-		             	if($last_subarray_found) $last_subarray_found .= '_'.$key;
-		             	else $last_subarray_found = $key;
-		            }
-		            $out = $this->flatten_array($child, $preserve_keys, $out, $last_subarray_found);
-		        }
-		        elseif($preserve_keys + is_string($key) > 1)
-		        {
-		            if ($last_subarray_found) $sfinal_key_value = $last_subarray_found . "_" . $key;
-		            else  $sfinal_key_value = $key;
-		            
-		            $out[$sfinal_key_value] = $child;
-		        }
-		        else $out[] = $child;
-		    }
-
-		    return $out;
 	}
 	
 	protected function flatten_array($Array,$Separator="_",$FlattenedKey='') 

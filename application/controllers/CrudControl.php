@@ -40,7 +40,13 @@ class CrudControl extends CI_Controller {
 	
 	function save($id=false)
 	{
-		$results = $this->input->post(); 		
+		//posted result array
+		$results = $this->input->post(); 
+		
+		//if id posted or passed to the controller, use it (switch to edit mode)
+		if ((!$id) && ($results['id'] > 0)) $id = $results['id'];
+		
+		//set and save results		
 		jse($this->Entity($id)->set($results)->save());
 	}
 	
