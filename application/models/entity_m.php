@@ -264,7 +264,9 @@ class Entity_m extends CI_Model {
 		{
 			R::trash($this->bean);
 			$out['success'] = true;
-		}	
+		}
+		
+		return $out;	
 	}
 		
 	function getBean()
