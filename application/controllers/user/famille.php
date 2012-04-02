@@ -14,6 +14,17 @@ class Famille extends CrudControl {
 	//renvoi l'id de la famille et celui de chaque adherent
 	function loadFamille($id_famille=false)
 	{
+		//red bean fashion
+		$adherent = $this->Entity($id_famille)->sharedUserAdherent;
+		foreach($adherents as $adh) 
+		{
+			if ($adh->userStatut->id == 1) $out['referent']  = $adh['id'];
+			elseif ($adh->userStatut->id == 2) $out['conjoint']  = $adh['id'];
+			else $out['enfants'][] = $adh['id'];
+		}
+		
+		//old fashion
+		/*
 		$this->load->model('user/adherent_m');
 		$session_m = new Adherent_m();
 		
@@ -29,7 +40,7 @@ class Famille extends CrudControl {
 			elseif ($adh['userStatut_id'] == 2) $out['conjoint']  = $adh['id'];
 			else $out['enfants'][] = $adh['id'];
 		}
-		
+		*/
 		jse($out);
 	}
 	
