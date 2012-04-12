@@ -130,7 +130,11 @@ class CrudControl extends CI_Controller {
 		$e = new RedBean_Plugin_BeanExport(R::$toolbox);
     		$e->loadSchema();
     		$out = $e->exportLimited($beans,false,$depth,false,false);
+    		
+    		//flatten arrays for json answer
+    		$outF = array();
+    		foreach($out as $exp) $outF[] = flatten_array($exp);  		
 		
-		jse($out);
+		jse($outF);
 	}
 }

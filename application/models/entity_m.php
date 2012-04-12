@@ -43,7 +43,7 @@ class Entity_m extends CI_Model {
     			$e->loadSchema();
     			$array = $e->exportLimited($beans,false,2,false,false);
 									
-			$out['data'] = $this->flatten_array(current($array));
+			$out['data'] = flatten_array(current($array));
 			$out['succes'] = true;
 		}
 		else 
@@ -308,25 +308,6 @@ class Entity_m extends CI_Model {
 			if ($fi->relatedTo) $this->bean->{$n.'_id'} = $fi->value;
 			else $this->bean->{$n} = $fi->value;
 		}
-	}
-	
-
-	protected function flatten_array($Array,$Separator="_",$FlattenedKey='') 
-	{
-		$FlattenedArray=Array();
-		foreach($Array as $Key => $Value) {
-			
-			if (is_string($Key)) {
-				if (strlen($FlattenedKey) > 0) $next_key = $FlattenedKey.$Separator.$Key;
-				else $next_key = $Key;
-			}
-			else $next_key = $FlattenedKey; 
-	
-			
-			if(is_Array($Value)) $FlattenedArray=Array_merge($FlattenedArray,$this->flatten_array($Value,$Separator,$next_key));
-			else $FlattenedArray[$next_key]=$Value;
-		}
-		return $FlattenedArray;
 	}
 
 }
