@@ -94,12 +94,16 @@ class CrudControl extends CI_Controller {
 		jse($del_res);
 	}
 	
-	function listAll($order=false)
+	function listAll($order=false,$depth=1)
 	{		
+		//TODO refactory with RedBean
+		
+		if($order == 'false') $order = false;
 		if($order) $this->db->order_by($order);
 		
 		$post = array();
 		
+		//extract where conditions
 		if ($posted = $this->input->post())
 		foreach ($posted as $id=>$val)
 		{
@@ -111,19 +115,21 @@ class CrudControl extends CI_Controller {
 				if (isset($where_id[1]) and ($where_id[1])) $post['where'][$where_id[1]] = $val;
 			}
 		}
-				
-		if (isset($post['where']) and (is_array($post['where'])))
-		{
-			foreach($post['where'] as $name=>$value) $this->db->where($name,$value);
-		}
-				
-			
 		
+		//build where query		
+		if (isset($post['where']) and (is_array($post['where'])))
+			foreach($post['where'] as $name=>$value) $this->db->where($name,$value);
+	
+		//db query		
 		$this->db->select('id');
 		$all = $this->db->get($this->Entity()->table)->result_array();
 		
-		$out=array();
-		foreach ($all as $a) $out[] = $this->Entity($a['id'])->getBean()->export();
+		//export beans		
+		$beans = array();
+		foreach ($all as $a) $beans[] = $this->Entity($a['id'])->getBean();
+		$e = new RedBean_Plugin_BeanExport(R::$toolbox);
+    		$e->loadSchema();
+    		$out = $e->exportLimited($beans,false,$depth,false,false);
 		
 		jse($out);
 	}

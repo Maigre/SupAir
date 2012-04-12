@@ -36,10 +36,9 @@ class Entity_m extends CI_Model {
 	{
 		if ($this->bean->id)
 		{
-
 			$beans[] = $this->bean;
 
-			//new export allow
+			//new export using RedBean
 			$e = new RedBean_Plugin_BeanExport(R::$toolbox);
     			$e->loadSchema();
     			$array = $e->exportLimited($beans,false,2,false,false);
