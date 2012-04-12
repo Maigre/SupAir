@@ -47,7 +47,13 @@ class Welcome extends CI_Controller {
 		$data['extjs'][]=$this->load->view('sessionDisplay',null,true);
 		
 		$data['extjs'][]=$this->load->view('sessionCalendrierWindow',null,true);
+		
+		//Inscription
 		$data['extjs'][]=$this->load->view('inscriptionPanel',null,true);
+		$data['extjs'][]=$this->load->view('inscriptionForm',null,true);
+		
+		//Outils
+		$data['extjs'][]=$this->load->view('tranchesQfForm',null,true);
 
 	//***TOOLS
 		$data['extjs'][]=$this->load->view('tools/ListWindow',null,true);	

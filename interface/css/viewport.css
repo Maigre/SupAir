@@ -102,3 +102,15 @@ hr {
 	background-color: rgba(223, 232, 246, 0.5);
 }
 
+.x-datepicker-holidays a {
+    background-color: red;
+    color: #BBBBBB;
+    cursor: default;
+}
+
+.x-datepicker-closeddays a {
+    background-color: blue;
+    color: #BBBBBB;
+    cursor: default;
+}
+

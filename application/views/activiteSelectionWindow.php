@@ -47,8 +47,6 @@ Ext.define('MainApp.view.ActiviteSelectionWindow', {
 			//disabled: true,
 			handler: function() {
 				selecteditem=Ext.getCmp('activiteallgrid').getSelectionModel().getSelection();
-				
-				console.info(selecteditem[0].get('id'));
 				loadinscriptionpanel(selecteditem[0].get('id'));
 			}
 		}

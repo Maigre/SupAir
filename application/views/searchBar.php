@@ -17,6 +17,7 @@ Ext.define('MainApp.view.tools.SearchBar', {
 	listeners:{
 		select: {fn : function(a,b){
 			ID_FAMILLE=a.getValue();
+			ID_ADHERENT=a.valueModels[0].data.id;
 			displayfamille();
 			//console.info(a.getValue());
 			//console.info(b.getValue());

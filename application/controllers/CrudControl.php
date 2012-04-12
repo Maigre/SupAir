@@ -41,13 +41,44 @@ class CrudControl extends CI_Controller {
 	function save($id=false)
 	{
 		//posted result array
-		$results = $this->input->post(); 
-		
+		$results = $this->input->post();
+		 
 		//if id posted or passed to the controller, use it (switch to edit mode)
-		if ((!$id) && ($results['id'] > 0)) $id = $results['id'];
+		if ((!$id) && (isset($results['id']))) $id = $results['id'];
 		
 		//set and save results		
 		jse($this->Entity($id)->set($results)->save());
+	}
+	
+	function savewithroot($id=false)
+	{
+		//posted result array
+		$results = $this->input->post();
+		 
+		//Cas où le post est encodé en json et nécessite une root (='data')
+		if(isset($results['data'])){
+			$results = $results['data'];
+			$results = json_decode( $results );
+			$results = get_object_vars ( $results ); //transforme l'objet en tableau
+		}
+		
+		//if id posted or passed to the controller, use it (switch to edit mode)
+		if ((!$id) && (isset($results['id']))) $id = $results['id'];
+		
+		//set and save results		
+		$response=$this->Entity($id)->set($results)->save();
+		//if ($response['success']){
+			
+		foreach($results as $key=>$value){
+			if ($key!='id'){
+				$response[$key]=$value;
+			}				
+		}
+		$response=array(
+			'data'=>$response
+		);
+		
+		jse($response);
 	}
 	
 	function delete($id=false)
@@ -60,6 +91,36 @@ class CrudControl extends CI_Controller {
 		
 		//delete!	
 		jse($this->Entity($id)->delete());
+	}
+	
+	function deletewithroot($id=false)
+	{
+		//posted result array
+		$results = $this->input->post(); 
+		
+		//Cas où le post est encodé en json et nécessite une root (='data')
+		if(isset($results['data'])){
+			$results = $results['data'];
+			$results = json_decode( $results );
+			$results = get_object_vars ( $results ); //transforme l'objet en tableau
+		}
+		
+		//if id posted or passed to the controller, use it (switch to edit mode)
+		if ((!$id) && ($results['id'] > 0)) $id = $results['id'];
+		
+		//delete!	
+		$response = $this->Entity($id)->delete();
+		
+		foreach($results as $key=>$value){
+			if ($key!='id'){
+				$response[$key]=$value;
+			}				
+		}
+		$response=array(
+			'data'=>$response
+		);
+		
+		jse($response);
 	}
 	
 	function listAll($order=false)

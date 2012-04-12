@@ -155,7 +155,7 @@ Ext.define('MainApp.view.ActiviteDisplay', {
 					modal	: true,
 					items	: [{
 						xtype	: 'sessionform',
-						height  : 240,
+						height  : 540,
 						border	: false,
 						frame	: false
 					}]

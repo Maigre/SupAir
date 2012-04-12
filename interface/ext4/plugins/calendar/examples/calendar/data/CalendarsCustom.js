@@ -13,7 +13,7 @@ Ext.define('Extensible.example.calendar.data.CalendarsCustom', {
                 "cal_color":2
             },{
                 "cal_id":"2",
-                "cal_title":"Jour Ferm&eacute;",
+                "cal_title":"Jour Ferme",
                 "cal_color":22
             }]
         }

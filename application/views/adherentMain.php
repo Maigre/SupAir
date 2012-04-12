@@ -116,8 +116,11 @@ show_adherent= function(idadherent,idpanel){
 			Ext.getCmp('adherent_container').insert(2,adherentdisplay);
 									
 		}
+		if (idadherent==ID_ADHERENT){
+			adherentdisplay.expand();
+		}
 		adherentdisplay.on('expand', function(panel){
-			console.info(panel.form._record.data.id);
+			ID_ADHERENT=panel.form._record.data.id;
 		})
 	});	
 }

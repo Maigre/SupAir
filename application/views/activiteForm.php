@@ -192,6 +192,11 @@ Ext.define('MainApp.view.ActiviteForm', {
 								//console.info(action);
 								Ext.Msg.alert('Success', 'Activit&eacute; enregistr&eacute;e');
 								Ext.getCmp('nouvelleactivite_window').close();
+								//Reconstruit le menu
+								Ext.getCmp('menupanel').removeAll(true);
+								build_menu(); //defini dans menu.php
+								menupanel=Ext.widget('menupanel');
+								Ext.getCmp('westregion').add(menupanel);
 								//displayactivite(ACTIVITE_ID);
 								
 							},

@@ -79,7 +79,7 @@ build_secteur_menu = function(){
 						}			
 					},{
 						xtype: 		'grid',
-						title: 		op.nom,
+						title: 		'Activit&eacute;s',
 						hideHeaders : 	true,
 						id:		nomsecteur+'grid',
 						store: 		Ext.getStore(nomsecteur+'Store'),
@@ -257,6 +257,30 @@ build_menu = function(){
 							nouveausecteur_window.show();
 						}		
 					}			
+				},{
+					xtype	: 'button',
+					text 	: 'Tranches QF',
+					iconCls	: 'calculator',					
+					width 	: 110,
+					margin	: 2,
+					listeners: {
+						click: function() {
+							tranchesQf_window= new Ext.window.Window({
+								id	: 'tranchesQf_window',
+								title	: 'Tranches Q.F',
+								//iconCls	: 'palette',
+								modal	: true,
+								items	: [{
+									xtype	: 'tranchesqfform',
+									height  : 220,
+									border	: false,
+									frame	: false
+								}]
+							});
+							tranchesQf_window.show();
+							Ext.getStore('tranchesqfStore').load();
+						}		
+					}			
 				}]
 			}];
 		
@@ -327,7 +351,7 @@ Ext.define('MainApp.view.nouveladherentButton', {
 			nouveladherent_window.show();
 		}, iconCls : 'user'},
 		{text: 'Nouvel Enfant',handler: function(){
-			nouveladherent_window= new Ext.window.Window({
+			nouveladherent_window = new Ext.window.Window({
 				id	: 'nouveladherent_window',
 				title	: 'Nouvel Enfant',
 				modal	: true,

@@ -110,6 +110,16 @@
 	background: url(../images/icons/selection_select.png) no-repeat !important;
 }
 
+.unselect{
+	background: url(../images/icons/selection.png) no-repeat !important;
+}
+
 .load{
 	background: url(../images/ajax-loader.gif) no-repeat !important;
 }
+
+.calculator{
+	background: url(../images/icons/calculator.png) no-repeat !important;
+}
+
+

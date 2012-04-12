@@ -5,7 +5,7 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 	title	: 'Calendrier de la session',
 	iconCls	: 'calendrier',
 	modal	: true,
-	height	: 403,
+	height	: 425,
 	width	: 1092,
 	layout	: {
 		type: 'vbox',
@@ -15,96 +15,93 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
                 text	: 'S&eacute;lection',
                 iconCls	: 'select',
                 menu	: [{
-                	text: 'Lundi',
-                	iconCls: 'select',
-                	handler: function() {
+			text: 'Lundi',
+			checked: false,
+			checkHandler: function(a,checked) {
                 		
-                		Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(1);
+                		if(checked){
+                			Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(1);
+                		}
+                		else{
+                			Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(1);
+                		}
                 	}
-                },{
-                	text: 'Mardi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(2);
+		},{
+			text: 'Mardi',
+			checked: false,
+			checkHandler: function(a,checked) {
+                		
+                		if(checked){
+                			Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(2);
+                		}
+                		else{
+                			Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(2);
+                		}
                 	}
-                },{
-                	text: 'Mercredi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(3);
+		},{
+			text: 'Mercredi',
+			checked: false,
+			checkHandler: function(a,checked) {
+                		
+                		if(checked){
+                			Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(3);
+                		}
+                		else{
+                			Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(3);
+                		}
                 	}
-                },{
-                	text: 'Jeudi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(4);
+		},{
+			text: 'Jeudi',
+			checked: false,
+			checkHandler: function(a,checked) {
+                		
+                		if(checked){
+                			Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(4);
+                		}
+                		else{
+                			Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(4);
+                		}
                 	}
-                },{
-                	text: 'Vendredi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(5);
+		},{
+			text: 'Vendredi',
+			checked: false,
+			checkHandler: function(a,checked) {
+                		
+                		if(checked){
+                			Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(5);
+                		}
+                		else{
+                			Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(5);
+                		}
                 	}
-                },{
-                	text: 'Samedi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(6);
+		},{
+			text: 'Samedi',
+			checked: false,
+			checkHandler: function(a,checked) {
+                		
+                		if(checked){
+                			Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(6);
+                		}
+                		else{
+                			Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(6);
+                		}
                 	}
-                },{
-                	text: 'Dimanche',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(0);
+		},{
+			text: 'Dimanche',
+			checked: false,
+			checkHandler: function(a,checked) {
+                		
+                		if(checked){
+                			Ext.getCmp('sessioncalendrierwindow').selectDaysofweek(0);
+                		}
+                		else{
+                			Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(0);
+                		}
                 	}
-                },]
+		}]
         },{
-                text	: 'D&eacute;s&eacute;lection',
-                iconCls	: 'select',
-                menu	: [{
-                	text: 'Lundi',
-                	iconCls: 'select',
-                	handler: function() {
-                		
-                		Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(1);
-                	}
-                },{
-                	text: 'Mardi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(2);
-                	}
-                },{
-                	text: 'Mercredi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(3);
-                	}
-                },{
-                	text: 'Jeudi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(4);
-                	}
-                },{
-                	text: 'Vendredi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(5);
-                	}
-                },{
-                	text: 'Samedi',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(6);
-                	}
-                },{
-                	text: 'Dimanche',
-                	iconCls: 'select',
-                	handler: function() {
-                		Ext.getCmp('sessioncalendrierwindow').unselectDaysofweek(0);
-                	}
-                },]
+        	id	: 'countselected',
+        	text	: '28 S&eacute;ances',
         }],
 	items	: [{
 			flex	: 1,
@@ -125,6 +122,14 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 			}
 		}
 	],
+	bbar:['->',{
+		text: 'O.K',
+		handler: function(){
+			Ext.getCmp('sessionform').getForm().findField('dates').setValue(SELECTED_DATES);
+			console.info('ok');
+			Ext.getCmp('sessioncalendrierwindow').close();
+		}
+    	}],
 	initComponent: function() {
 		var me=this;
 		SELECTED_DATES=[];
@@ -137,7 +142,7 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 			Ext.getCmp('sessioncalendrierwindow').getEl().mask('Loading...');
 			
 			
-			var disabledDates = ['12/26/2011', '12/27/2011', '12/28/2011', '12/29/2011', '12/30/2011', '12/31/2011'];
+			//var disabledDates = ['12/26/2011', '12/27/2011', '12/28/2011', '12/29/2011', '12/30/2011', '12/31/2011'];
 			
 			//Request the exercice infos to add minDate and maxDate to the datepickers
 			Ext.Ajax.request({
@@ -222,13 +227,16 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 							title: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+panel_title,
 							items:[{
 								flex: 1,
-								xtype	: 'datepicker',
+								xtype	: 'multidatepicker',
 								id	: 'sessiondatepicker'+i,
 								value	: new Date(year+","+month+",01"),
 								minDate	: minDate,
 								maxDate	: maxDate,
 								showToday: false,
+								startDay: 1,
 								disabledDates: ["15/03/12"], //['03/08', '09/16'],//disabledDates,
+								holidays: ["16/03/12","17/03/12"],
+								closedDays	: ["17/03/12","18/03/12"],
 								disabledDays : [0],
 								//disableAnim: true,
 								handler	: function(picker, date) {
@@ -244,8 +252,14 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 						tohide=Ext.select(name);
 						tohide.setStyle('display', 'none');
 					});
-					
+					console.info(Ext.Date.dayNames);
 					Ext.getCmp('sessioncalendrierwindow').getEl().unmask();
+					//Initialisation de l'état de chaque date.
+					//Rq : Sans cette initialisation, le premier de chaque mois serait sélectionné
+					//correspondant au paramètre value qui permet de choisir le mois affiché
+					for(k=0;k<12;k++){
+						Ext.getCmp('sessiondatepicker'+k).selectedUpdate();
+					}
 				}
 			});
 			
@@ -282,7 +296,10 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 			if (testDate.getHours()==23){//Heure d'hiver rajouter une heure
 				nextday=nextday+3600*1000;
 			}
-			SELECTED_DATES.push(nextday);
+			array_indice= SELECTED_DATES.indexOf(nextday);
+			if(array_indice == -1){//Date non trouvée dans le tableau SELECTED_DATES
+				SELECTED_DATES.push(nextday);
+			}		
 		}
 		
 		console.info(SELECTED_DATES);
@@ -301,5 +318,70 @@ Ext.define('MainApp.view.SessionCalendrierWindow', {
 			}
 		}*/
 
+	},
+	unselectDaysofweek: function(daytoselect) {//day of week 0 for Sunday, 1 for Monday, etc...
+		var me = this;
+		//Partant du 1er jour de l'exercice on cherche le premier lundi(si lundi sélectionné)
+		tempdate = me.debut_calendrier;
+		dayofweek=tempdate.getDay();//Jour de la semaine du premier jour de l'exercice - 0 for Sunday, 1 for Monday, etc..
+		while (dayofweek!=daytoselect)
+		{
+			tempdate=Ext.Date.add(tempdate, Ext.Date.DAY, 1);
+			dayofweek=tempdate.getDay();
+		}
+		//Ajuste l'heure pour pouvoir comparer les objet Date (dates avec les heures)
+		tempdate.setHours(0,0,0);
+		
+		first_day=Number(tempdate); //On converti en timestamp millisecondes
+		
+		//nombre de millisecondes dans une semaine pour incrémenter de semaine en semaine = 3600*24*7*1000
+		var millisecondsinweek=604800000;
+		
+		
+		for (j=0;j<52;j++){			
+			nextday=parseInt(first_day)+j*millisecondsinweek;
+			testDate = new Date();
+			testDate.setTime(nextday);
+			if (testDate.getHours()==23){//Heure d'hiver rajouter une heure
+				nextday=nextday+3600*1000;
+			}
+			
+			//Retire la date dans la liste des SELECTED_DATES
+			array_indice= SELECTED_DATES.indexOf(nextday);
+			if(array_indice != -1){//Date trouvée dans le tableau SELECTED_DATES
+			  
+				delete SELECTED_DATES[array_indice];
+				SELECTED_DATES.slice(1,1);
+				temp_array=[];
+				for (i=0;i<=SELECTED_DATES.length;i++){
+					
+					if (SELECTED_DATES[i]!== undefined){
+						temp_array.push(SELECTED_DATES[i]);
+						var myDate = new Date();
+						myDate.setTime(SELECTED_DATES[i]);
+					}					
+				}
+				SELECTED_DATES=temp_array;
+			}
+		}
+		
+		for(k=0;k<12;k++){
+			Ext.getCmp('sessiondatepicker'+k).selectedUpdate();
+		}
+		
+		
+		//Remove doublons from the list
+		/*var sorted_arr = arr.sort(); 
+		
+		var results = [];
+		for (var i = 0; i < arr.length - 1; i++) {
+			if (sorted_arr[i + 1] == sorted_arr[i]) {
+				results.push(sorted_arr[i]);
+			}
+		}*/
+
+	},
+	onCheckHandler: function(){
+		console.info('okcheck');
 	}
 });

@@ -39,7 +39,7 @@ Ext.onReady(function(){
 	
 	Ext.override(Extensible.calendar.view.Month, {
 		dayCount: 7,
-		moreText: '+{0} autre...'
+		moreText: '+{0} autre(s)...'
 	});		
 	
 	Ext.override(Extensible.calendar.view.AbstractCalendar , { 
@@ -114,7 +114,8 @@ Ext.onReady(function(){
 		titleTextEdit	: 'Nouvel &eacute;v&egrave;nement',
 		width		: 600,
 		labelWidth	: 65,
-		detailsLinkText	: 'Détails...',
+		detailsLinkText	: '',
+		calendarLabelText: 'Type',
 		savingMessage	: 'Enregistrement...',
 		deletingMessage	: 'Suppression...',
 		saveButtonText	: 'O.K',
@@ -521,17 +522,17 @@ Ext.onReady(function(){
 		                data: Ext.create('Extensible.example.calendar.data.Events')
 			}),*/
 			calendarStore	: calendarStore,
-			/*todayText 	: 'Aujourd\'hui',
+			todayText 	: 'Aujourd\'hui',
 			jumpToText	: 'Aller au',
 			weekText	: 'Semaine', 
 			dayText		: 'Jour',
 			monthText	: 'Mois',
-			multiWeekText	: '26 Semaines',
+			//multiWeekText	: '26 Semaines',
 			goText		: 'OK',
 			enableEditDetails : false,
 			showDayView	: false,
 			showWeekView	: false,
-			showMultiWeekView : true,*/
+			//showMultiWeekView : true,
 			listeners:{
 				activate : function(panel){
 					//datedebut=Ext.getCmp('exerciceform').getForm().findField('debut').value;

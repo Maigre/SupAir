@@ -21,7 +21,7 @@
         
         	<!-- ExtJS Framework -->
         <script type="text/javascript" src="interface/ext4/ext-all.js"></script>
-        <script type="text/javascript" src="interface/ext4/datepickerOverride.js"></script>
+        <script type="text/javascript" src="interface/ext4/Ext.ux.MultiDatePicker.js"></script>
         <script type="text/javascript" src="interface/ext4/locale/ext-lang-fr.js"></script>
         <script type="text/javascript">Ext.BLANK_IMAGE_URL = 'interface/ext4/resources/s.gif';</script>
      	<script type="text/javascript">BASE_URL = '<?=base_url()?>index.php/';</script>
