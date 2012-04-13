@@ -11,11 +11,18 @@ class Exercice extends CrudControl {
 		$this->type = 'exercice';
 	}
 	
-	function prepareNew()
+	function getNewExercice()
 	{
-		//TODO return new exercice info based on last created one
-		$array['nom'] = "2011 - 2012";
-		$array['debut'] = "01/09/2011";
-		$array['fin'] = "31/08/2012";
+		jse($this->Entity()->newExercice()->edit());		
+	}
+	
+	function getCurrentExercice()
+	{
+		jse($this->Entity()->currentExercice()->show());		
+	}
+	
+	function getLastExercice()
+	{
+		jse($this->Entity()->lastExercice()->show());		
 	}
 }
