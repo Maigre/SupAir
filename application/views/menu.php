@@ -272,7 +272,7 @@ build_menu = function(){
 								modal	: true,
 								items	: [{
 									xtype	: 'tranchesqfform',
-									height  : 220,
+									height  : 230,
 									border	: false,
 									frame	: false
 								}]

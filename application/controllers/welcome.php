@@ -36,7 +36,7 @@ class Welcome extends CI_Controller {
 		$data['extjs'][]=$this->load->view('activiteForm',null,true);
 		$data['extjs'][]=$this->load->view('activiteDisplay',null,true);
 		$data['extjs'][]=$this->load->view('activiteSelectionWindow',null,true);
-		
+		$data['extjs'][]=$this->load->view('secteurSelectionWindow',null,true);
 		
 		$data['extjs'][]=$this->load->view('secteurForm',null,true);
 		

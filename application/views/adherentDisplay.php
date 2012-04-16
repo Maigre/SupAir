@@ -57,8 +57,8 @@ Ext.define('MainApp.view.AdherentDisplay', {
 				        iconCls: 'palette',
 				        width: 'auto',
 					handler: function() {
-						activiteselectionwindow = Ext.widget('activiteselectionwindow');              		
-						activiteselectionwindow.show();
+						secteurselectionwindow = Ext.widget('secteurselectionwindow');              		
+						secteurselectionwindow.show();
 					}
 				    },{
 				        iconCls: 'money',

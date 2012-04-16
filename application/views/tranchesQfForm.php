@@ -1,6 +1,6 @@
 Ext.define('TranchesQf', {
 	extend: 'Ext.data.Model',
-	fields: ['id', 'QF','exExercice_id']
+	fields: ['id', 'QF', 'QFmax','exExercice_id']
 });
 
 tranchesQfstore= new Ext.data.Store({
@@ -12,9 +12,9 @@ tranchesQfstore= new Ext.data.Store({
 		type: 'ajax',
 		api: {
 	    		read	: BASE_URL+'exercice/tranchesqf/listAll',
-	    		update	: BASE_URL+'exercice/tranchesqf/savewithroot',
-	    		create	: BASE_URL+'exercice/tranchesqf/savewithroot',
-	    		destroy : BASE_URL+'exercice/tranchesqf/deletewithroot'
+	    		update	: BASE_URL+'exercice/tranchesqf/save',
+	    		create	: BASE_URL+'exercice/tranchesqf/save',
+	    		destroy : BASE_URL+'exercice/tranchesqf/delete'
 	    	},
 		actionMethods : {read: 'POST', update: 'POST'},
 		reader: {
@@ -31,10 +31,47 @@ tranchesQfstore= new Ext.data.Store({
 		}
 	},
 	listeners: {
-		'update': function(store, records) {
-			console.info('datachanged');
+		'load'	: function(store, records) {
 			grid = Ext.getCmp('tranchesqfgrid');
-			console.info(grid);
+			arrayQFmin=Array();
+			Ext.each(store.data.keys,function(id){
+				row=store.getById(id);
+				minQF=row.data.QF;
+				arrayQFmin.push(minQF);
+			});
+			var i=1;
+			Ext.each(store.data.keys,function(id){
+				row=store.getById(id);
+				
+				row.data.QFmax=arrayQFmin[i];
+				if(i==store.data.keys.length){
+					row.data.QFmax='et +';
+				}
+				i=i+1;
+			});			
+			grid.getView().refresh();
+		},
+		'update': function(store, records) {
+			grid = Ext.getCmp('tranchesqfgrid');
+			arrayQFmin=Array();
+			Ext.each(store.data.keys,function(id){
+				row=store.getById(id);
+				if (row != null){
+					minQF=row.data.QF;
+					arrayQFmin.push(minQF);
+				}
+			});
+			var i=1;
+			Ext.each(store.data.keys,function(id){
+				row=store.getById(id);
+				if (row != null){
+					row.data.QFmax=arrayQFmin[i];
+					if(i==store.data.keys.length){
+						row.data.QFmax='et +';
+					}
+				}				
+				i=i+1;
+			});
 			grid.store.load();
 			grid.getView().refresh();
 		}
@@ -51,7 +88,7 @@ Ext.define('MainApp.view.tranchesQfForm', {
 	alias 		: 'widget.tranchesqfform',
 	//id         	   : 'activiteform',
 	frame 		: true,
-	height		: 240,
+	height		: 250,
 	width 		: 250,
 	x     		: 0,
 	y     		: 0,
@@ -76,10 +113,9 @@ Ext.define('MainApp.view.tranchesQfForm', {
 				handler : function(){
 					// Create a model instance
 					var r = Ext.create('TranchesQf', {
-						min: '0',
-						max: '0',
+						QF: '0',
+						exExercice_id: EXERCICE_ID,
 					});
-					console.info(this);
 					var tranchesqfStore = Ext.getStore('tranchesqfStore');
 					row_number = tranchesqfStore.count();
 					tranchesqfStore.insert(row_number, r);
@@ -102,7 +138,7 @@ Ext.define('MainApp.view.tranchesQfForm', {
 				disabled: true
 			}],
 			columns	: [
-				{ header: 'Min',  dataIndex: 'min', flex:1,
+				{ header: 'Min',  dataIndex: 'QF', flex:1,
 					editor: {
 						xtype: 'numberfield',
 						allowBlank: false,
@@ -110,7 +146,8 @@ Ext.define('MainApp.view.tranchesQfForm', {
 						maxValue: 100000
 					}
 				},
-				{ header: 'Max', dataIndex: 'max', flex:1}
+				{ header: 'Max', dataIndex: 'QFmax', flex:1},
+				{ header: 'exercice_id', dataIndex: 'exExercice_id', hidden: true}
 			],
 			height	: 200,
 			width	: '100%',
@@ -131,10 +168,10 @@ Ext.define('MainApp.view.tranchesQfForm', {
 			items: {
 				xtype 	: 'button',
 				text	: 'OK',
-				formBind: true, //only enabled once the form is valid
-				disabled: true,
+				//formBind: true, //only enabled once the form is valid
+				//disabled: true,
 				handler	: function() {
-					
+					this.up('window').close();	
 				}
 			}
 		}

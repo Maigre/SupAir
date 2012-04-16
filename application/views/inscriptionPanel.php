@@ -20,13 +20,13 @@ session_activite_store= new Ext.data.Store({
 
 inscrits_store= new Ext.data.Store({
 	storeId: 'inscrits_store',
-	fields: ['id', 'nom', 'prenom'],
+	fields: ['id', 'userAdherent_nom', 'userAdherent_prenom'],
 	//requires: 'MainApp.model.PlModel',
 	//model: 'MainApp.model.PlModel',
 	proxy: {
 		type: 'ajax',
 		api: {
-			read: BASE_URL+'activite/inscription/listall'    		
+			read: BASE_URL+'activite/inscription/listall/id/2'    		
 		},
 		actionMethods : {read: 'POST'},   	
 		reader: {
@@ -145,8 +145,8 @@ Ext.define('MainApp.view.InscriptionPanel', {
 				store	: 'inscrits_store',
 				hideHeaders : 	true,
 				columns	:[
-					{ header: 'Nom',  dataIndex: 'nom'},
-					{ header: 'Pr&eacute;nom', dataIndex: 'prenom'}
+					{ header: 'Nom',  dataIndex: 'userAdherent_nom'},
+					{ header: 'Pr&eacute;nom', dataIndex: 'userAdherent_prenom'}
 				],
 				minHeight : 100,
 				width	: 150,
