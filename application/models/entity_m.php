@@ -107,7 +107,7 @@ class Entity_m extends CI_Model {
 				{
 					$this->bean->{$n} = substr($this->bean->{$n},0,10);
 					$xpld = explode('-',$this->bean->{$n});
-					if (count($xpld != 3))
+					if (count($xpld) != 3)
 					{ 
 						$xpld = explode('/',$this->bean->{$n}); 
 						if (count($xpld) == 3) $this->bean->{$n} = $xpld[2].'-'.$xpld[1].'-'.$xpld[0];
@@ -172,6 +172,7 @@ class Entity_m extends CI_Model {
 				{
 					$xpld = explode('-',$this->bean->{$n}); 		
 					if (!checkdate($xpld[1],$xpld[2],$xpld[0])) $error[$n][] = 'invaliddate';
+					else $this->bean->{$n} = R::isoDate(strtotime($this->bean->{$n}));
 				}
 				//
 				
@@ -184,16 +185,16 @@ class Entity_m extends CI_Model {
 				//
 				
 				//min/max/equal
-					//prepare value
-					$value = null;
-					if ($fi->relatedTo) 
-					{ 
-						if(isset($this->bean->{$n}->id))
-							$value = $this->bean->{$n}->id;
-					}
-					elseif ($fi->type == 'date') $value = strtotime($this->bean->{$n});
-					else $value = $this->bean->{$n};
-				
+				//prepare value
+				$value = null;
+				if ($fi->relatedTo) 
+				{ 
+					if(isset($this->bean->{$n}->id))
+						$value = $this->bean->{$n}->id;
+				}
+				elseif ($fi->type == 'date') $value = strtotime($this->bean->{$n});
+				else $value = $this->bean->{$n};
+		
 				//equal
 				if ((isset($fi->equal)) and ($value !== $fi->equal))
 				{	
