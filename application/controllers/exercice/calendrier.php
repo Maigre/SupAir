@@ -23,7 +23,12 @@ class Calendrier extends CrudControl {
 		
 		$list = array();
 		foreach ($dates as $cal) 
-			for ($i = strtotime($cal['debut']); $i <= strtotime($cal['fin']); $i = strtotime("+1 day", $i)) $list[] = date("d/m/Y",$i);
+		{
+			if ($cal['cal_id'] == 2) $index = 'vacances';
+			else $index = 'ferme';
+			
+			for ($i = strtotime($cal['debut']); $i <= strtotime($cal['fin']); $i = strtotime("+1 day", $i)) $list[$index][] = date("d/m/Y",$i);
+		}
 			
 		$out['data'] = $list;
 		
