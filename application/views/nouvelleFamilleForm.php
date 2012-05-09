@@ -8,7 +8,7 @@ save_famille_and_referent = function(){
 		success: function(action, form) {
 			referentform = Ext.getCmp('referentform').getForm();
 			referentform.findField('sexeref').name='sexe';
-			referentform.findField('sexeref').name='sexe';
+			//referentform.findField('sexeref').name='sexe';
     			referentform.url=BASE_URL+'user/adherent/save';
     			console.info(form);
 			referentform.submit({
