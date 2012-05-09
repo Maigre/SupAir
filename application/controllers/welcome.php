@@ -21,6 +21,7 @@ class Welcome extends CI_Controller {
 		
 		//CALENDAR
 		$data['extjs'][]=$this->load->view('calendrierWindow',null,true);
+		$data['extjs'][]=$this->load->view('exerciceForm',null,true);
 		
 		//users
 		$data['extjs'][]=$this->load->view('adherentDisplay',null,true);
@@ -32,6 +33,7 @@ class Welcome extends CI_Controller {
 		$data['extjs'][]=$this->load->view('nouvelleFamilleForm',null,true);
 		
 		$data['extjs'][]=$this->load->view('adherentMain',null,true);
+		$data['extjs'][]=$this->load->view('activiteMain',null,true);
 		
 		$data['extjs'][]=$this->load->view('activiteForm',null,true);
 		$data['extjs'][]=$this->load->view('activiteDisplay',null,true);
@@ -51,6 +53,10 @@ class Welcome extends CI_Controller {
 		//Inscription
 		$data['extjs'][]=$this->load->view('inscriptionPanel',null,true);
 		$data['extjs'][]=$this->load->view('inscriptionForm',null,true);
+		
+		
+		//Compta
+		$data['extjs'][]=$this->load->view('comptaFamillePanel',null,true);
 		
 		//Outils
 		$data['extjs'][]=$this->load->view('tranchesQfForm',null,true);

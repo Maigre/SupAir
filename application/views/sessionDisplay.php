@@ -1,6 +1,6 @@
 Ext.define('Session', {
 	extend: 'Ext.data.Model',
-	fields: ['id', 'nom', 'actiActivite_id','periode', 'dates', 'agemin', 'agemax', 'capacitemin', 'capacitemax', {name:'animdisplay', mapping: 'persAnimateur_prenom + " " + obj.persAnimateur_nom'},'persAnimateur_nom', 'actiNiveau_id', 'actiNiveau_nom', 'in', 'out']
+	fields: ['id', 'nom', 'actiActivite_id','periode', 'dates', 'agemin', 'agemax', {name:'agedisplay', mapping: 'agemin + " &agrave; " + obj.agemax + " ans"'}, 'capacitemin', 'capacitemax', {name:'capacitedisplay', mapping: 'capacitemin + " &agrave; " + obj.capacitemax + " participants"'}, {name:'animdisplay', mapping: 'persAnimateur_prenom + " " + obj.persAnimateur_nom'},'persAnimateur_nom', 'actiNiveau_id', 'actiNiveau_nom', 'in', 'out', {name:'agedisplay', mapping: 'agemin + " &agrave; " + obj.agemax + " ans"'}, 'capacitemin', 'capacitemax', {name:'horairesdisplay', mapping: 'in + " &agrave; " + obj.out'}]
 });
 
 
@@ -23,10 +23,10 @@ Ext.define('MainApp.view.SessionDisplay', {
 	bodyStyle    	 : 'padding:0px 0px 0',
 	method       	 : 'post',
 	trackResetOnLoad : 'true',
-	fieldDefaults: {
-		msgTarget: 'side',
-		labelWidth: 60,
-		allowBlank:false//,
+	fieldDefaults : {
+		msgTarget : 'side',
+		labelWidth : 60,
+		allowBlank :false//,
 		//labelAlign : "top",
 	},
 	defaultType  : 'displayfield',
@@ -34,39 +34,73 @@ Ext.define('MainApp.view.SessionDisplay', {
 		margin: '0px 5px'
 	},
 	items	: [{
-			fieldLabel: 'Periode',
-			//hideLabel : true,		
-			name      : 'periode',
-			value	  : '',
-			cls       : ''
+			xtype:'toolbar',
+			margin: '0px 0px 5px 0px',
+			items: ['->',{
+				text: '',
+				iconCls: 'outils',
+				menu: [{
+					text: 'Modifier la session',
+					iconCls: 'edit',
+					handler: function() {
+						idSession = this.parentMenu.floatParent.ownerCt.ownerCt.getForm().findField('id').value;
+						edit_session(idSession);
+					}
+				}]
+			}]
 		},{
-			fieldLabel: 'Dates',
+			fieldLabel: 'id',
+			hidden	  : true,	
 			//hideLabel : true,		
-			name      : 'dates',
-			value	  : '',
-			cls       : ''
+			name      : 'id',
+			value	  : 0
 		},{
-			fieldLabel: 'Age min.',
+			xtype	: 'container',
+			anchor	: '96%',
+			layout	: {
+				type: 'hbox'
+			},
+			items	: [{
+				xtype	  	: 'textfield',
+				hidden		: true,
+				fieldLabel	: 'Dates',
+				name      	: 'dates'
+			},{
+				xtype : 'button',
+				text: 'Calendrier',
+				iconCls	: 'calendrier',	
+				//formBind: true, //only enabled once the form is valid
+				//disabled: true,
+				handler: function() {
+					SELECTED_DATES_temp = Ext.getCmp('sessiondisplay').getForm().findField('dates').value;
+					
+					SELECTED_DATES=[];
+					SELECTED_DATES_temp=SELECTED_DATES_temp.split(',');
+					Ext.each(SELECTED_DATES_temp, function(date){
+						SELECTED_DATES.push(Number(date));
+					});
+					console.info(SELECTED_DATES);
+					sessioncalendrierwindow = Ext.getCmp('sessioncalendrierwindow');
+					if(!sessioncalendrierwindow){
+						sessioncalendrierwindow=Ext.widget('sessioncalendrierwindow');
+					}
+					sessioncalendrierwindow.dateSelection = false;
+					sessioncalendrierwindow.show();
+					/*for(k=0;k<12;k++){
+						Ext.getCmp('sessiondatepicker'+k).selectedUpdate();
+					}*/
+				},
+				width	: 80,
+				margins: '0 0 5 0'
+			}]
+		},{
+			fieldLabel: 'Age',
 			//hideLabel : false,		
-			name      : 'agemin',
-			value	  : '',
-			cls       : ''
+			name      : 'agedisplay',
 		},{
-			fieldLabel: 'Age max.',
+			fieldLabel: 'Capacit&eacute;',
 			//hideLabel : true,		
-			name      : 'agemax',
-			value	  : '',
-			cls       : ''
-		},{
-			fieldLabel: 'Capacite min.',
-			//hideLabel : true,		
-			name      : 'capacitemin',
-			value	  : '',
-			cls       : ''
-		},{
-			fieldLabel: 'Capacite max.',
-			//hideLabel : true,		
-			name      : 'capacitemax',
+			name      : 'capacitedisplay',
 			value	  : '',
 			cls       : ''
 		},{
@@ -82,21 +116,15 @@ Ext.define('MainApp.view.SessionDisplay', {
 			value	  : '',
 			cls       : ''
 		},{
-			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de',
+			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ',
 			//hideLabel : true,		
-			name      : 'in',
+			name      : 'horairesdisplay',
 			value	  : '',
 			cls       : 'clock'
-		},{
-			fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &agrave;',
-			//hideLabel : true,		
-			name      : 'out',
-			value	  : '',
-			cls       : ''
 		}
 	],
-	initComponent: function() {
-		var me=this;
+	initComponent : function() {
+		var me = this;
 		//Hide fields
 		/*this.on('render', function(){
 			if (me.statut=='enfant'){ //enfant, cacher certains champs

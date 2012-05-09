@@ -19,15 +19,17 @@ class Calendrier extends CrudControl {
 		
 		$this->db->where('exExercice_id',$ex);
 		if ($cal_type > 0) $this->db->where('cal_id',$cal_type);
-		$dates = $this->db->get('exCalendrier');
+		$dates = $this->db->get('exCalendrier')->result_array();
+		
 		
 		$list = array();
 		foreach ($dates as $cal) 
 		{
-			if ($cal['cal_id'] == 2) $index = 'vacances';
+			//print_r($cal);
+			if ($cal['cal_id'] == 1) $index = 'vacances';
 			else $index = 'ferme';
 			
-			for ($i = strtotime($cal['debut']); $i <= strtotime($cal['fin']); $i = strtotime("+1 day", $i)) $list[$index][] = date("d/m/Y",$i);
+			for ($i = strtotime($cal['debut']); $i <= strtotime($cal['fin']); $i = strtotime("+1 day", $i)) $list[$index][] = date("d/m/y",$i); 
 		}
 			
 		$out['data'] = $list;

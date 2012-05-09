@@ -1,4 +1,20 @@
-reductionstore= new Ext.data.Store({
+dateSessionStore = new Ext.data.Store({
+	storeId: 'datesessionstore',
+	fields: ['id', 'dates'],
+	autoLoad: false,
+	proxy: {
+		type: 'ajax',
+		url: BASE_URL+'activite/session/getDates',  // url that will load data
+		actionMethods : {read: 'POST'},
+		reader : {
+			type : 'json',
+			totalProperty: 'size',
+			root: 'combobox'
+		}
+	}
+});
+
+reductionstore = new Ext.data.Store({
 	storeId: 'reductionstore',
 	fields: ['id', 'nom', 'valeur'],
 	autoLoad: true,
@@ -14,7 +30,7 @@ reductionstore= new Ext.data.Store({
 	}
 });
 
-update_tarif= function(){
+update_tarif = function(){
 	var tarif = Ext.getCmp('tarif_field').value;
 	
 	
@@ -27,14 +43,15 @@ update_tarif= function(){
 		var reduc = Ext.getStore('reductionstore').getById(reduc_id).data.valeur;
 		total_facture = Math.round(tarif * (nombre_seances/total_seances) * (1+parseInt(reduc)/100));
 		Ext.getCmp('total_facture_field').setValue(total_facture);
-		Ext.getCmp('total_facture_display_field').setValue(total_facture);
+		Ext.getCmp('total_facture_display_field').setValue(total_facture + ' &euro;');
 	}
-		
-	
-	
 }
 
-
+//Allow using checkbox into grid
+Ext.require([
+    'Ext.selection.CheckboxModel'
+]);
+var sm = Ext.create('Ext.selection.CheckboxModel');
 
 
 Ext.define('MainApp.view.InscriptionForm', {
@@ -43,8 +60,8 @@ Ext.define('MainApp.view.InscriptionForm', {
 	//id   		: 'activiteform',
 	statut		: '',
 	frame 		: true,
-	height		: 220,
-	width 		: 200,
+	height		: '100%',
+	width 		: 250,
 	x     		: 0,
 	y     		: 0,
 	url   		: '',
@@ -59,6 +76,20 @@ Ext.define('MainApp.view.InscriptionForm', {
 	},
 	defaultType  	: 'textfield',
 	items 		: [{
+		xtype	: 'grid',
+		store	: dateSessionStore,
+		selModel: sm,
+		columns	: [
+		    {text: "Date", flex: 1, dataIndex: 'dates'}
+		],
+		columnLines: true,
+		width	: '100%',
+		height	: 150,
+		frame	: true,
+		title	: 'S&eacute;lection des dates',
+		iconCls	: 'icon-grid',
+		margin : '0 0 3 0'
+	},{
 		xtype	: 'hiddenfield',
 		name	: 'userAdherent_id'
 	},{
@@ -73,7 +104,7 @@ Ext.define('MainApp.view.InscriptionForm', {
 		xtype	: 'container',
 		layout	: 'hbox',
 		items:[{
-			xtype		: 'textfield',
+			xtype		: 'displayfield',
 			id		: 'nombre_seances_field',
 			fieldLabel	: '',
 			labelSeparator	: ' ',
@@ -82,11 +113,12 @@ Ext.define('MainApp.view.InscriptionForm', {
 			//hideLabel	: true,
 			name		: 'nbre_seances',
 			width		: 76,
+			value		: 15/*,
 			listeners 	:{
 				'change': function(me) {
 					update_tarif();
 				}
-			}
+			}*/
 		},{
 			xtype		: 'displayfield',
 			name		: 'stringfield',
@@ -110,10 +142,11 @@ Ext.define('MainApp.view.InscriptionForm', {
 			flex		: 3
 		}]
 	},{
-		xtype	  	: 'textfield',
+		xtype	  	: 'displayfield',
 		id		: 'tarif_field',
 		fieldLabel	: 'Tarif (&euro;)',	
-		name      	: 'tarif'
+		name      	: 'tarif',
+		value		: 75
 	},{
 		xtype	  	: 'combobox',
 		id		: 'reduc_combobox',
@@ -122,11 +155,58 @@ Ext.define('MainApp.view.InscriptionForm', {
 		store	  	: 'reductionstore',
 		displayField	: 'nom',
 		valueField	: 'id',
+		allowBlank	: true,
 		listeners 	:{
 			'change': function(me) {
 				update_tarif();
 			}
 		}
+	},{
+		xtype	: 'container',
+		layout	: 'hbox',
+		items:[{
+			xtype		: 'checkboxfield',
+			fieldLabel	: 'Autre R&eacute;duction',
+			//hideLabel 	: true,		
+			name      	: 'ckb',
+			value	  	: true,
+			anchor	  	: '30%',	
+			handler		: function (chk, checked) {
+				Ext.getCmp('reduc_field').setVisible(checked);	
+				Ext.getCmp('reduc_field_euro').setVisible(checked);
+				Ext.getCmp('motif_reduc_field').setVisible(checked);
+			},
+			flex		: 3
+		},{
+			xtype	  	: 'textfield',
+			id		: 'reduc_field',
+			hidden		: true,
+			hideLabel	: true,
+			fieldLabel	: '',
+			name      	: 'reduc_field',
+			anchor	  	: '30%',
+			allowBlank	: true,
+			flex		: 1
+		},{
+			xtype	  	: 'displayfield',
+			id		: 'reduc_field_euro',
+			hidden		: true,
+			hideLabel	: true,
+			fieldLabel	: '',
+			anchor	  	: '30%',
+			margin		: '0 0 0 3',
+			value		: '&euro;',
+			flex		: 1
+		}]
+	},{
+		xtype	  	: 'textareafield',
+		id		: 'motif_reduc_field',
+		hidden		: true,
+		fieldLabel	: 'Motif',
+		name      	: 'motif_reduc',
+		allowBlank	: true,
+		rows		: 2,
+		flex		: 1
 	},{
 		xtype		: 'displayfield',
 		fieldLabel	: 'Total Facture',

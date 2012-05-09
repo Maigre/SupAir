@@ -2,13 +2,13 @@
 Ext.namespace('Ext.ux');
  
 /**
-  * Ext.ux.IconCombo Extension Class
+  * Ext.ux.MultiDatePicker Extension Class
   *
-  * @author  Jozef Sakalos
+  * @author  Matthias IMBERT
   * @version 1.0
   *
-  * @class Ext.ux.IconCombo
-  * @extends Ext.form.ComboBox
+  * @class Ext.ux.MultiDatePicker
+  * @extends Ext.picker.Date
   * @constructor
   * @param {Object} config Configuration options
   */
@@ -26,6 +26,7 @@ Ext.define('Ext.ux.MultiDatePicker',{
 	extend	: 'Ext.picker.Date', 
 	alias	: 'widget.multidatepicker',
 	dayNames: ["Samedi", "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
+	dateSelection: true,
     	/*renderTpl: [
 		'<div class="{cls}" id="{id}" role="grid" title="{ariaTitle} {value:this.longDay}">',
 		    '<div role="presentation" class="{baseCls}-header">',
@@ -143,54 +144,58 @@ Ext.define('Ext.ux.MultiDatePicker',{
     	
     	
     	handleDateClick : function(e, t){
-		console.info('ok');
+		console.info(this);
 		var me = this,
 			handler = me.handler;
-
-		e.stopEvent();
-		if(!me.disabled && t.dateValue && !Ext.fly(t.parentNode).hasCls(me.disabledCellCls)){
-			//console.info(me.selectedDates);
-			//console.info(me);
-			//me.cancelFocus = me.focusOnSelect === false;
-			var el = Ext.get(t);
-			//console.info(el.up('td'));
+		if (me.dateSelection==true){
+			e.stopEvent();
+			if(!me.disabled && t.dateValue && !Ext.fly(t.parentNode).hasCls(me.disabledCellCls)){
+				//console.info(me.selectedDates);
+				//console.info(me);
+				//me.cancelFocus = me.focusOnSelect === false;
+				var el = Ext.get(t);
+				//console.info(el.up('td'));
 			
-			//Vérifie que la date n'existe pas déjà dans la liste des SELECTED_DATES
-			array_indice= SELECTED_DATES.indexOf(t.dateValue);
-			if(array_indice == -1){  
-				SELECTED_DATES.push(t.dateValue);
-			}
-			//Si elle existe déjà, c'est que la case a été cliquée pour enlever cette date
-			//Elle est enlevée avec la méthode slice qui laisse la case vide donc on décale ensuite toutes les dates suivantes d'un cran dans le tableau
-			else{
-				delete SELECTED_DATES[array_indice];
-				SELECTED_DATES.slice(1,1);
-				temp_array=[];
-				for (i=0;i<=SELECTED_DATES.length;i++){
-					
-					if (SELECTED_DATES[i]!== undefined){
-						temp_array.push(SELECTED_DATES[i]);
-						var myDate = new Date();
-						myDate.setTime(SELECTED_DATES[i]);
-						console.info(myDate);
-					}					
+				//Vérifie que la date n'existe pas déjà dans la liste des SELECTED_DATES
+				array_indice= SELECTED_DATES.indexOf(t.dateValue);
+				if(array_indice == -1){  
+					//console.info(SELECTED_DATES);
+					console.info(t.dateValue);
+					SELECTED_DATES.push(t.dateValue);
 				}
-				SELECTED_DATES=temp_array;
-				console.info(SELECTED_DATES);
-			}
+				//Si elle existe déjà, c'est que la case a été cliquée pour enlever cette date
+				//Elle est enlevée avec la méthode slice qui laisse la case vide donc on décale ensuite toutes les dates suivantes d'un cran dans le tableau
+				else{
+					delete SELECTED_DATES[array_indice];
+					SELECTED_DATES.slice(1,1);
+					temp_array=[];
+					for (i=0;i<=SELECTED_DATES.length;i++){
+					
+						if (SELECTED_DATES[i]!== undefined){
+							temp_array.push(SELECTED_DATES[i]);
+							var myDate = new Date();
+							myDate.setTime(SELECTED_DATES[i]);
+							console.info(myDate);
+						}					
+					}
+					SELECTED_DATES=temp_array;
+					console.info(SELECTED_DATES);
+				}
 			
-			me.setValue(new Date(t.dateValue));
-			delete me.cancelFocus;
-			me.fireEvent('select', me, me.value);
-			if (handler) {
-			handler.call(me.scope || me, me, me.value);
+				me.setValue(new Date(t.dateValue));
+				delete me.cancelFocus;
+				me.fireEvent('select', me, me.value);
+				if (handler) {
+				handler.call(me.scope || me, me, me.value);
+				}
+				// event handling is turned off on hide
+				// when we are using the picker in a field
+				// therefore onSelect comes AFTER the select
+				// event.
+				me.onSelect();
 			}
-			// event handling is turned off on hide
-			// when we are using the picker in a field
-			// therefore onSelect comes AFTER the select
-			// event.
-			me.onSelect();
 		}
+		
 	},
 	selectedDates : [],
 	selectedUpdate: function(){

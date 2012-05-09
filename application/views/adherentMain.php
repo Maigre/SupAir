@@ -1,6 +1,8 @@
 displayfamille= function(){
 	//famille id stockée en variable globale : ID_FAMILLE
-	
+	adherentmain = Ext.widget('adherentmain');
+	Ext.getCmp('centerregion').removeAll(false);
+	Ext.getCmp('centerregion').add(adherentmain);
 	Ext.Ajax.request({
 		url: BASE_URL+'user/famille/loadFamille/'+ID_FAMILLE,
 		method : 'POST',
@@ -21,7 +23,7 @@ displayfamille= function(){
 			famillestore.on('load', function(database){
 				var rec= database.getAt(0);
 				//Remplace les champs booleens par des icones yes no
-				fields=['ext','ccas','bonv'];
+				fields=['ext','ccas','bonv', 'groupe'];
 				Ext.each(fields, function(field){
 					rec.data=seticonfield(rec.data,field);
 				})
@@ -142,10 +144,11 @@ Ext.define('MainApp.view.AdherentMain', {
 		type:'vbox',
 		align:'stretch'
 	},
+	bodyStyle: "background-image:url(interface/images/NASA1.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;",
 	defaults: {
-	// applied to each contained panel
-	defaults:{height:100},
-	bodyStyle: 'margin:5px',
+		// applied to each contained panel
+		defaults:{height:100},
+		bodyStyle: 'margin:5px',
 		layout:{
 			type:'hbox',
 			align:'stretch'

@@ -65,7 +65,18 @@ Ext.define('MainApp.view.AdherentDisplay', {
 				        colspan: 2,
 				        text: 'Acc&eacute;der aux factures',
 				        scale: 'small',
-				        width: 'auto'
+				        width: 'auto',
+					handler: function() {
+						Ext.getCmp('main_container').removeAll(true);
+						var comptafamillepanel = Ext.getCmp('comptafamillepanel');
+						if(!comptafamillepanel){
+							comptafamillepanel = Ext.widget('comptafamillepanel');
+						}
+						//console.info(comptafamillepanel);
+						Ext.getCmp('main_container').add(comptafamillepanel);
+						nom_famille=Ext.getStore('adherentstore').getAt(0).data.nom;
+						comptafamillepanel.setTitle('Comptes de la famille ' + nom_famille);
+					}
 				    },{
 				        iconCls: 'cancel',
 				        colspan: 2,

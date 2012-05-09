@@ -1,6 +1,6 @@
 Ext.define('MainApp.view.Viewport', {
     extend: 'Ext.container.Viewport',
-	id: 'viewport',
+    id: 'viewport',
     layout: 'border',
  	
     initComponent: function() {
@@ -72,14 +72,14 @@ Ext.define('MainApp.view.Viewport', {
 		}, {
 			region	: 'center',
 			id	: 'centerregion',
-			xtype	: 'container',
+			//xtype	: 'container',
 			layout	: 'fit',
-			//bodyStyle: "background-image:url(interface/images/NASA1.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;",
+			bodyStyle: "background-image:url(interface/images/NASA1.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;"/*,
 			//opacity : 0,
 			items	: [{
 				xtype: 'adherentmain',
 				bodyStyle: "background-image:url(interface/images/NASA1.jpg); background-repeat:no-repeat; background-position:center center;-moz-background-size: cover; -webkit-background-size: cover;-o-background-size: cover;background-size: cover;",
-			}]
+			}]*/
     	}];
 
         this.callParent();

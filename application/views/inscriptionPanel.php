@@ -38,7 +38,7 @@ inscrits_store= new Ext.data.Store({
 	}
 });
 
-loadinscriptionpanel= function(idactivite){
+loadinscriptionpanel= function(idactivite, nomactivite){
 	session_activite_store=Ext.getStore('session_activite_store');
 	//session_activite_store.proxy.api.read = BASE_URL+'activite/session/listall'; 			
 	session_activite_store.load({ params: {"where[actiActivite_id]": idactivite}});
@@ -52,43 +52,47 @@ loadinscriptionpanel= function(idactivite){
 		if(!inscriptionpanel){
 			inscriptionpanel= Ext.widget('inscriptionpanel');
 		}
-		console.info(inscriptionpanel);
 		
 		Ext.getCmp('main_container').add(inscriptionpanel);
+		Ext.getCmp('sessions_activite_gridpanel').setTitle('Session - ' + nomactivite);
 	}); 	
 };
 
 load_session_inscription= function(idsession){
 	
-	sessiondisplay_inscription=Ext.getCmp('sessiondisplay_inscription');
+	//Affiche les infos de la session
+	sessiondisplay_inscription = Ext.getCmp('sessiondisplay_inscription');
 	sessiondisplay_inscription.show();
 	sessiondisplay_inscription.store.proxy.api.read = BASE_URL+'activite/session/show/'+idsession;
 	sessiondisplay_inscription.store.load();
+	
+	sessiondisplay_inscription.store.un('load', function(){});
 	sessiondisplay_inscription.store.on('load', function(database){
-		var rec= database.getAt(0);
+		console.info('onload');
+		var rec = database.getAt(0);
 		//Remplace les champs booleens par des icones yes no
 		fields=[];
 		Ext.each(fields, function(field){
 			rec.data=seticonfield(rec.data,field);
-		})
+		});
 		
 		sessiondisplay_inscription.getForm().loadRecord(rec);
+		
 		//Set title
 		sessiondisplay_inscription.setTitle(rec.data.nom);
 		sessiondisplay_inscription.show();
-		
-		//Get les adherents inscrits à cette session.
-		var inscrits_store = Ext.getStore('inscrits_store');
-		inscrits_store.load({ params: {"where[actiSession_id]": idsession}});
-		inscrits_store.on('load',function(){
-			Ext.getCmp('inscrits_panel').show();
-			Ext.getCmp('inscriptionform_panel').show();
-		})
-		
-		
 	});
-	sessiondisplay_inscription.show();
-}
+	
+	//Affiche les adherents inscrits à cette session.
+	var inscrits_store = Ext.getStore('inscrits_store');
+	inscrits_store.load({ params: {"where[actiSession_id]": idsession}});
+	inscrits_store.on('load',function(){
+		Ext.getCmp('inscrits_panel').show();
+		Ext.getCmp('inscriptionform_panel').show();
+		Ext.getCmp('inscritsgrid').doLayout();
+	});
+	
+};
 
 Ext.define('MainApp.view.InscriptionPanel', {
 	extend	: 'Ext.panel.Panel',
@@ -109,8 +113,9 @@ Ext.define('MainApp.view.InscriptionPanel', {
 			flex	: 'ratio'
 		},
 		items	: [{
-			flex	: 1,
+			flex	: 2,
 			xtype	: 'panel',
+			id	: 'sessions_activite_gridpanel',
 			title	: 'Session',
 			frame	: true,
 			items	: [{
@@ -128,13 +133,14 @@ Ext.define('MainApp.view.InscriptionPanel', {
 				listeners: {
 					itemclick: {
 						fn: function(a,b){
-							load_session_inscription(b.data.id);
 							ID_SESSION = b.data.id;
+							load_session_inscription(b.data.id);
 						}
 					}
 				}
 			}]
 		},{
+			flex	: 1,
 			xtype	: 'panel',
 			id	: 'inscrits_panel',
 			title	: 'Inscrits',
@@ -143,14 +149,15 @@ Ext.define('MainApp.view.InscriptionPanel', {
 				xtype	: 'grid',
 				id	: 'inscritsgrid',
 				store	: 'inscrits_store',
+				autoHeight: true,
 				hideHeaders : 	true,
 				columns	:[
 					{ header: 'Nom',  dataIndex: 'userAdherent_nom'},
 					{ header: 'Pr&eacute;nom', dataIndex: 'userAdherent_prenom'}
 				],
-				minHeight : 100,
+				minHeight : 300,
 				width	: 150,
-				scroll	: 'vertical'			
+				scroll	: 'vertical'		
 			}],
 			hidden	: true //initially hidden before one session has been selected
 		}]
@@ -158,7 +165,7 @@ Ext.define('MainApp.view.InscriptionPanel', {
 		xtype	: 'sessiondisplay',
 		id	: 'sessiondisplay_inscription',
 		height	: 300,
-		width	: 150,
+		//width	: 210,
 		hidden	: true //initially hidden before one session has been selected
 	},{
 		xtype	: 'panel',

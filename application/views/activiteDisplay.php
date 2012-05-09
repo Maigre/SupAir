@@ -1,5 +1,8 @@
 displayactivite= function(idactivite){
 
+	activitemain = Ext.widget('activitemain');
+	Ext.getCmp('centerregion').removeAll(false);
+	Ext.getCmp('centerregion').add(activitemain);
 	
 	Ext.Ajax.request({
 		url: BASE_URL+'activite/activite/loadActivite/'+idactivite,
@@ -8,15 +11,15 @@ displayactivite= function(idactivite){
 			var response = Ext.JSON.decode(response.responseText);
 			
 			//ACTIVITE
-			Ext.getCmp('infofamille_container').removeAll(true);
-			Ext.getCmp('adherent_container').removeAll(true);
+			//Ext.getCmp('infoactivite_container').removeAll(true);
+			//Ext.getCmp('adherent_container').removeAll(true);
 			
 			var activitedisplay = Ext.getCmp('activitedisplay');
 			if (!activitedisplay){
 				var activitedisplay = Ext.widget('activitedisplay');
 			}	
 			
-			Ext.getCmp('infofamille_container').add(activitedisplay);
+			Ext.getCmp('infoactivite_container').add(activitedisplay);
 			
 			var activitestore = Ext.getStore('activitestore');
 			activitestore.proxy.api.read = BASE_URL+'activite/activite/show/'+idactivite; 
@@ -83,12 +86,11 @@ show_session= function(idsession,idpanel){
 		}
 		//Set title
 		sessiondisplay.getForm().loadRecord(rec);
-		//if (idpanel=='referentdisplay'){
-			sessiondisplay.title=rec.data.nom;
-			//adherentdisplay.statut='referent';
-			session_number=Ext.getCmp('adherent_container').items.items.length;
-			Ext.getCmp('adherent_container').insert(session_number, sessiondisplay);
-		//}
+		sessiondisplay.title=rec.data.nom;
+		
+		//Insertion dans l'accordeon
+		session_number=Ext.getCmp('session_container').items.items.length;
+		Ext.getCmp('session_container').insert(session_number, sessiondisplay);
 	});	
 }
 
@@ -149,18 +151,7 @@ Ext.define('MainApp.view.ActiviteDisplay', {
                 	text: 'Ajouter une session',
                 	iconCls: 'add',
                 	handler: function() {
-                		nouvellesession_window= new Ext.window.Window({
-					id	: 'nouvellesession_window',
-					title	: 'Nouvelle Session',
-					modal	: true,
-					items	: [{
-						xtype	: 'sessionform',
-						height  : 540,
-						border	: false,
-						frame	: false
-					}]
-				});
-				nouvellesession_window.show();
+                		edit_session(0);
                 	}
                 },{
                 	text: 'Modifier l\'activit&eacute;',
@@ -201,7 +192,9 @@ Ext.define('MainApp.view.ActiviteDisplay', {
 					cls       : ''
 				},{
 					fieldLabel: '',
-					//hideLabel : false,		
+					hideLabel : true,
+					width	  : '100%', 
+					//labelWidth: 0,		
 					name      : 'actiSecteur_nom',
 					value	  : '',
 					cls       : ''

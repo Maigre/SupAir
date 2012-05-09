@@ -103,13 +103,13 @@ hr {
 }
 
 .x-datepicker-holidays a {
-    background-color: red;
+    background-color: #3375B7;
     color: #BBBBBB;
     cursor: default;
 }
 
 .x-datepicker-closeddays a {
-    background-color: blue;
+    background-color: #CC3333;
     color: #BBBBBB;
     cursor: default;
 }

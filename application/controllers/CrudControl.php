@@ -44,6 +44,7 @@ class CrudControl extends CI_Controller {
 		$results = $this->input->post();
 		
 		//Cas où le post est encodé en json et nécessite une root (='data')
+		$answer_type = '';
 		if(isset($results['data']))
 		{
 			$answer_type = 'rooted';
@@ -53,7 +54,7 @@ class CrudControl extends CI_Controller {
 		}
 		 
 		//if id posted or passed to the controller, use it (switch to edit mode)
-		if ((!$id) && (isset($results['id']))) $id = $results['id'];
+		if ((!$id) && (isset($results['id'])) && ($results['id']>0)) $id = $results['id'];
 		
 		//set and save results
 		$save = $this->Entity($id)->set($results)->save();
@@ -72,6 +73,7 @@ class CrudControl extends CI_Controller {
 		$results = $this->input->post(); 
 		
 		//Cas où le post est encodé en json et nécessite une root (='data')
+		$answer_type = '';
 		if(isset($results['data']))
 		{
 			$answer_type = 'rooted';

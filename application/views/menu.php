@@ -224,13 +224,39 @@ build_menu = function(){
 				},
 				items	:[{
 					xtype	: 'button',
+					text 	: 'Exercice',
+					iconCls	: 'calendrier',					
+					width 	: 110,
+					margin	: 2,
+					listeners: {
+						click: function() {
+							exerciceformpanel_window= new Ext.window.Window({
+								id	: 'exerciceformpanel_window',
+								title	: 'Exercice',
+								//iconCls	: 'palette',
+								modal	: true,
+								items	: [{
+									xtype	: 'exerciceformpanel',
+									height  : 300,
+									border	: false,
+									frame	: false
+								}]
+							});
+							exerciceformpanel_window.show();
+						}		
+					}			
+				},{
+					xtype	: 'button',
 					text 	: 'Calendrier',
 					iconCls	: 'calendrier',					
 					width 	: 110,
 					margin	: 2,
 					listeners: {
 						click: function() {
-							calendrier_window=Ext.widget('calendrier_window');
+							calendrier_window = Ext.getCmp('calendrier_window');
+							if(!calendrier_window){
+								calendrier_window = Ext.widget('calendrier_window');
+							}
 							calendrier_window.show();
 						}		
 					}			

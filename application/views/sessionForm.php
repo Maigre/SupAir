@@ -1,3 +1,41 @@
+edit_session = function (idSession){
+	sessionform=Ext.widget('sessionform');
+	
+	
+	if(idSession>0){ //modification d'une session existante, chargement des données dans le formulaire
+		var sessionStore = new Ext.data.Store({
+			model: 'Session',
+			proxy: {
+				type: 'ajax',
+				api: {
+					read: BASE_URL+'activite/session/show/1'    		
+				},
+				actionMethods : {read: 'POST'},   	
+				reader: {
+					type: 'json',
+					root: 'data',
+					totalProperty: 'size',
+					successProperty: 'success'
+				}
+			}
+		});
+		sessionStore.proxy.api.read = BASE_URL+'activite/session/show/'+idSession; 
+		sessionStore.load();
+		sessionStore.on('load', function(database){
+			var rec= database.getAt(0);
+			sessionform.getForm().loadRecord(rec);				
+		});
+	}
+	
+	nouvellesession_window= new Ext.window.Window({
+		id	: 'nouvellesession_window',
+		title	: 'Nouvelle Session',
+		modal	: true,
+		items	: [sessionform]
+	});
+	nouvellesession_window.show();	
+};
+
 animateurstore= new Ext.data.Store({
 	storeId: 'animateurstore',
 	fields: ['id', 'nom','prenom',{name:'todisplay', mapping: 'nom + " " + obj.prenom'}],
@@ -50,9 +88,11 @@ Ext.define('MainApp.view.SessionForm', {
 	extend		: 'Ext.form.Panel',
 	alias 		: 'widget.sessionform',
 	id		: 'sessionform',
+	idSession	: 0,
 	statut		: '',
-	frame 		: true,
-	height		: 800,
+	height  	: 540,
+	border		: false,
+	frame		: false,
 	width 		: 600,
 	x     		: 0,
 	y     		: 0,
@@ -82,6 +122,12 @@ Ext.define('MainApp.view.SessionForm', {
 		items	: [{
 				xtype		: 'textfield',
 				hidden		: true,
+				fieldLabel	: 'id',
+				name      	: 'id',
+				value	  	: 0
+			},{
+				xtype		: 'textfield',
+				hidden		: true,
 				fieldLabel	: 'Nom',
 				name      	: 'actiActivite_id',
 				value	  	: 1
@@ -92,27 +138,12 @@ Ext.define('MainApp.view.SessionForm', {
 				name      	: 'nom',
 				anchor		: '96%'
 			},{
-				xtype		: 'container',
-				anchor		: '96%',
-				layout		: {
-					type: 'hbox'
-				},
-				items		: [{
-					flex		: 5,
-					xtype		: 'combobox',
-					fieldLabel	: 'P&eacuteriode',
-					name      	: 'periode',
-					store		: 'periodesemainestore',
-					displayField	: 'nom',
-					valueField	: 'id'
-				}]
-			},{
 				xtype	: 'container',
 				anchor	: '96%',
 				layout	: {
 					type: 'hbox'
 				},
-				items	: [{
+				items	: [{//Champ caché pour les dates permet chargement et enregistrement des dates sélectionnées du calendrier 
 					xtype	  	: 'textfield',
 					hidden		: true,
 					fieldLabel	: 'Dates',
@@ -124,14 +155,27 @@ Ext.define('MainApp.view.SessionForm', {
 				},{
 					xtype : 'button',
 					text: 'Calendrier',
+					iconCls	: 'calendrier',	
 					//formBind: true, //only enabled once the form is valid
 					//disabled: true,
 					handler: function() {
-						sessioncalendrierwindow=Ext.getCmp('sessioncalendrierwindow');
+						SELECTED_DATES_temp = Ext.getCmp('sessionform').getForm().findField('dates').value;
+						console.info(SELECTED_DATES_temp);
+						
+						SELECTED_DATES=[];
+						SELECTED_DATES_temp=SELECTED_DATES_temp.split(',');
+						Ext.each(SELECTED_DATES_temp, function(date){
+							SELECTED_DATES.push(Number(date));
+						});
+						console.info(SELECTED_DATES);
+						sessioncalendrierwindow = Ext.getCmp('sessioncalendrierwindow');
 						if(!sessioncalendrierwindow){
 							sessioncalendrierwindow=Ext.widget('sessioncalendrierwindow');
 						}
 						sessioncalendrierwindow.show();
+						/*for(k=0;k<12;k++){
+							Ext.getCmp('sessiondatepicker'+k).selectedUpdate();
+						}*/
 					},
 					width	: 80,
 					margins: '0 0 5 0'
@@ -280,7 +324,6 @@ Ext.define('MainApp.view.SessionForm', {
 							});
 						}
 						listwindow.show();
-						//console.info(Ext.widget('listwindow'));
 					}
 				}]
 			},{
@@ -298,7 +341,6 @@ Ext.define('MainApp.view.SessionForm', {
 					value	  	: true,
 					anchor	  	: '30%',	
 					handler		: function (chk, checked) {
-						console.info('ok');
 						Ext.getCmp('horairein').setVisible(checked);
 						Ext.getCmp('horaireout').setVisible(checked);
 				
@@ -412,7 +454,7 @@ Ext.define('MainApp.view.SessionForm', {
 				},{
 					xtype	: 'container',
 					id	: 'tarif_palier_container',
-					anchor	: '100%',
+					anchor	: '50%',
 					hidden	: true
 				}]
 			}]
@@ -452,20 +494,30 @@ Ext.define('MainApp.view.SessionForm', {
 				method 	: 'POST',
 				success	: function(response){
 					var options = Ext.decode(response.responseText);			
-					console.info(options);
 					i=0;
 					Ext.each(options, function(tranche) {
 						field = Ext.create('Ext.form.field.Text', {
-							fieldLabel 	: tranche.min+' - '+tranche.max,
+							fieldLabel 	: tranche.QF,
 							name		:'tarif'+i,
 							id		: 'tarif_field'+i,
 							value		: '0',
 							labelWidth 	: 80		
 						});
+						
+						if(i>0){
+							previous = i-1;
+							oldLabel = Ext.getCmp('tarif_field' + previous).fieldLabel;
+							newLabel = oldLabel + ' - ' + tranche.QF;
+							Ext.getCmp('tarif_field' + previous).labelEl.update(newLabel);
+						}
 						i++;
 						Ext.getCmp('tarif_palier_container').add(field);
 						//console.info(me.getForm().findField(tohide));
-					})
+					});
+					previous = i-1;
+					oldLabel = Ext.getCmp('tarif_field' + previous).fieldLabel;
+					newLabel = oldLabel + ' et +';
+					Ext.getCmp('tarif_field' + previous).labelEl.update(newLabel);
 				}
 			});
 		});

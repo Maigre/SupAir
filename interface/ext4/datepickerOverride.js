@@ -45,7 +45,6 @@ Ext.override(Ext.picker.Date, {
     	],*/
     	numDays: 37,
     	handleDateClick : function(e, t){
-		console.info('ok');
 		var me = this,
 			handler = me.handler;
 
@@ -59,11 +58,12 @@ Ext.override(Ext.picker.Date, {
 			
 			//Vérifie que la date n'existe pas déjà dans la liste des SELECTED_DATES
 			array_indice= SELECTED_DATES.indexOf(t.dateValue);
-			if(array_indice == -1){  
+			if(array_indice == -1){ 
+				console.info(SELECTED_DATES); 
 				SELECTED_DATES.push(t.dateValue);
 			}
 			//Si elle existe déjà, c'est que la case a été cliquée pour enlever cette date
-			//Elle est enlevée avec la méthode slice qui laisse la case vide donc on décale ensuite toutes les dates suivantes d'un cran dans le tableau
+			//Elle est enlevée avec la méthode slice qui laisse la case vide donc il faut ensuite décaler toutes les dates suivantes d'un cran dans le tableau
 			else{
 				delete SELECTED_DATES[array_indice];
 				SELECTED_DATES.slice(1,1);
@@ -75,7 +75,7 @@ Ext.override(Ext.picker.Date, {
 						var myDate = new Date();
 						myDate.setTime(SELECTED_DATES[i]);
 						console.info(myDate);
-					}					
+					}				
 				}
 				SELECTED_DATES=temp_array;
 				console.info(SELECTED_DATES);
@@ -103,7 +103,6 @@ Ext.override(Ext.picker.Date, {
 
 		cells.removeCls(cls);
 		cells.each(function(c){
-			
 			if(SELECTED_DATES.indexOf(c.dom.firstChild.dateValue) != -1){  
 				
 				me.el.dom.setAttribute('aria-activedescendent', c.dom.id);
@@ -112,8 +111,6 @@ Ext.override(Ext.picker.Date, {
 				    //Ext.fly(c.dom.firstChild).focus(50);
 				}
 			}
-
-			
 		}, this);
     	},
     	handleMouseWheel : function(e){
